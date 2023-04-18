@@ -1,0 +1,12 @@
+:root {
+    --Text: #fff;
+    --Darkbackground: #282828;
+
+    --lightHover: #fad27b;
+    --focusing: #f3b52f;
+    --borderLight: #dad2d2;
+
+    --fontSizeText: 16px;
+    --fontSizeTextSmall: 12px;
+
+}

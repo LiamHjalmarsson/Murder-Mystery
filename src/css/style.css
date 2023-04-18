@@ -1,0 +1,20 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    font-size: var(--fontSizeText);
+}
+
+body {
+    background-color: var(--Darkbackground);
+}
+
+button.active {
+    border-color: var(--lightHover);
+    transition: background 0.4s ease-in, color 0.4s ease-in;
+}
+
+button.active:hover {
+    background: var(--focusing);
+    color: var(--Darkbackground);
+}
