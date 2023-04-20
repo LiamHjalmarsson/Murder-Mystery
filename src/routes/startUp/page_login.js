@@ -1,20 +1,21 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../../lib/js/functions.js";
 import { colRef, docRef, getFromDB, setDocRef } from "../../firebase/functions/firebase_functions.js";
-import { registerPlayer, loginPlayer } from "../../firebase/functions/firebase_auth.js";
+import { loginPlayer, registerPlayer } from "../../firebase/functions/firebase_auth.js";
 
 export default {}
 
 ;(() => {
 
     PubSub.subscribe({
-        event: "Regeister",
+        event: "render::Login",
         listener: render
     });
 
 })();
 
 async function render () {
+
     let main = document.querySelector("#app");
     main.innerHTML = "";
 
@@ -32,23 +33,11 @@ async function render () {
             label: "Enter email"
         },
         {
-            type: "text",
-            name: "playerName",
-            id: "playerName",
-            label: "Enter player name"
-        },
-        {
             type: "password",
             name: "password",
             id: "password",
             label: "Enter password"
-        },
-        {
-            type: "text",
-            name: "teamName",
-            id: "teamName",
-            label: "Join a team"
-        },
+        }
     ]
 
     inputsDetail.forEach(element => {
@@ -67,18 +56,17 @@ async function render () {
     });
 
     let btnContainer = createElement("div", "", "btnContainer");
-    
-    let buttonReg = createElement("button", "playGame");
+
+    let buttonReg = createElement("button", `playGame`);
     buttonReg.textContent = "Regeister";
 
     let buttonLog = createElement("button", "playGame");
     buttonLog.textContent = "Login";
-
     btnContainer.append(buttonReg, buttonLog);
 
     formStartUp.append(btnContainer)
 
-    formStartUp.querySelectorAll("div > input").forEach(input => {
+    formStartUp.querySelectorAll("div input").forEach(input => {
         input.addEventListener("keyup", (e) => {
             if (e.target.value !== "") {
                 e.target.parentElement.lastElementChild.classList.add("active");
@@ -88,71 +76,24 @@ async function render () {
         });
     });
 
-    buttonReg.classList.add("active");
 
-    buttonLog.addEventListener("click", () => {
+    buttonLog.classList.add("active");
+
+    buttonReg.addEventListener("click", () => {
         PubSub.publish({
-            event: "Login"
+            event: "render::Regeister"
         });
     });
 
-    formStartUp.addEventListener("submit", async (e)  => {
-        e.preventDefault();
-        
+    formStartUp.addEventListener("submit", async ()  => {
         let email = document.querySelector("#email").value;
         let password = document.querySelector("#password").value;
 
+        // loginPlayer(email, password)
+
         PubSub.publish({
-            event: "Map"
+            event: "render::Map"
         });
-    
-
-        // if (await registerPlayer(email, password)) {
-        //     addTeamAndMember(e);
-        // }
-    });
-
-}
-
-async function addTeamAndMember (e) {
-    e.preventDefault();
-
-    let teamsInDB = await getFromDB("teams");
-    
-    let teamName = document.querySelector("#teamName").value;
-    let playerName = document.querySelector("#playerName").value;
-    let email = document.querySelector("#email").value;
-
-    let teamRef = colRef("teams");
-    let memberRef = colRef("members");
-
-    let docRefTeam = docRef(teamRef);
-    let docRefMember = docRef(memberRef);
-
-    let teamExists = teamsInDB.find(team => team.teamName === teamName);
-
-    if (teamExists === undefined) {
-
-        setDocRef(docRefTeam, {
-            teamName: teamName 
-        });
-    
-        setDocRef(docRefMember, {
-            email: email,
-            player: playerName, 
-            team: teamName
-        });
-
-    } else {
-        setDocRef(docRefMember, {
-            email: email,
-            member: playerName, 
-            team: teamName
-        });
-    } 
-
-    PubSub.publish({
-        event: "Login"
     });
 
 }

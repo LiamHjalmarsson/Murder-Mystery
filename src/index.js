@@ -1,6 +1,6 @@
 import { PubSub } from "/src/utilities/pubsub.js";
 
 PubSub.publish({
-    event: "Login"
+    event: "render::Login"
 });
 

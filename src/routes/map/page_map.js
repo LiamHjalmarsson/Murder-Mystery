@@ -1,13 +1,13 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { setDoc } from "firebase/firestore";
-import { colRef, docRef, getFromDB } from "../../../src/firebase/functions/firebase_functions.js";
+import { colRef, docRef, getFromDB } from "../../firebase/functions/firebase_functions.js";
 
 export default {}
 
 ;(() => {
 
     PubSub.subscribe({
-        event: "Map",
+        event: "render::Map",
         listener: render
     });
 
@@ -21,7 +21,7 @@ function render () {
 
     let map = L.map('map').setView([55.6065, 13.0100], 18);
 
-    // map.locate({setView: true, maxZoom: 16});
+    map.locate({setView: true, maxZoom: 16});
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -37,13 +37,13 @@ function render () {
     // searh(map);
 
     // get the location
-    // map.on('locationfound', onLocationFound);
+    map.on('locationfound', onLocationFound);
 
     function onLocationFound(e) {
         let  radius = e.accuracy;
     
         L.marker(e.latlng).addTo(map)
-            .bindPopup("You are within " + radius).openPopup();
+            .bindPopup("You location").openPopup();
     
         L.circle(e.latlng, radius).addTo(map);
     }
@@ -51,6 +51,8 @@ function render () {
 }
 
 function addMarkers (map) {
+
+    // add all locations in db 
     let locations = [
         {
             type: "search",
