@@ -102,20 +102,19 @@ async function render () {
         let email = document.querySelector("#email").value;
         let password = document.querySelector("#password").value;
 
-        PubSub.publish({
-            event: "render::Map"
-        });
+        if (await registerPlayer(email, password)) {
+            await addTeamAndMember();
 
-        // if (await registerPlayer(email, password)) {
-        //     addTeamAndMember(e);
-        // }
+            PubSub.publish({
+                event: "render::Map",
+                // detail: { data: { locations: "locations" } }
+            });
+        }
     });
 
 }
 
 async function addTeamAndMember (e) {
-    e.preventDefault();
-
     let teamsInDB = await getFromDB("teams");
     
     let teamName = document.querySelector("#teamName").value;
@@ -150,8 +149,8 @@ async function addTeamAndMember (e) {
         });
     } 
 
-    PubSub.publish({
-        event: "Login"
-    });
+    // PubSub.publish({
+        // event: "Login",
+    // });
 
 }

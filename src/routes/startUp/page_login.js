@@ -94,6 +94,7 @@ async function render () {
         PubSub.publish({
             event: "render::Map"
         });
+
     });
 
 }
