@@ -68,53 +68,22 @@ function addMarkers (map, db_locations) {
 //     alert("latitude" + e.latlng);
 // }
 
-function getLocation (map) {
-    if (!navigator.geolocation) {
+// function getLocation (map) {
+//     if (!navigator.geolocation) {
 
-    } else {
-        setInterval(() => {
-            navigator.geolocation.getCurrentPosition(getPostion)
-        }, 5000);
-    }
+//     } else {
+//         setInterval(() => {
+//             navigator.geolocation.getCurrentPosition(getPostion)
+//         }, 5000);
+//     }
 
-    let marker, circle
+//     let marker, circle
 
-    function getPostion (position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        const accuracy = position.coords.accuracy;
-    
-        if (marker) {
-            map.removeLayer(marker);
-        }
-
-        if (circle) {
-            map.removeLayer(circle);
-        }
-
-        marker = L.marker([latitude, longitude]).addTo(map)
-        circle = L.circle([latitude, longitude], accuracy).addTo(map);
-
-        // let featureGroup = L.featureGroup([marker, circle]).addTo(map);
-
-        // map.fitBounds(featureGroup.getBounds());
-        map.setView([latitude, longitude]);
-
-    }
-}
-
-
-// function searh (map) {
-//     navigator.geolocation.watchPosition(success);
-
-//     function success(position) {
-//         let marker, circle, zoomed;
-    
+//     function getPostion (position) {
 //         const latitude = position.coords.latitude;
 //         const longitude = position.coords.longitude;
 //         const accuracy = position.coords.accuracy;
     
-//         // Removes any existing marker and circule 
 //         if (marker) {
 //             map.removeLayer(marker);
 //         }
@@ -122,23 +91,52 @@ function getLocation (map) {
 //         if (circle) {
 //             map.removeLayer(circle);
 //         }
-//         // Adds marker to the map and a circle for accuracy
-//         marker = L.marker([latitude, longitude]).addTo(map);
+
+//         marker = L.marker([latitude, longitude]).addTo(map)
 //         circle = L.circle([latitude, longitude], accuracy).addTo(map);
-    
-//         // Set zoom to boundaries of accuracy circle
-//         if (!zoomed) {
-//             zoomed = map.fitBounds(circle.getBounds()); 
-//         }
-    
-//         // Set map focus to current user position
+
+//         // let featureGroup = L.featureGroup([marker, circle]).addTo(map);
+
+//         // map.fitBounds(featureGroup.getBounds());
 //         map.setView([latitude, longitude]);
-    
+
 //     }
 // }
 
 
-    // searh(map);
+function getLocation (map) {
+    navigator.geolocation.watchPosition(success);
+
+    let marker, circle, zoomed;
+
+    function success(position) {
+    
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
+    
+        // Removes any existing marker and circule 
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        if (circle) {
+            map.removeLayer(circle);
+        }
+        // Adds marker to the map and a circle for accuracy
+        marker = L.marker([latitude, longitude]).addTo(map);
+        circle = L.circle([latitude, longitude], accuracy).addTo(map);
+    
+        // Set zoom to boundaries of accuracy circle
+        if (!zoomed) {
+            zoomed = map.fitBounds(circle.getBounds()); 
+        }
+    
+        // Set map focus to current user position
+        map.setView([latitude, longitude]);
+    }
+}
+
 
     // get the location
     // map.on('locationfound', onLocationFound);
