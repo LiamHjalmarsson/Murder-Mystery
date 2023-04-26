@@ -1,17 +1,26 @@
-#pageStartUp {
+#startUpContainer {
+    position: relative;
     height: 100vh;
     display: flex;
     place-items: center;
     background-color: var(--Darkbackground);
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.gameTitle {
+    position: absolute;
+    top: 3rem;
+    font-size: var(--fontSizeHeader);
+    color: var(--Text);
 }
 
 #formStartUp {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--gap);
 }
 
 .box_input {
@@ -68,7 +77,6 @@
 }
 
 .playGame {
-    color: #3a3a3a;
     position: relative;
     color: var(--Text);
     outline: none;
@@ -88,7 +96,7 @@
 #btnContainer {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: var(--gap);
 }
 #btnContainer > button {
     width: 40%;

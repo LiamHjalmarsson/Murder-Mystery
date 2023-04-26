@@ -1,0 +1,88 @@
+import { PubSub } from "../../utilities/pubsub.js";
+import { createElement } from "../js/functions.js";
+import { getFromDB, addDocAddData, docUpdate, docUpdateArry } from "../../utilities/functions/firebase_functions.js";
+
+export function formLogReg (inputsDetail) {
+    let formStartUp = createElement("form", "", "formStartUp");
+
+    inputsDetail.forEach(element => {
+        let div = createElement("div", "box_input");
+
+        let input = createElement("input", "formStartUp_input", element.id);
+        input.type = element.type;
+        input.name = element.name;
+
+        let label = createElement("label", "labelInput");
+        label.for = element.name;
+        label.textContent = element.label
+
+        div.append(input, label);
+        formStartUp.appendChild(div);
+    });
+
+    return formStartUp;
+}
+
+export function btnsForm (type) {
+    let btnContainer = createElement("div", "", "btnContainer");
+    let btnDeatils = ["register", "login"];
+
+    btnDeatils.forEach(btn => {
+        let button = createElement("button", `playGame`);
+        button.textContent = btn;
+        btnContainer.append(button);
+
+        if (button.textContent === type) {
+            button.classList.add("active");
+        }
+
+        if (!button.classList.contains("active")) {
+            button.addEventListener("click", () => {
+                PubSub.publish({
+                    event: "render::startUp",
+                    detail: button.textContent
+                });
+            });
+        }
+    });
+    return btnContainer;
+}
+
+export async function addTeamAndMember () {
+    let teamsInDB = await getFromDB("teams");
+    let usersInDB = await getFromDB("users");
+    
+    let username = document.querySelector("#username").value;
+    let teamName = document.querySelector("#teamName").value;
+    
+    let teamExists = teamsInDB.find(team => team.team === teamName);
+    let userExists = usersInDB.find(user => user.username === username);
+
+    let docDataUser = {
+        username: username,
+        team: teamName,
+    }
+
+    if (userExists === undefined) {
+
+        if (teamExists === undefined) {
+    
+            let docDataTeam = {
+                team: teamName,
+                members: [username],
+                clues: [],
+            }
+    
+            await addDocAddData("teams", teamName, docDataTeam);
+            await addDocAddData("users", username, docDataUser);
+
+        } else {
+
+            await docUpdateArry("teams", teamName, username);
+            await addDocAddData("users", username, docDataUser);
+
+        } 
+
+    }
+
+}

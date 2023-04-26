@@ -1,0 +1,43 @@
+#wrapperPopUp {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 60vh;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: burlywood;
+    border-radius: 20px;
+}
+
+#containerPopUp {
+    height: 90%;
+    width: 90%;
+}
+
+#closeContainer {
+    height: 50px;
+    width: 100%;
+}
+
+#close {
+    background-image: url("/src/lib/icons/close.png");
+    background-position: right;
+    background-size: contain;
+    height: 30px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+#box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+.smallheader {
+    text-align: center;
+    font-size: var(--fontSizeHeader);
+}

@@ -1,0 +1,14 @@
+#container_map {
+    position: relative;
+}
+
+#map { 
+    display: none;
+    height: 90vh; 
+    width: 100vw;
+    z-index: 0;
+}
+
+.leaflet-top {
+    display: none;
+}

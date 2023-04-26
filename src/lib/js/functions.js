@@ -1,5 +1,3 @@
-import { PubSub } from "../../utilities/pubsub";
-
 export const createElement = ( element, addclass, id ) => {
     let elemetTyp = document.createElement(element);
     addClass(addclass, elemetTyp);
@@ -9,13 +7,19 @@ export const createElement = ( element, addclass, id ) => {
 }
 
 export const addClass = (addclass, element) => {
-    addclass === "" || undefined ? false : element.classList.add(addclass) ;
+
+    if (addclass === "" || addclass === undefined ) {
+        return false; 
+    } else {
+        element.classList.add(addclass)
+    }
 }
 
 export const addId = (id, element) => {
-    id === undefined || "" ? false : element.id = id ;
+    if (id === "" || id === undefined ) {
+        return false; 
+    } else {
+        element.id = id ;
+    }
 }
 
-export const selectAll = (elemets) => {
-    return document.querySelectorAll(elemets);
-}

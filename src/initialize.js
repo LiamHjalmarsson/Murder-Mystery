@@ -1,3 +1,4 @@
-import register from "./routes/startUp/page_register.js";
-import login from "./routes/startUp/page_login.js";
-import map from "./routes/map/page_map.js";
+import startUp from "./routes/startUp.js";
+import map from "./routes/map.js";
+import navigation from "./routes/navigation.js";
+import component_popUp from "./lib/components/component_popUp.js";
