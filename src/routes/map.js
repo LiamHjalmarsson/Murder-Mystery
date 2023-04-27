@@ -1,6 +1,7 @@
 import { PubSub } from "../utilities/pubsub.js";
 import { loadBundle, setDoc } from "firebase/firestore";
 import { colRef, docRef, getFromDB } from "../utilities/functions/firebase_functions.js";
+import { createElement } from "../lib/js/functions.js";
 
 export default {}
 
@@ -13,10 +14,18 @@ export default {}
 
 })();
 
-async function render () {
-    document.querySelector("#app").innerHTML = "";
+async function render (data) {
+
+    let app = document.querySelector("#app");
+    app.innerHTML = "";
+
+    let container_map = createElement("div", "", "container_map");
+    app.appendChild(container_map);
+
+    let mapBox = createElement("div", "", "map");
+    container_map.append(mapBox);
     
-    let db_locations = await getFromDB("locations");
+    // let db_locations = await getFromDB("locations");
     
     document.querySelector("#map").style.display = "flex";
 
@@ -29,7 +38,8 @@ async function render () {
     
     document.getElementById('map').style.zIndex = 0;
 
-    addMarkers(map, db_locations);
+    // let db_locations = getLocations();
+    // addMarkers(map, db_locations);
 
     // getLocation(map);
 
@@ -38,6 +48,7 @@ async function render () {
 }
 
 function addMarkers (map, db_locations) {
+
     let pinIcon = L.icon({
         iconUrl: '../../library/pin.png',
         iconSize: [38, 38], // size of the icon
@@ -68,7 +79,8 @@ function addMarkers (map, db_locations) {
 
 }
 
-function getLocation (map) {
+function getLocation (map) {    
+
     navigator.geolocation.watchPosition(success);
 
     let marker, circle, zoomed;
@@ -100,6 +112,11 @@ function getLocation (map) {
         map.setView([latitude, longitude]);
     }
 }
+
+
+
+
+
 
 
 // function getLocation(e) {

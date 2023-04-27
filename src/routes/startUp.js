@@ -1,9 +1,6 @@
 import { PubSub } from "../utilities/pubsub.js";
 import { createElement } from "../lib/js/functions.js";
 import { formLogReg, btnsForm, addTeamAndMember } from "../lib/components/component_startUp.js";
-import { registerPlayer, loginPlayer, unsubAuth } from "../utilities/functions/firebase_auth.js";
-import { getFromDB, addDocAddData, docUpdate, 
-    realTime, realtimeListner, docUpdateArry } from "../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -64,36 +61,16 @@ async function render ( params ) {
         let password = document.querySelector("#password").value;
 
         if (params === "login") {
-            let data;
-
-            let user = await loginPlayer(username, password);
-            
-            // if (data.error) { 
-
-            //     PubSub.publish({
-            //         event: "render::component_PopUp",
-            //         detail: data
-            //     });
-
-            // } else {
-
-                // unsubAuth();
-        
-                realTime("users");
                 PubSub.publish({
                     event: "render::map"
                 });
-            // }
         } else {
-
-            if (await registerPlayer(username, password)) {
-                await addTeamAndMember();
+            await addTeamAndMember();
     
-                PubSub.publish({
-                    event: "render::startUp", 
-                    detail: "login"
-                });
-            }
+            PubSub.publish({
+                event: "render::startUp", 
+                detail: "login"
+            });
 
         }
     });

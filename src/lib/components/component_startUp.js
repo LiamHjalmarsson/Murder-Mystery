@@ -49,13 +49,10 @@ export function btnsForm (type) {
 }
 
 export async function addTeamAndMember () {
-    let teamsInDB = await getFromDB("teams");
     let usersInDB = await getFromDB("users");
     
     let username = document.querySelector("#username").value;
-    let teamName = document.querySelector("#teamName").value;
     
-    let teamExists = teamsInDB.find(team => team.team === teamName);
     let userExists = usersInDB.find(user => user.username === username);
 
     let docDataUser = {
@@ -65,23 +62,7 @@ export async function addTeamAndMember () {
 
     if (userExists === undefined) {
 
-        if (teamExists === undefined) {
-    
-            let docDataTeam = {
-                team: teamName,
-                members: [username],
-                clues: [],
-            }
-    
-            await addDocAddData("teams", teamName, docDataTeam);
-            await addDocAddData("users", username, docDataUser);
-
-        } else {
-
-            await docUpdateArry("teams", teamName, username);
-            await addDocAddData("users", username, docDataUser);
-
-        } 
+        await addDocAddData("users", username, docDataUser);
 
     }
 

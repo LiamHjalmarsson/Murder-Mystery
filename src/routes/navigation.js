@@ -1,6 +1,6 @@
 import { PubSub } from "../utilities/pubsub.js";
 import { createElement } from "../lib/js/functions.js";
-import { logoutPlayer } from "../utilities/functions/firebase_auth.js";
+import { getFromDB } from "../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -12,7 +12,6 @@ export default {}
 })();
 
 function render () {
-
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
 
@@ -51,33 +50,11 @@ function render () {
         button.classList.add("navigationBtn");
         button.textContent = btn.text;
 
-        button.addEventListener("click", (e) => {
-            let btnText = btn.target.innerText;
-
-            console.log(btnText);
+        button.addEventListener("click", async (e) => {
+            
         });
 
         navigationBox.append(button);
     });
 
 } 
-
-
-function buttonsEventHandler (btn) {
-    let btnText = btn.target.innerText;
-
-    switch(btnText) {
-        case "Lös Gåta":
-            console.log("Lös Gå")
-        break;
-        case "Loga ut":
-            console.log("Loga ut")
-        break;
-        case "Väska":
-            console.log("Väska")
-        break;
-        case "Misstänkta":
-            console.log("Misstänkta")
-        break;
-    }
-}
