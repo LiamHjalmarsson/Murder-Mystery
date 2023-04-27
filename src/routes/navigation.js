@@ -6,12 +6,12 @@ export default {}
 
 ;(() => {
     PubSub.subscribe({
-        event: "render::map",
-        listener: render
+        event: "render_map",
+        listener: renderNavigation
     });
 })();
 
-function render () {
+function renderNavigation () {
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
 

@@ -8,13 +8,13 @@ export default {}
 ;(() => {
 
     PubSub.subscribe({
-        event: "render::map",
-        listener: render
+        event: "render_map",
+        listener: render_map
     });
 
 })();
 
-async function render (data) {
+async function render_map (d) {
 
     let app = document.querySelector("#app");
     app.innerHTML = "";

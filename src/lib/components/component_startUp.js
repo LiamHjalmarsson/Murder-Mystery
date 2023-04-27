@@ -23,7 +23,7 @@ export function formLogReg (inputsDetail) {
     return formStartUp;
 }
 
-export function btnsForm (type) {
+export function btnsForm (params) {
     let btnContainer = createElement("div", "", "btnContainer");
     let btnDeatils = ["register", "login"];
 
@@ -32,14 +32,14 @@ export function btnsForm (type) {
         button.textContent = btn;
         btnContainer.append(button);
 
-        if (button.textContent === type) {
+        if (button.textContent === params) {
             button.classList.add("active");
         }
 
         if (!button.classList.contains("active")) {
             button.addEventListener("click", () => {
                 PubSub.publish({
-                    event: "render::startUp",
+                    event: "render_startUp",
                     detail: button.textContent
                 });
             });
@@ -52,12 +52,13 @@ export async function addTeamAndMember () {
     let usersInDB = await getFromDB("users");
     
     let username = document.querySelector("#username").value;
+    let password = document.querySelector("#password").value;
     
     let userExists = usersInDB.find(user => user.username === username);
 
     let docDataUser = {
         username: username,
-        team: teamName,
+        password: password  
     }
 
     if (userExists === undefined) {

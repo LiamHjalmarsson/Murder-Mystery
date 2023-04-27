@@ -10,6 +10,7 @@ body {
 }
 
 button.active {
+    background: var(--focusing);
     border-color: var(--lightHover);
     transition: background 0.4s ease-in, color 0.4s ease-in;
 }

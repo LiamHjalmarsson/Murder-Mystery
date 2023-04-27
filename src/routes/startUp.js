@@ -6,13 +6,13 @@ export default {}
 
 ;(() => {
     PubSub.subscribe({
-        event: "render::startUp",
-        listener: render
+        event: "render_startUp",
+        listener: render_startUp
     });
 })();
 
-async function render ( params ) {
-    
+async function render_startUp ( params ) {
+
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -62,13 +62,13 @@ async function render ( params ) {
 
         if (params === "login") {
                 PubSub.publish({
-                    event: "render::map"
+                    event: "render_map",
                 });
         } else {
             await addTeamAndMember();
     
             PubSub.publish({
-                event: "render::startUp", 
+                event: "render_startUp", 
                 detail: "login"
             });
 

@@ -1,17 +1,16 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../js/functions.js";
-import { logoutPlayer } from "../../utilities/functions/firebase_auth.js";
 
 export default {}
 
 ;(() => {
     PubSub.subscribe({
-        event: "render::component_PopUp",
-        listener: render
+        event: "render_component_popup",
+        listener: render_component_popup
     });
 })();
 
-function render (data) {
+function render_component_popup (data) {
 
     let app = document.querySelector("#app");
 
