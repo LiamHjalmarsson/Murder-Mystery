@@ -41,7 +41,6 @@ export const PubSub = {
 		// Vi får här den listner som matchar eventet text render_startUp och loppar om det finns flera listners / funktioner 
 		// console.log(listeners[event]);
 		listeners[event].forEach((listener) => {
-			console.log(listener, detail);
 			listener(detail); // detta är varje funktion med detail som en parameter / kan vara en sträng eller data av olika typer 
 		});
 	},
