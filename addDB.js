@@ -74,6 +74,8 @@ async function addDB () {
 
         document.querySelector("#value").value = "";
         document.querySelector("#key").value = "";
+
+        console.log(docData);
     });
 
     formStartUp.addEventListener("submit", async (e) => {
