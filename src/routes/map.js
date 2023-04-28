@@ -1,7 +1,6 @@
 import { PubSub } from "../utilities/pubsub.js";
-import { loadBundle, setDoc } from "firebase/firestore";
-import { colRef, docRef, getFromDB } from "../utilities/functions/firebase_functions.js";
 import { createElement } from "../lib/js/functions.js";
+import { registerPlayer } from "../utilities/functions/firebase_auth.js";
 
 export default {}
 
@@ -14,7 +13,10 @@ export default {}
 
 })();
 
-async function render_map (d) {
+async function render_map (data) {
+
+    console.log(data);
+    let { location } = data;
 
     let app = document.querySelector("#app");
     app.innerHTML = "";
@@ -29,7 +31,7 @@ async function render_map (d) {
     
     document.querySelector("#map").style.display = "flex";
 
-    let map = L.map('map').setView([55.6065, 13.0100], 18);
+    let map = L.map('map').setView([location.lat, location.long], 16);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -39,15 +41,15 @@ async function render_map (d) {
     document.getElementById('map').style.zIndex = 0;
 
     // let db_locations = getLocations();
-    // addMarkers(map, db_locations);
+    addMarkers(map, location);
 
     // getLocation(map);
 
     // click to get coordinates 
-    // map.on('click', getLocation);
+    // map.on('click', coordinatesAlert);
 }
 
-function addMarkers (map, db_locations) {
+function addMarkers (map, location) {
 
     let pinIcon = L.icon({
         iconUrl: '../../library/pin.png',
@@ -56,26 +58,8 @@ function addMarkers (map, db_locations) {
         popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
     });
 
-    db_locations.forEach(location => {
-
-        if (location.type === "pin") {
-
-            if (location.view) {
-                L.marker([location.location._lat, location.location._long], { icon: pinIcon })
-                    .addTo(map).bindPopup(location.text);
-            }
-        }
-
-        if (location.type === "search") {
-
-            if (location.view) {
-                L.circle([location.location._lat, location.location._long], {
-                    radius: location.radius
-                }).addTo(map).bindPopup(location.text);
-            }
-        }
-
-    });
+    L.marker([location.lat, location.long], { icon: pinIcon })
+        .addTo(map).bindPopup(location.text);
 
 }
 
@@ -117,11 +101,32 @@ function getLocation (map) {
 
 
 
+        
+    // db_locations.forEach(location => {
+
+    //     if (location.type === "pin") {
+
+    //         if (location.view) {
+    //             L.marker([location.location._lat, location.location._long], { icon: pinIcon })
+    //                 .addTo(map).bindPopup(location.text);
+    //         }
+    //     }
+
+    //     if (location.type === "search") {
+
+    //         if (location.view) {
+    //             L.circle([location.location._lat, location.location._long], {
+    //                 radius: location.radius
+    //             }).addTo(map).bindPopup(location.text);
+    //         }
+    //     }
+
+    // });
 
 
-// function getLocation(e) {
-//     alert("latitude" + e.latlng);
-// }
+function coordinatesAlert(e) {
+    alert("latitude" + e.latlng);
+}
 
 // function getLocation (map) {
 //     if (!navigator.geolocation) {
