@@ -12,6 +12,7 @@ export default {}
 
 function render_component_popup (data) {
 
+    console.log(data);
     let app = document.querySelector("#app");
 
     let wrapperPopUp = createElement("div", "", "wrapperPopUp");
@@ -36,16 +37,31 @@ function displayInformation ( data ) {
     let header = createElement("div", "smallheader", ""); 
     let message = createElement("div", "popUp", ""); 
 
-    if (data.error) {
-        header.textContent = "Error";
-        message.textContent = data.error; 
-    }
-
-    if (data.message) { 
-
-    }
-
     box.append(header, message);
+
+    switch(data) {
+        case "error":
+            header.textContent = "Error";
+            message.textContent = data.error; 
+        break;
+
+        case "wrong":
+            header.textContent = "Ajdå!";
+
+        break;
+
+        case "success":
+            header.textContent = "Grattis";
+
+        break;
+
+        default:
+            header.textContent = "Skriv in kod";
+            let input = createElement("input", "popUp_input", ""); 
+            message.append(input);
+        break;
+    }
+
     return box;
 }
 
