@@ -1,6 +1,6 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../js/functions.js";
-import { getFromDB, addDocAddData, docUpdate, docUpdateArry } from "../../utilities/functions/firebase_functions.js";
+import { getFromDB, addDocAddData } from "../../utilities/functions/firebase_functions.js";
 
 export function formLogReg (inputsDetail) {
     let formStartUp = createElement("form", "", "formStartUp");
@@ -24,6 +24,7 @@ export function formLogReg (inputsDetail) {
 }
 
 export function btnsForm (params) {
+
     let btnContainer = createElement("div", "", "btnContainer");
     let btnDeatils = ["register", "login"];
 
@@ -48,23 +49,31 @@ export function btnsForm (params) {
     return btnContainer;
 }
 
-export async function addTeamAndMember () {
+export async function addUser (user) {
     let usersInDB = await getFromDB("users");
     
     let username = document.querySelector("#username").value;
     let password = document.querySelector("#password").value;
+    // let email = document.querySelector("#email").value;
     
     let userExists = usersInDB.find(user => user.username === username);
 
     let docDataUser = {
+        // email: email,
+        password:password,
         username: username,
-        password: password  
+        clues: [],
+        chapters: [ {
+                chapterOne: false,
+                chapterTwo: false,
+                chapterThree: false,
+            }
+        ],
     }
 
     if (userExists === undefined) {
-
-        await addDocAddData("users", username, docDataUser);
-
+        let user = await addDocAddData("users", docDataUser);
+        return user;
     }
 
 }
