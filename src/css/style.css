@@ -1,8 +1,10 @@
-* {
+*{
     padding: 0px;
     margin: 0px;
     box-sizing: border-box;
     font-size: var(--fontSizeText);
+    font-family: var(--fontText);
+    color: var(--lightGray);
 }
 
 body {

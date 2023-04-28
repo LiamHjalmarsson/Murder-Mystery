@@ -1,7 +1,6 @@
 import { PubSub } from "../utilities/pubsub.js";
 import { createElement } from "../lib/js/functions.js";
-import { getFromDB, docUpdate, addDocAddData, docUpdateArry, realTime } from "../utilities/functions/firebase_functions.js";
-import { auth } from "../utilities/functions/firebase_auth.js";
+import { getFromDB, addDocAddData, realTime } from "../utilities/functions/firebase_functions.js";
 export default {}
 
 ;(() => {
@@ -15,12 +14,14 @@ function renderNavigation () {
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
 
-    let topNavigation = createElement("div", "", "topNavigation");
-
     let navigationBox = createElement("div", "", "navigationBox");
-    container_map.insertBefore(topNavigation, map);
+
+    let topMenu = renderTopMenu();
+    container_map.insertBefore(topMenu, map);
     container_map.append(navigationBox);
 
+    countDown();
+    
     let buttons = [
         {
             text: "Lös Gåta",
@@ -57,6 +58,22 @@ function renderNavigation () {
 
 } 
 
+function renderTopMenu () {
+    let topNavigation = createElement("div", "", "topNavigation");
+
+    topNavigation.innerHTML = `
+        <div id="navigationContainer">
+            <div id="guessMurderBox">
+                <button id="guessMurder" class="topNav"> Gissa mördaren </button>
+            </div>
+            <div id="timeContainer"> 
+                <h3 id="timeLeft"> </h3>
+            </div>
+        </div>
+    `;
+
+    return topNavigation;
+}
 
 async function diffrentBtns (e) {
     e.preventDefault();
@@ -123,4 +140,26 @@ async function diffrentBtns (e) {
         break;
     }
 
+}
+
+function countDown() {
+    let remainingTime = 4 * 60 * 60; // 4 hours in seconds
+    
+    const intervalId = setInterval(() => {
+        if (remainingTime > 0) {
+            console.log(remainingTime);
+            remainingTime--;
+
+            let remainingHours = Math.floor(remainingTime / 3600);
+            let remainingMinutes = Math.floor((remainingTime % 3600) / 60);
+            let remainingSeconds = remainingTime % 60;
+
+            if (document.querySelector("#timeLeft")) {
+                document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${remainingHours}: ${remainingMinutes}m : ${remainingSeconds}s`
+            }
+        } else {
+            console.log("Countdown finished!");
+            clearInterval(intervalId);
+        }
+    }, 1000);
 }

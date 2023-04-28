@@ -1,3 +1,38 @@
+#topNavigation {
+    height: 10vh;
+}
+
+#navigationContainer {
+    background-color: var(--darkBrown);
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#navigationContainer > div {
+    width: 50%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.topNav {
+    background-color: var(--lightBrown);
+    border: none;
+    height: 50px;
+    width: 100px;
+    border-radius: 5px;
+    font-size: var(--fontSizeText);
+    cursor: pointer; 
+}
+
+#timeLeft {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #navigationBox {
     top: 0;
     left: 0;
@@ -9,7 +44,7 @@
     position: absolute;
     width: 100px;
     height: 50px;
-    background-color: #4CAF50;
+    background-color: var(--lightBrown);
     color: white;
     border: none;
     border-radius: 5px;
@@ -17,6 +52,7 @@
     cursor: pointer;
 }
 
+/* Postionening for the four buttons */
 #topLeft {
     top: 100px;
     left: 10px;
@@ -35,8 +71,4 @@
 #bottomRight {
     bottom: 60px;
     right: 10px;
-}
-
-#topNavigation {
-    height: 10vh;
 }

@@ -3,7 +3,7 @@ import { PubSub } from "../utilities/pubsub.js";
 import { createElement } from "../lib/js/functions.js";
 import { formLogReg, btnsForm, addUser } from "../lib/components/component_startUp.js";
 import { registerPlayer } from "../utilities/functions/firebase_auth.js";
-import { getUserDoc, checkLoginStatus } from "../utilities/functions/firebase_functions.js";
+import { getUserDoc, checkLoginStatus, getFromDB } from "../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -117,22 +117,26 @@ async function render_startUp ( params ) {
 
                 console.log(userID);
                 const user = {
-                    userId: userID,
+                    userId: userID.id,
                     password: password,
                     username: username
                 };
                 
                 localStorage.setItem("user", JSON.stringify(user));
 
-                PubSub.publish({
-                    event: "render_map",
-                    detail: {
-                        location: {
-                            lat: 55.608627,
-                            long: 13.005227
-                        }
-                    }
-                });
+
+                
+                let s = await getFromDB("storyTelling", userID.data.chapters[0])
+                console.log(s);
+                // PubSub.publish({
+                //     event: "render_map",
+                //     detail: {
+                //         location: {
+                //             lat: 55.608627,
+                //             long: 13.005227
+                //         }
+                //     }
+                // });
 
             }
 
