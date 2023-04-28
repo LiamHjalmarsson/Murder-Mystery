@@ -2,8 +2,6 @@ import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
     query, orderBy, updateDoc, arrayUnion, where } from "firebase/firestore";
 
-import { auth } from "./firebase_auth.js";
-
 export const db = getFirestore(App);
 
 // get the correct users id when login in 
@@ -17,8 +15,8 @@ export const getUserDoc = async (username, password) => {
     } else if (result.size > 1) {
         return { response: "error", error : "Multiple matching documents found" };
     } else {
-        console.log(result.docs.id);
-        return result.docs[0].id
+        // console.log(result.docs[0].id);
+        return { id: result.docs[0].id, data: result.docs[0].data() }
     }
 };
 
