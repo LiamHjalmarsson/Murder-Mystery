@@ -12,7 +12,7 @@ export default {}
 
 function render_component_popup (data) {
 
-    console.log(data);
+    console.log("data");
     let app = document.querySelector("#app");
 
     let wrapperPopUp = createElement("div", "", "wrapperPopUp");
@@ -39,7 +39,9 @@ function displayInformation ( data ) {
 
     box.append(header, message);
 
-    switch(data) {
+    console.log(data.response);
+
+    switch(data.response) {
         case "error":
             header.textContent = "Error";
             message.textContent = data.error; 

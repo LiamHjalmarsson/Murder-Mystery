@@ -116,9 +116,13 @@ async function render_startUp ( params ) {
             } else {
 
                 console.log(userID);
-                localStorage.setItem("userId", userID);
-                localStorage.setItem("password", password);
-                localStorage.setItem("username", username);
+                const user = {
+                    userId: userID,
+                    password: password,
+                    username: username
+                };
+                
+                localStorage.setItem("user", JSON.stringify(user));
 
                 PubSub.publish({
                     event: "render_map",

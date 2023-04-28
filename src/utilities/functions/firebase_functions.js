@@ -13,10 +13,11 @@ export const getUserDoc = async (username, password) => {
     let result = await getDocs(queryRef);
 
     if (result.empty) {
-        return { error : "No matching document found" } ;
+        return { response: "error", error : "No matching document found" } ;
     } else if (result.size > 1) {
-        return { error : "Multiple matching documents found" };
+        return { response: "error", error : "Multiple matching documents found" };
     } else {
+        console.log(result.docs.id);
         return result.docs[0].id
     }
 };
@@ -137,16 +138,15 @@ export const realTime = async (colName, id) => {
 
 // Function to check if a user is logged in and authenticate them if necessary
 export async function checkLoginStatus() {
-    const storedUserId = localStorage.getItem("userId");
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
 
-    if (storedUserId) {
+    if (storedUser) {
         // Authenticate the user using the stored user ID
-        const isAuthenticated = await getUserDoc(username, password)
+        const isAuthenticated = await getUserDoc(storedUser.username, storedUser.password)
 
         return { detail: true, data: isAuthenticated, sos: "sos" }
-        if (!isAuthenticated) {
+        
+        if (!storedUser) {
             // If the stored user ID is invalid, remove it from local storage
             localStorage.removeItem("userId");
             return { error: "failed to authenticate" }

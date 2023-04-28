@@ -67,7 +67,12 @@ async function diffrentBtns (e) {
         break;
             
         case "Brevlåda":
-            docUpdateArry("storyTelling", "chapterOne", "myArrayField", "xxx")
+            // docUpdateArry("storyTelling", "chapterOne", "myArrayField", "xxx")
+            localStorage.clear();
+            PubSub.publish({
+                event: "render_startUp",
+                detail: "login"
+            });
         break;
 
         case "Väska":
@@ -89,7 +94,6 @@ async function diffrentBtns (e) {
 
             containerPopUp.append(close, text);
 
-            console.log(db)
             close.addEventListener("click", () => {
                 counter++
                 if (counter < db.partsChapter.length) {
