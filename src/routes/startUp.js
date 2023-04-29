@@ -8,10 +8,12 @@ import { getUserDoc, checkLoginStatus, getFromDB } from "../utilities/functions/
 export default {}
 
 ;(() => {
+
     PubSub.subscribe({
         event: "render_startUp",
         listener: render_startUp
     });
+
 })();
 
 async function render_startUp ( params ) {
@@ -115,28 +117,31 @@ async function render_startUp ( params ) {
 
             } else {
 
-                console.log(userID);
                 const user = {
                     userId: userID.id,
                     password: password,
                     username: username
                 };
-                
+
                 localStorage.setItem("user", JSON.stringify(user));
 
+                let getChapter = userID.data.chapters.filter(chapter => chapter.onGoing);
+                let data = await getFromDB("storyTelling", getChapter[0].chapter);
 
-                
-                let s = await getFromDB("storyTelling", userID.data.chapters[0])
-                console.log(s);
-                // PubSub.publish({
-                //     event: "render_map",
-                //     detail: {
-                //         location: {
-                //             lat: 55.608627,
-                //             long: 13.005227
-                //         }
-                //     }
-                // });
+                console.log(data);
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        location: {
+                            lat: 55.608627,
+                            long: 13.005227
+                        },
+                        data: {
+                            chapters: data.data, 
+                            user: userID
+                        }
+                    }
+                });
 
             }
 

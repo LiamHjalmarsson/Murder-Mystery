@@ -63,11 +63,17 @@ export async function addUser (user) {
         password:password,
         username: username,
         clues: [],
-        chapters: [ {
-                chapterOne: false,
-                chapterTwo: false,
-                chapterThree: false,
-            }
+        chapters: [
+            {
+                completed: false,
+                onGoing: true,
+                chapter: "chapterOne"
+            }, 
+            {
+                completed: false,
+                onGoing: false,
+                chapter: "chapterTwo"
+            }, 
         ],
     }
 

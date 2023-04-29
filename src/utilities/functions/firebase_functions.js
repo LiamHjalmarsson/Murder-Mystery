@@ -78,9 +78,10 @@ export const addDocAddData = async (colName, docData, docId) => {
 export const docUpdate = async (colName, docId, upData) => {
     let colRef = collection(db, colName);
     let refDoc = doc(colRef, docId);
-    await updateDoc(refDoc, upData);
+    let update = await updateDoc(refDoc, upData);
 
-    // how to call await docUpdate("users", "123456", { username: "new user" } );
+    return update;
+    // how to call await docUpdate("users", "123456", { name: "new user" } );
 }
 
 // Used to update arrays in documents takes 4 parameters the collection name, the document 
@@ -105,6 +106,8 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
 
 }
 
+
+// Används inte för tillfället kommer kanseke inte användas 
 // updaterar document om de ändras lämna om behövs 
 export const realTime = async (colName, id) => {
     let colRef = collection(db, colName);
@@ -114,7 +117,7 @@ export const realTime = async (colName, id) => {
         let docRef = doc(colRef, id);
         onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
-                console.log({ ...docSnap.data(), id: docSnap.id });
+                console.log("data", { ...docSnap.data(), id: docSnap.id });
                 isUpdating = true;
             } else {
                 console.log({ error: "No matching document found" });
@@ -126,11 +129,10 @@ export const realTime = async (colName, id) => {
             snapshot.docs.forEach((doc) => {
                 array.push({ ...doc.data(), id: doc.id});
             });
-            console.log(array);
+            console.log("array", array);
             isUpdating = true;
         });
     }
-
     return isUpdating;
 }
 

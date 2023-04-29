@@ -36,4 +36,6 @@
 
     /* Borders & gap */
     --gap: 20px;
+
+    --btnRadius: 10px;
 }

@@ -21,16 +21,10 @@
     background-color: var(--lightBrown);
     border: none;
     height: 50px;
-    width: 100px;
+    width: 150px;
     border-radius: 5px;
     font-size: var(--fontSizeText);
     cursor: pointer; 
-}
-
-#timeLeft {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 #navigationBox {
@@ -43,7 +37,7 @@
 .navigationBtn {
     position: absolute;
     width: 100px;
-    height: 50px;
+    padding: 7px;
     background-color: var(--lightBrown);
     color: white;
     border: none;
@@ -54,12 +48,12 @@
 
 /* Postionening for the four buttons */
 #topLeft {
-    top: 100px;
+    top: 120px;
     left: 10px;
 }
 
 #topRight {
-    top: 100px;
+    top: 120px;
     right: 10px;
 }
 
@@ -71,4 +65,16 @@
 #bottomRight {
     bottom: 60px;
     right: 10px;
+}
+
+#iconNav {
+    background-position: center;
+    background-size: contain;
+    height: 30px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.infoNavBtn{
+    text-align: center;
 }

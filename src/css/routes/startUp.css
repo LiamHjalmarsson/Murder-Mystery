@@ -37,7 +37,7 @@
     width: 100%;
     height: 100%;
     border: 0.15rem solid var(--borderLight);
-    border-radius: 0.5rem;
+    border-radius: var(--btnRadius);
     outline: none;
     padding: 1.25rem;
     background: none;
@@ -82,7 +82,7 @@
     outline: none;
     background: none;
     border: 0.15rem solid var(--borderLight);
-    border-radius: 0.5rem;
+    border-radius: var(--btnRadius);
     cursor: pointer;
     padding: 0.8rem;
 

@@ -4,13 +4,21 @@ import { getFromDB, addDocAddData, realTime } from "../utilities/functions/fireb
 export default {}
 
 ;(() => {
+    
     PubSub.subscribe({
         event: "render_map",
         listener: renderNavigation
     });
+
+    PubSub.subscribe({
+        event: "startCountDown",
+        listener: countDown
+    });
+
 })();
 
-function renderNavigation () {
+function renderNavigation (res) {
+
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
 
@@ -20,40 +28,45 @@ function renderNavigation () {
     container_map.insertBefore(topMenu, map);
     container_map.append(navigationBox);
 
-    countDown();
-    
     let buttons = [
         {
             text: "Lös Gåta",
             id: "topLeft",
-            icon: "path...",
+            icon: "../../src/lib/icons/search.png",
         },
         {
             text: "Brevlåda",
             id: "topRight",
-            icon: "path...",
+            icon: "../../src/lib/icons/letter.png",
         },
         {
             text: "Väska",
             id: "bottomLeft",
-            icon: "path...",
+            icon: "../../src/lib/icons/backpack.png",
         },
         {
             text: "Misstänkta ",
             id: "bottomRight",
-            icon: "path...",
+            icon: "../../src/lib/icons/spyware.png",
         }
     ];
 
     buttons.forEach(btn => {
-        let button = createElement("button", "navigationBtn", btn.id);
+        let buttonBox = createElement("div", "navigationBtn", btn.id);
 
-        button.classList.add("navigationBtn");
+        let iconsDiv = createElement("div", "", "iconNav");
+        iconsDiv.style.backgroundImage = `url(${btn.icon})`;
+    
+        let button = createElement("div", "infoNavBtn");
+        
         button.textContent = btn.text;
-
-        button.addEventListener("click", diffrentBtns);
-
-        navigationBox.append(button);
+        
+        buttonBox.addEventListener("click", () => {
+            diffrentBtns(btn.text, data);
+        });
+        
+        buttonBox.append(iconsDiv, button);
+        navigationBox.append(buttonBox);
     });
 
 } 
@@ -75,12 +88,12 @@ function renderTopMenu () {
     return topNavigation;
 }
 
-async function diffrentBtns (e) {
-    e.preventDefault();
+async function diffrentBtns (e, data) {
 
-    switch (e.target.innerText) {
+    console.log(data);
+    switch (e) {
         case "Lös Gåta":
-            realTime("storyTelling", "chapterOne")
+            realTime("storyTelling", "chapterOne");
         break;
             
         case "Brevlåda":
@@ -143,11 +156,10 @@ async function diffrentBtns (e) {
 }
 
 function countDown() {
-    let remainingTime = 4 * 60 * 60; // 4 hours in seconds
+    let remainingTime = 4 * 60 * 60; 
     
     const intervalId = setInterval(() => {
         if (remainingTime > 0) {
-            console.log(remainingTime);
             remainingTime--;
 
             let remainingHours = Math.floor(remainingTime / 3600);

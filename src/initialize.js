@@ -4,6 +4,8 @@ import map from "./routes/map.js";
 import navigation from "./routes/navigation.js";
 import component_popup from "./lib/components/component_popup.js";
 
+import test from "./routes/testFirebase.js";
+
 
 // left to do ROUTES
 import bag from "./routes/bag.js";
