@@ -81,11 +81,35 @@ export const docUpdate = async (colName, docId, upData) => {
     let update = await updateDoc(refDoc, upData);
 
     return update;
-    // how to call await docUpdate("users", "123456", { name: "new user" } );
 }
 
-// Used to update arrays in documents takes 4 parameters the collection name, the document 
-// id, the name of array and the data to add
+// Update a array of objects choose collection, doc, what array, the key to change value and the value 
+export const updateArrayMap = async (colName, docName, arr, key, value) => {
+    let colRef = collection(db, colName);
+    let documentRef = doc(colRef, docName);
+  
+    let documentSnapshot = await getDoc(documentRef);
+  
+    let updatedArr = documentSnapshot.data()[arr].map((item, index) => {
+        if (index === 1) {
+            return {
+                ...item,
+                [key]: value,
+            };
+        }
+        
+        return item;
+    });
+
+    let updated = await setDoc(documentRef, {
+        ...documentSnapshot.data(),
+        [arr]: updatedArr,
+    });
+  
+    return updated;
+};
+
+// Used to update arrays in documents takes 4 parameters the collection name, the document id, the name of array and the data to add not 
 export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
     let colRef = collection(db, colName);
     let refDoc = doc(colRef, docId);
@@ -105,6 +129,35 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
     }
 
 }
+
+// Function to check if a user is logged in and authenticate them if necessary
+export async function checkLoginStatus() {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser) {
+        // Authenticate the user using the stored user ID
+        const isAuthenticated = await getUserDoc(storedUser.username, storedUser.password)
+        
+        if (!storedUser) {
+            // If the stored user ID is invalid, remove it from local storage
+            localStorage.removeItem("userId");
+            return { error: "failed to authenticate" }
+        }
+
+        return { detail: true, data: isAuthenticated, sos: "sos" }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Används inte för tillfället kommer kanseke inte användas 
@@ -134,22 +187,4 @@ export const realTime = async (colName, id) => {
         });
     }
     return isUpdating;
-}
-
-// Function to check if a user is logged in and authenticate them if necessary
-export async function checkLoginStatus() {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (storedUser) {
-        // Authenticate the user using the stored user ID
-        const isAuthenticated = await getUserDoc(storedUser.username, storedUser.password)
-
-        return { detail: true, data: isAuthenticated, sos: "sos" }
-        
-        if (!storedUser) {
-            // If the stored user ID is invalid, remove it from local storage
-            localStorage.removeItem("userId");
-            return { error: "failed to authenticate" }
-        }
-    }
 }

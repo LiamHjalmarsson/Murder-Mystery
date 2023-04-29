@@ -1,6 +1,8 @@
 
 import { PubSub } from "../utilities/pubsub.js";
-import { realTime, getUserDoc, addDocAddData, getFromDB, docUpdate, docUpdateArry } from "../utilities/functions/firebase_functions.js";
+import { updateArrayMap, realTime, getUserDoc, 
+    addDocAddData, getFromDB, docUpdate,
+    docUpdateArry } from "../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -30,7 +32,13 @@ async function test () {
     // let user = await addDocAddData("new", newData, "try");
     // console.log("user", user);
 
-    // let updateValue = { key : "värde"} 
-    // let update = await docUpdate("new", "new", updateValue);
+    // let updateValue = { hello: true }
+    // let update = await docUpdate("users", " ", updateValue);
     // console.log(update);
+
+    // let updateArray = docUpdateArry("users", "LYTRzWbGVlNmU9w8DFOv", "chapters", "hello");
+    // console.log(updateArray);
+
+    // let updateArrayMap = await updateArrayMap('users', 'LYTRzWbGVlNmU9w8DFOv', 'chapters', 'xx', true);
+    // console.log(updateArrayMap);
 }
