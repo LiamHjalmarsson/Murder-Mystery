@@ -15,7 +15,6 @@ export const getUserDoc = async (username, password) => {
     } else if (result.size > 1) {
         return { response: "error", error : "Multiple matching documents found" };
     } else {
-        // console.log(result.docs[0].id);
         return { id: result.docs[0].id, data: result.docs[0].data() }
     }
 };
@@ -78,36 +77,11 @@ export const addDocAddData = async (colName, docData, docId) => {
 export const docUpdate = async (colName, docId, upData) => {
     let colRef = collection(db, colName);
     let refDoc = doc(colRef, docId);
+
     let update = await updateDoc(refDoc, upData);
 
     return update;
 }
-
-// Update a array of objects choose collection, doc, what array, the key to change value and the value 
-export const updateArrayMap = async (colName, docName, arr, key, value) => {
-    let colRef = collection(db, colName);
-    let documentRef = doc(colRef, docName);
-  
-    let documentSnapshot = await getDoc(documentRef);
-  
-    let updatedArr = documentSnapshot.data()[arr].map((item, index) => {
-        if (index === 1) {
-            return {
-                ...item,
-                [key]: value,
-            };
-        }
-        
-        return item;
-    });
-
-    let updated = await setDoc(documentRef, {
-        ...documentSnapshot.data(),
-        [arr]: updatedArr,
-    });
-  
-    return updated;
-};
 
 // Used to update arrays in documents takes 4 parameters the collection name, the document id, the name of array and the data to add not 
 export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
@@ -116,6 +90,7 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
 
     let dataToUpdate = { [arrayField]: arrayUnion(newValue) };
 
+    console.log(dataToUpdate);
     try {
         await updateDoc(refDoc, dataToUpdate);
 
@@ -130,8 +105,46 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
 
 }
 
+// Update a array of objects choose collection, doc, what array, the key to change value and the value 
+export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
+    const colRef = collection(db, colName);
+    const docRef = doc(colRef, docId);
+
+    try {
+        const docSnapshot = await getDoc(docRef);
+    
+        const arraryToUpdate = docSnapshot.data()[arr].map((item, i) => {
+
+            console.log(item, i);
+            if (i === index) {
+            return {
+                ...item,
+                ...updateObj
+            };
+            }
+            return item;
+        });
+    
+        await updateDoc(docRef, {
+            [arr]: arraryToUpdate
+        });
+
+        console.log(`Document with ID ${docId} successfully updated.`);
+        return arraryToUpdate;
+    } catch (error) {
+        console.error(`Error updating document with ID ${docId}:`, error);
+        return false;
+    }
+};
+
+
+
+
+
+
 // Function to check if a user is logged in and authenticate them if necessary
 export async function checkLoginStatus() {
+
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
     if (storedUser) {
@@ -144,7 +157,7 @@ export async function checkLoginStatus() {
             return { error: "failed to authenticate" }
         }
 
-        return { detail: true, data: isAuthenticated, sos: "sos" }
+        return { detail: true, data: isAuthenticated }
     }
 }
 

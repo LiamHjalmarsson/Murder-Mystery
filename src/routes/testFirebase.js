@@ -16,7 +16,7 @@ export default {}
 })();
 
 async function test () {
-    // let data = await getUserDoc("123456", "123456");
+    // let data = await getUserDoc("1", "123456");
     // console.log(data);
 
     // let dataDB = await getFromDB("storyTelling");
@@ -25,20 +25,21 @@ async function test () {
 
     // let newData = {
     //     username: "testUser",
-    //     locations: [1, 2, 3]
+    //     locations: [1, 2, 3],
+    //     password: 123456
     // }
     
-    // // let user = await addDocAddData("new", newData);
+    // let user = await addDocAddData("new", newData);
     // let user = await addDocAddData("new", newData, "try");
     // console.log("user", user);
 
-    // let updateValue = { hello: true }
-    // let update = await docUpdate("users", " ", updateValue);
+    // let updateValue = { hello: false }
+    // let update = await docUpdate("new", "try", updateValue);
     // console.log(update);
 
-    // let updateArray = docUpdateArry("users", "LYTRzWbGVlNmU9w8DFOv", "chapters", "hello");
+    // let updateArray = docUpdateArry("users", "LYTRzWbGVlNmU9w8DFOv", "chapters", { onGoing: true } );
     // console.log(updateArray);
 
-    // let updateArrayMap = await updateArrayMap('users', 'LYTRzWbGVlNmU9w8DFOv', 'chapters', 'xx', true);
-    // console.log(updateArrayMap);
+    let updateArrayMaps = await updateArrayMap('users', 'LYTRzWbGVlNmU9w8DFOv', 'chapters', 5, { onGoing: false });
+    console.log(updateArrayMaps);
 }
