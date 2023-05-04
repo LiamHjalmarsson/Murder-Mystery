@@ -12,3 +12,20 @@
 .leaflet-top {
     display: none;
 }
+
+.leaflet-popup-content-wrapper{
+    width: 150px;
+    background-color: var(--Darkbackground);
+}
+
+.leaflet-popup-tip {
+    background-color: var(--Darkbackground);
+}
+
+.leaflet-popup-content {
+    text-align: center;
+}
+
+.leaflet-popup-close-button > span {
+    font-size: 28px;
+}

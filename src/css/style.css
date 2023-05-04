@@ -11,6 +11,26 @@ body {
     background-color: var(--Darkbackground);
 }
 
+button {
+    position: relative;
+    color: var(--Text);
+    outline: none;
+    background: none;
+    border: 0.15rem solid var(--borderLight);
+    border-radius: var(--btnRadius);
+    cursor: pointer;
+
+    width: 100%;
+    
+    padding: 0.8rem;
+
+    transition: border-color 0.4s ease-in;
+}
+
+button:hover {
+    border-color: var(--lightHover);
+}
+
 button.active {
     background: var(--focusing);
     border-color: var(--lightHover);

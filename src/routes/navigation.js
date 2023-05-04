@@ -6,69 +6,32 @@ export default {}
 ;(() => {
     
     PubSub.subscribe({
-        event: "render_map",
+        event: "render_navigation",
         listener: renderNavigation
     });
 
     PubSub.subscribe({
-        event: "startCountDown",
+        event: "render_counDown",
         listener: countDown
     });
 
 })();
 
-function renderNavigation (res) {
+let intervalId;
 
+function renderNavigation ( response ) {
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
 
-    let navigationBox = createElement("div", "", "navigationBox");
+    container_map.insertBefore(renderTopMenu(), map);
+    container_map.append(render_buttonsNav(response)); 
 
-    let topMenu = renderTopMenu();
-    container_map.insertBefore(topMenu, map);
-    container_map.append(navigationBox);
-
-    let buttons = [
-        {
-            text: "Lös Gåta",
-            id: "topLeft",
-            icon: "../../src/lib/icons/search.png",
-        },
-        {
-            text: "Brevlåda",
-            id: "topRight",
-            icon: "../../src/lib/icons/letter.png",
-        },
-        {
-            text: "Väska",
-            id: "bottomLeft",
-            icon: "../../src/lib/icons/backpack.png",
-        },
-        {
-            text: "Misstänkta ",
-            id: "bottomRight",
-            icon: "../../src/lib/icons/spyware.png",
-        }
-    ];
-
-    buttons.forEach(btn => {
-        let buttonBox = createElement("div", "navigationBtn", btn.id);
-
-        let iconsDiv = createElement("div", "", "iconNav");
-        iconsDiv.style.backgroundImage = `url(${btn.icon})`;
-    
-        let button = createElement("div", "infoNavBtn");
-        
-        button.textContent = btn.text;
-        
-        buttonBox.addEventListener("click", () => {
-            diffrentBtns(btn.text, data);
+    document.querySelector("#guessMurder").addEventListener("click", () => {
+        PubSub.publish({
+            event: "render_guess_murder",
         });
-        
-        buttonBox.append(iconsDiv, button);
-        navigationBox.append(buttonBox);
+    
     });
-
 } 
 
 function renderTopMenu () {
@@ -88,68 +51,102 @@ function renderTopMenu () {
     return topNavigation;
 }
 
-async function diffrentBtns (e, data) {
+function render_buttonsNav (response) {
 
-    console.log(data);
-    switch (e) {
+    let navigationBox = createElement("div", "", "navigationBox");
+
+    let buttons = [
+        {
+            text: "Lös Gåta",
+            id: "topLeft",
+            icon: "../../src/lib/icons/search.png",
+        },
+        {
+            text: "Loga Ut",
+            id: "topRight",
+            icon: "../../src/lib/icons/letter.png",
+        },
+        {
+            text: "Väska",
+            id: "bottomLeft",
+            icon: "../../src/lib/icons/backpack.png",
+        },
+        {
+            text: "Misstänkta",
+            id: "bottomRight",
+            icon: "../../src/lib/icons/spyware.png",
+        }
+    ];
+
+    buttons.forEach(btn => {
+        let buttonBox = createElement("div", "navigationBtn", btn.id);
+
+        let iconsDiv = createElement("div", "", "iconNav");
+        iconsDiv.style.backgroundImage = `url(${btn.icon})`;
+    
+        let button = createElement("div", "infoNavBtn");
+        button.textContent = btn.text;
+        
+        buttonBox.addEventListener("click", () => {
+            diffrentBtns(btn.text, response);
+        });
+        
+        buttonBox.append(iconsDiv, button);
+        navigationBox.append(buttonBox);
+    });
+
+    return navigationBox;
+}
+
+async function diffrentBtns (btn, { response } ) {
+    let { data, storys } = response;
+
+    switch (btn) {
         case "Lös Gåta":
-            realTime("storyTelling", "chapterOne");
-        break;
             
-        case "Brevlåda":
-            // docUpdateArry("storyTelling", "chapterOne", "myArrayField", "xxx")
+            PubSub.publish({
+                event: "render_component_popup",
+                detail: {
+                    params: "",  
+                    response: {
+                        data: data,
+                        storys: storys
+                    }
+                }
+            });
+
+        break;
+        
+        case "Loga Ut":
+
+            stopCountdown();
             localStorage.clear();
             PubSub.publish({
                 event: "render_startUp",
                 detail: "login"
             });
+
         break;
 
         case "Väska":
-            let db = await getFromDB("storyTelling", "chapterOne");
 
-            let counter = 0;
-            let app = document.querySelector("#app");
-
-            let wrapperPopUp = createElement("div", "", "wrapperPopUp");
-            app.appendChild(wrapperPopUp);
-        
-            let containerPopUp = createElement("div", "", "containerPopUp"); 
-        
-            wrapperPopUp.append(containerPopUp);
-        
-            let close = createElement("div", "", "close");
-            let text = createElement("div", "", "text");
-            text.innerHTML = db.partsChapter[counter];
-
-            containerPopUp.append(close, text);
-
-            close.addEventListener("click", () => {
-                counter++
-                if (counter < db.partsChapter.length) {
-                    text.innerHTML = db.partsChapter[counter];
-                } else {
-                    let btn = createElement("button", "", "");
-                    btn.textContent = "next"
-                    containerPopUp.append(btn)
-                    btn.addEventListener("click", () => {
-                        PubSub.publish({
-                            event: "render_map",
-                            detail: {
-                                location: {
-                                    lat: db.locationCharacter._lat,
-                                    long: db.locationCharacter._long,
-                                }, 
-                            }
-                        })
-                    })
+            PubSub.publish({
+                event: "render_bag",
+                detail: {
+                    response: {
+                        data: data,
+                    }
                 }
             });
-        
+
         break;
 
         case "Misstänkta":
-            addDocAddData("xxx", { hello: 1 }, "hello");
+
+            PubSub.publish({
+                event: "render_suspects",
+            });
+        
         break;
     }
 
@@ -158,7 +155,7 @@ async function diffrentBtns (e, data) {
 function countDown() {
     let remainingTime = 4 * 60 * 60; 
     
-    const intervalId = setInterval(() => {
+    intervalId = setInterval(() => {
         if (remainingTime > 0) {
             remainingTime--;
 
@@ -170,8 +167,58 @@ function countDown() {
                 document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${remainingHours}: ${remainingMinutes}m : ${remainingSeconds}s`
             }
         } else {
-            console.log("Countdown finished!");
             clearInterval(intervalId);
         }
     }, 1000);
+
 }
+
+function stopCountdown() {
+    clearInterval(intervalId);
+}
+
+
+
+
+
+
+
+
+
+// talk 
+// let app = document.querySelector("#app");
+
+// let wrapperPopUp = createElement("div", "", "wrapperPopUp");
+// app.appendChild(wrapperPopUp);
+
+// let containerPopUp = createElement("div", "", "containerPopUp"); 
+
+// wrapperPopUp.append(containerPopUp);
+
+// let close = createElement("div", "", "close");
+// let text = createElement("div", "", "text");
+// text.innerHTML = db.partsChapter[counter];
+
+// containerPopUp.append(close, text);
+
+// close.addEventListener("click", () => {
+//     counter++
+//     if (counter < db.partsChapter.length) {
+//         text.innerHTML = db.partsChapter[counter];
+//     } else {
+//         let btn = createElement("button", "", "");
+//         btn.textContent = "next"
+//         containerPopUp.append(btn)
+//         btn.addEventListener("click", () => {
+//             PubSub.publish({
+//                 event: "render_map",
+//                 detail: {
+//                     location: {
+//                         lat: db.locationCharacter._lat,
+//                         long: db.locationCharacter._long,
+//                     }, 
+//                 }
+//             })
+//         })
+//     }
+// });

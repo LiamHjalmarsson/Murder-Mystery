@@ -19,12 +19,10 @@ export function formLogReg (inputsDetail) {
         div.append(input, label);
         formStartUp.appendChild(div);
     });
-
     return formStartUp;
 }
 
 export function btnsForm (params) {
-
     let btnContainer = createElement("div", "", "btnContainer");
     let btnDeatils = ["register", "login"];
 
@@ -50,36 +48,82 @@ export function btnsForm (params) {
 }
 
 export async function addUser (user) {
-    let usersInDB = await getFromDB("users");
+    let usersInDB = await getFromDB("users"); // kommer åt alla användare 
     
     let username = document.querySelector("#username").value;
     let password = document.querySelector("#password").value;
-    // let email = document.querySelector("#email").value;
     
-    let userExists = usersInDB.find(user => user.username === username);
+    let userExists = usersInDB.find(user => user.username === username); // kontroll om användarnamnt finns 
 
+    // object datan som ska läggas till 
     let docDataUser = {
-        // email: email,
-        password:password,
+        password: password,
         username: username,
         clues: [],
+        charaters: [],
         chapters: [
             {
+                chapter: 1,
                 completed: false,
                 onGoing: true,
-                chapter: "chapterOne"
-            }, 
-            {
-                completed: false,
-                onGoing: false,
-                chapter: "chapterTwo"
+                searchOnGoing   : false,
+                searchDone: false,
             }, 
         ],
     }
 
     if (userExists === undefined) {
-        let user = await addDocAddData("users", docDataUser);
+        let user = await addDocAddData("users", docDataUser); // lägger till användaren i db 
         return user;
+    } else {
+        console.log("error user exists in db", userExists);
     }
 
 }
+
+
+
+
+// {
+            //     chapter: "chapterOne",
+            //     completed: false,
+            //     onGoing: true,
+            //     searchArea: false,
+            //     searchDone: false,
+            // }, 
+            // {
+            //     chapter: "chapterTwo",
+            // }, 
+            // {
+            //     chapter: "chapterThree",
+            // }, 
+            // {
+            //     chapter: "chapterFour",
+            // }, 
+            // {
+            //     chapter: "chapterFive",
+            // }, 
+            // {
+            //     chapter: "chapterSix",
+            // }, 
+            // {
+            //     chapter: "chapterSeven",
+            // }, 
+            // {
+            //     chapter: "chapterEight",
+            // }, 
+            // {
+            //     chapter: "chapterNine",
+            // }, 
+            // {
+            //     chapter: "chapterTen",
+            // }, 
+            // {
+            //     chapter: "chapterEleven",
+            // }, 
+            // {
+            //     chapter: "chapterTwelve",
+            // }, 
+            // {
+            //     chapter: "chapterThirteen",
+// }

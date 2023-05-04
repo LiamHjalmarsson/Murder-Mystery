@@ -1,5 +1,5 @@
 import { createElement } from "./src/lib/js/functions";
-import { formLogReg, btnsForm, addTeamAndMember } from "./src/lib/components/component_startUp.js";
+import { formLogReg } from "./src/lib/components/component_startUp.js";
 import { addDocAddData } from "./src/utilities/functions/firebase_functions";
 
 async function addDB () {
@@ -84,7 +84,7 @@ async function addDB () {
         let collectionName = document.querySelector("#collectionName").value;
         let documentName = document.querySelector("#documentName").value;
 
-        await addDocAddData(collectionName, documentName, docData);
+        await addDocAddData(collectionName, docData, documentName);
 
         formStartUp.reset();
     });

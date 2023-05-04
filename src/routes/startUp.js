@@ -2,13 +2,16 @@
 import { PubSub } from "../utilities/pubsub.js";
 import { createElement } from "../lib/js/functions.js";
 import { formLogReg, btnsForm, addUser } from "../lib/components/component_startUp.js";
-import { registerPlayer } from "../utilities/functions/firebase_auth.js";
-import { getUserDoc, checkLoginStatus, getFromDB } from "../utilities/functions/firebase_functions.js";
+import { getUserDoc, getFromDB } from "../utilities/functions/firebase_functions.js";
 
 export default {}
 
+
+// ett omedelbart / självkörade anropat funktionsuttryck som kör koden i funktionen när modulen importeras.
 ;(() => {
 
+    // subscribar / premenurerar på ett event ("render_startUp")
+    // listner function med function namn som kallas när ett event är triggat
     PubSub.subscribe({
         event: "render_startUp",
         listener: render_startUp
@@ -16,8 +19,8 @@ export default {}
 
 })();
 
+// function tar emot information från sin publish 
 async function render_startUp ( params ) {
-
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -38,44 +41,6 @@ async function render_startUp ( params ) {
             label: "Enter password"
         }
     ]
-
-    // if (params === "login") {
-    //     inputsDetail = [
-    //         {
-    //             type: "text",
-    //             name: "email",
-    //             id: "email",
-    //             label: "Enter email"
-    //         },
-    //         {
-    //             type: "password",
-    //             name: "password",
-    //             id: "password",
-    //             label: "Enter password"
-    //         }
-    //     ]
-    // } else {
-    //     inputsDetail = [
-    //         {
-    //             type: "text",
-    //             name: "email",
-    //             id: "email",
-    //             label: "Enter email"
-    //         },
-    //         {
-    //             type: "password",
-    //             name: "password",
-    //             id: "password",
-    //             label: "Enter password"
-    //         },
-    //         {
-    //             type: "text",
-    //             name: "username",
-    //             id: "username",
-    //             label: "Enter username"
-    //         }
-    //     ]
-    // }
 
     let gameTitle = createElement("h2", "gameTitle");
     gameTitle.textContent = "Dåd på kungens hörna";
@@ -102,64 +67,59 @@ async function render_startUp ( params ) {
         e.preventDefault();
         let username = document.querySelector("#username").value;
         let password = document.querySelector("#password").value;
-        // let email = document.querySelector("#email").value;
 
         if (params === "login") {
 
-            let userID = await getUserDoc(username, password);
+            // kommer åt användarens document genom username & password
+            let user = await getUserDoc(username, password);
 
-            if (userID.error) {
+            if (user.params === "error") {
 
+                // om det blir en error kommer popUp upp 
                 PubSub.publish({
                     event: "render_component_popup",
-                    detail: userID
+                    detail: user
                 });
 
             } else {
 
-                const user = {
-                    userId: userID.id,
+                // ett object med lite information om användaren 
+                const userLocal = {
+                    userId: user.id,
                     password: password,
                     username: username
                 };
 
-                localStorage.setItem("user", JSON.stringify(user));
+                // användar objectet spara i localStorage 
+                localStorage.setItem("user", JSON.stringify(userLocal));
 
-                let getChapter = userID.data.chapters.filter(chapter => chapter.onGoing);
-                let data = await getFromDB("storyTelling", getChapter[0].chapter);
-
-                console.log(data);
-                PubSub.publish({
+                console.log("startUp", user);
+                // publiserar ett event 
+                PubSub.publish({ // Eventet och dens detail data kommer att skickas till all listeners som subsribar på eventet "render_map".
                     event: "render_map",
                     detail: {
-                        location: {
-                            lat: 55.608627,
-                            long: 13.005227
-                        },
-                        data: {
-                            chapters: data.data, 
-                            user: userID
+                        response: {
+                            data: user
                         }
                     }
+                });
+
+                PubSub.publish({
+                    event: "render_counDown"
                 });
 
             }
 
         } else {
 
-            // keep if we change to email 
-                // let user = await registerPlayer(email, password)
-                // await addUser(user);
-
-            let user = await addUser();
-            console.log("användare till lagd", user);
+            // skapar användaren och lägger till i db samt gör små kontroller innan det läggs till 
+            await addUser();
             
             PubSub.publish({
                 event: "render_startUp", 
                 detail: "login"
             });
             
-
         }
     });
 }

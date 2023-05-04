@@ -4,20 +4,27 @@ import { checkLoginStatus } from "./utilities/functions/firebase_functions";
 let check = await checkLoginStatus();
 
 if (check) {
+
+    PubSub.publish({
+        event: "render_counDown"
+    });
+
     PubSub.publish({
         event: "render_map",
         detail: {
-            location: {
-                lat: 55.608627,
-                long: 13.005227
+            response: {
+                data: check.data
             }
         }
     });
+
 } else {
+
     PubSub.publish({
         event: "render_startUp",
         detail: "login"
     });
+    
 }
 
 
