@@ -3,14 +3,16 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 60vh;
+    height: 40vh;
     width: 80%;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background: burlywood;
+    background: var(--lightBrown);
     border-radius: 20px;
+
+    box-shadow: 3px 25px 50px -26px rgba(0,0,0,0.62);
 }
 
 #containerPopUp {
@@ -37,6 +39,7 @@
     flex-direction: column;
     gap: var(--gap);
 }
+
 .smallheader {
     text-align: center;
     font-size: var(--fontSizeHeader);
@@ -52,4 +55,9 @@
     background: none;
     color: var(--Text);
     transition: all 0.2s ease-in;
+}
+
+.popUp_input.error {
+    border: 1px solid var(--lightRed);
+    color: var(--lightRed);
 }

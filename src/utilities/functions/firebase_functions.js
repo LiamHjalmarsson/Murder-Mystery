@@ -1,26 +1,46 @@
 import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
-    query, orderBy, updateDoc, arrayUnion, where } from "firebase/firestore";
+    query, updateDoc, arrayUnion, where } from "firebase/firestore";
 
 export const db = getFirestore(App);
 
-// get the correct users id when login in 
 export const getUserDoc = async (username, password) => {
     let colRef = collection(db, "users");
     let queryRef = query(colRef, where("username", "==", username), where("password", "==", password));
     let result = await getDocs(queryRef);
 
     if (result.empty) {
-        return { response: "error", error : "No matching document found" } ;
-    } else if (result.size > 1) {
-        return { response: "error", error : "Multiple matching documents found" };
+
+        return { 
+            params: "error", 
+            response : { 
+                error: "Problems loging in try again!" 
+            }};
+
     } else {
-        return { id: result.docs[0].id, data: result.docs[0].data() }
+        return result.docs[0].data();
     }
 };
 
-// Retrieving all documents in a collection and all there data
-// or if an id is given get the spesfic document and its data 
+export const getClueDoc = async (password) => {
+    let colRef = collection(db, "clues");
+    let queryRef = query(colRef, where("answer", "==", password));
+    let result = await getDocs(queryRef);
+
+    if (result.empty) {
+
+        return { 
+            params: "error", 
+            response : { 
+                error: "Wrong answer" 
+            }};
+
+    } else {
+        return result.docs[0].data();
+    }
+};
+
+
 export const getFromDB = async (colName, docId) => {
     let colRef = collection(db, colName);
 
@@ -36,8 +56,13 @@ export const getFromDB = async (colName, docId) => {
 
         } else {
 
-            return { error : "No matching document found" };
-
+            return { 
+                params: "error", 
+                response : { 
+                    error: "No matching document found" 
+                }
+            };
+            
         }
 
     } else {
@@ -54,26 +79,33 @@ export const getFromDB = async (colName, docId) => {
     }
 }
 
-// used to add a new document in firebase takes 3 parameters 
-// what the name of the collection the data to add and if we want to spefici the id or generat a auto id
+
 export const addDocAddData = async (colName, docData, docId) => {
 
     let colRef = collection(db, colName);
 
     if (docId) {
         let document = doc(colRef, docId);
-        let user = await setDoc(document, docData);
-        return { documentID: docId, user: docData };
+
+        return await setDoc(document, {
+            ...docData,
+            id: document.id
+        });
+
     } else {
+
         let document = doc(colRef);
-        await setDoc(document, docData);
+
+        return await setDoc(document, {
+            ...docData,
+            id: document.id
+        });
     
-        return { documentID: document.id, user: docData }
     }
 
 }
 
-// Used to update documents takes 3 parameters the collection name, the document name/id and the data to update
+
 export const docUpdate = async (colName, docId, upData) => {
     let colRef = collection(db, colName);
     let refDoc = doc(colRef, docId);
@@ -83,7 +115,7 @@ export const docUpdate = async (colName, docId, upData) => {
     return update;
 }
 
-// Used to update arrays in documents takes 4 parameters the collection name, the document id, the name of array and the data to add not 
+
 export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
     let colRef = collection(db, colName);
     let refDoc = doc(colRef, docId);
@@ -105,7 +137,7 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
 
 }
 
-// Update a array of objects choose collection, doc, what array, the key to change value and the value 
+
 export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
     const colRef = collection(db, colName);
     const docRef = doc(colRef, docId);
@@ -114,8 +146,6 @@ export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
         const docSnapshot = await getDoc(docRef);
     
         const arraryToUpdate = docSnapshot.data()[arr].map((item, i) => {
-
-            console.log(item, i);
             if (i === index) {
             return {
                 ...item,
@@ -142,7 +172,6 @@ export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
 
 
 
-// Function to check if a user is logged in and authenticate them if necessary
 export async function checkLoginStatus() {
 
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -160,9 +189,6 @@ export async function checkLoginStatus() {
         return { detail: true, data: isAuthenticated }
     }
 }
-
-
-
 
 
 

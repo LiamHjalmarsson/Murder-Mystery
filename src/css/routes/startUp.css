@@ -76,7 +76,7 @@
     background-color: var(--Darkbackground);
 }
 
-.playGame {
+/* .playGame {
     position: relative;
     color: var(--Text);
     outline: none;
@@ -87,17 +87,18 @@
     padding: 0.8rem;
 
     transition: border-color 0.4s ease-in;
-}
+} */
 
-.playGame:hover{
+/* .playGame:hover{
     border-color: var(--lightHover);
-} 
+}  */
 
 #btnContainer {
     display: flex;
     justify-content: center;
     gap: var(--gap);
 }
-#btnContainer > button {
+
+/* #btnContainer > button {
     width: 40%;
-}
+} */

@@ -1,6 +1,6 @@
 import { PubSub } from "../utilities/pubsub.js";
 import { createElement } from "../lib/js/functions.js";
-import { registerPlayer } from "../utilities/functions/firebase_auth.js";
+import { getFromDB } from "../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -13,54 +13,107 @@ export default {}
 
 })();
 
-async function render_map (data) {
-
-    console.log(data);
-    let { location } = data;
+async function render_map ( { response } ) {
+    let { data } = response;
 
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
     let container_map = createElement("div", "", "container_map");
     app.appendChild(container_map);
-
+    
     let mapBox = createElement("div", "", "map");
     container_map.append(mapBox);
     
-    // let db_locations = await getFromDB("locations");
-    
     document.querySelector("#map").style.display = "flex";
 
-    let map = L.map('map').setView([location.lat, location.long], 16);
+    detail_map(data);
+}
+
+async function detail_map (data) {
+    let map; 
+
+    // users chapters finds the chapters thats ongoing 
+    let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
+    // get all chapters 
+    let allChapters = await getFromDB("storyTelling");
+    
+    // filter out to get the correct chapter details 
+    let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
+
+    let doneChapters = data.chapters.filter(chapter => chapter.completed);
+
+    console.log(userOnGoingChapter);
+
+    if (userLocationsOnGoing.searchArea || !userOnGoingChapter.locationCharacter) {
+        map = L.map('map').setView([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], 16);
+    } else {
+        map = L.map('map').setView([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], 16);
+    }
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
     
-    document.getElementById('map').style.zIndex = 0;
-
-    // let db_locations = getLocations();
-    addMarkers(map, location);
-
-    // getLocation(map);
-
-    // click to get coordinates 
-    // map.on('click', coordinatesAlert);
-}
-
-function addMarkers (map, location) {
-
-    let pinIcon = L.icon({
-        iconUrl: '../../library/pin.png',
-        iconSize: [38, 38], // size of the icon
-        iconAnchor: [18, 38], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
+    addMarkers();
+    
+    map.on('click', coordinatesAlert);
+    
+    PubSub.publish({
+        event: "render_navigation",
+        detail: {
+            response: {
+                data: data,
+                storys: userOnGoingChapter
+            }
+        }
     });
 
-    L.marker([location.lat, location.long], { icon: pinIcon })
-        .addTo(map).bindPopup(location.text);
+    function addMarkers () {
+    
+        let pinIcon = L.icon({
+            iconUrl: '../../library/pin.png',
+            iconSize: [38, 38], // size of the icon
+            iconAnchor: [18, 38], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
+        });
 
+        if (userLocationsOnGoing.searchArea || !userOnGoingChapter.locationCharacter) {
+
+            L.circle([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], {
+                radius: userOnGoingChapter.searchRadius
+                }).addTo(map).bindPopup(userOnGoingChapter.character);
+
+        } else {
+
+            L.marker([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], { icon: pinIcon })
+                .addTo(map).bindPopup(userOnGoingChapter.character);
+
+        }
+
+        allChapters.forEach(chapterDb => {
+
+            doneChapters.forEach(chapter => {
+                if (chapter.chapter === chapterDb.chapterId) {
+
+                    if (chapter.completed) {
+                        L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
+                            .addTo(map).bindPopup(chapterDb.character);
+                    } 
+
+                    if (chapter.searchDone) {
+                        L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
+                            radius: chapterDb.searchRadius
+                        }).addTo(map).bindPopup(chapterDb.character);
+                    }
+                }
+                
+            });
+
+        });
+
+    }
 }
 
 function getLocation (map) {    
@@ -97,36 +150,11 @@ function getLocation (map) {
     }
 }
 
-
-
-
-
-        
-    // db_locations.forEach(location => {
-
-    //     if (location.type === "pin") {
-
-    //         if (location.view) {
-    //             L.marker([location.location._lat, location.location._long], { icon: pinIcon })
-    //                 .addTo(map).bindPopup(location.text);
-    //         }
-    //     }
-
-    //     if (location.type === "search") {
-
-    //         if (location.view) {
-    //             L.circle([location.location._lat, location.location._long], {
-    //                 radius: location.radius
-    //             }).addTo(map).bindPopup(location.text);
-    //         }
-    //     }
-
-    // });
-
-
 function coordinatesAlert(e) {
     alert("latitude" + e.latlng);
 }
+
+
 
 // function getLocation (map) {
 //     if (!navigator.geolocation) {
