@@ -63,7 +63,7 @@ function answerListener (data, clue, storys) {
                     searchDone: false,
                 });
 
-                await docUpdateArry("users", data.id, "clues", { clue: clue.clue, informaion: clue.information });
+                await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
 
                 let updateUser = await getFromDB("users", data.id);
 

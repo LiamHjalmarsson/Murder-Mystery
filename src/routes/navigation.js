@@ -62,7 +62,7 @@ function render_buttonsNav (response) {
             icon: "../../src/lib/icons/search.png",
         },
         {
-            text: "Loga Ut",
+            text: "Loga Ut", 
             id: "topRight",
             icon: "../../src/lib/icons/letter.png",
         },

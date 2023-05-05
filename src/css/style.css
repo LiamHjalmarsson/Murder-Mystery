@@ -41,3 +41,28 @@ button.active:hover {
     background: var(--focusing);
     color: var(--Darkbackground);
 }
+
+.close {
+    background-image: url("/src/lib/icons/close.png");
+    background-position: right;
+    background-size: contain;
+    height: 30px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+
+.containerPopUP { 
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    /* display: flex;
+    justify-content: center;
+    align-items: end; */
+    width: 100vw;
+    background-color: var(--darkBrown);
+    overflow: scroll;
+}
