@@ -23,7 +23,7 @@ function render_component_popup ( response ) {
 
     wrapperPopUp.append(containerPopUp);
 
-    let close = createElement("div", "", "close");
+    let close = createElement("div", "class");
     close.addEventListener("click", () => {
         wrapperPopUp.remove();
     });
