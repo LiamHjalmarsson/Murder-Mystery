@@ -15,6 +15,7 @@ export default {}
 
 async function render_bag ( { response}) {
 
+    console.log(response);
     let { data } = response;
 
     let app = document.querySelector("#app");
@@ -49,37 +50,31 @@ async function renderInventory (data) {
 
     let inventory = createElement("div", "", "inventory");
 
-    data.clues.forEach(userClue => {
+    cluesDb.forEach(clue => {
+        const foundClue = createElement("div", "foundClue");
+    
+        const imgClue = createElement("div", "imgClue");
+    
+        const found = data.clues.some(userClue => userClue.clueId === clue.clueId);
+    
+        imgClue.style.backgroundImage = found ? `url(../../src/lib/icons/${clue.imageRef}.png)` : `url(../../src/lib/icons/lock.png)`;
 
-        cluesDb.forEach(clue => {
-
-            let foundClue = createElement("div", "foundClue");
-            let imgClue = createElement("div", "imgClue");
-
-            if (userClue.clueId === clue.clueId) { 
-                imgClue.style.backgroundImage = `url(../../src/lib/icons/${clue.imageRef}.png)`;
-
-                foundClue.addEventListener("click", (e) => {
-                    PubSub.publish({
-                        event: "render_component_bag_detail",
-                        detail: {
-                            response: {
-                                clue: clue,
-                                data: data
-                            }
+        if (found) {
+            foundClue.addEventListener("click", (e) => {
+                PubSub.publish({
+                    event: "render_component_bag_detail",
+                    detail: {
+                        response: {
+                            clue: clue,
+                            data: data
                         }
-                    });
+                    }
                 });
-
-            } else {
-                imgClue.style.backgroundImage = `url(../../src/lib/icons/lock.png)`;
-            }
-
-            foundClue.append(imgClue);
-            inventory.append(foundClue);
-
-        });
-    });
+            });
+        }
+        foundClue.append(imgClue);
+        inventory.append(foundClue);
+    })
 
     return inventory;
 }
