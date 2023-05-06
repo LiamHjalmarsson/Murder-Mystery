@@ -14,9 +14,8 @@ export default {}
 })();
 
 function render_riddle ( { response } ) {
-    let { data, clue, storys } = response;
+    let { data, puzzel, storys } = response;
 
-    console.log(response);
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -28,7 +27,7 @@ function render_riddle ( { response } ) {
             <div>
                 <div id="riddleIcon"></div>
                 <div id="riddleText">
-                    <p>${clue.riddle}</p>
+                    <p>${puzzel.riddle}</p>
                 </div>
                 <input type="text" id="riddleAnswer">
                 <div>
@@ -38,35 +37,55 @@ function render_riddle ( { response } ) {
         </div>
     `;
 
-    answerListener(data, clue, storys);
+    answerListener(response);
 }
 
-function answerListener (data, clue, storys) {
+function answerListener (response) {
+
+    let { data, puzzel, storys } = response;
 
     document.querySelector("#btnAnswerRiddle").addEventListener("click", async (e) => {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
 
-        if (riddleAnswerInput === clue.riddleAnswer) {
+        if (riddleAnswerInput === puzzel.answer) {
 
-                let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
-                let chapterId = data.chapters.filter((chapter) => chapter.onGoing).map(id => id.chapter)[0];
+            if (!puzzel.isClue) {
 
-                // kommer göras uppdatering
-                await updateArrayMap('users', data.id, 'chapters', indexChapter, { onGoing: false, completed: true, searchDone: true });
+                PubSub.publish({
+                    event: "render_charater_interaction",
+                    detail: {
+                        response: {
+                            data: data,
+                            story: storys
+                        }
+                    }
+                });
 
+            } else {
+                let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
+                let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
+
+                let clues = await getFromDB("clues");
+
+                let clue = clues.find(clue => clue.clueId === puzzel.clueId);
+
+                await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                    searchDone: true, searchOnGoing: false, onGoing: false 
+                });
+    
                 await docUpdateArry("users", data.id, "chapters", {  
                     chapter: chapterId + 1,
                     completed: false,
                     onGoing: true,
-                    searchArea: false,
                     searchDone: false,
+                    searchOnGoing: false,
                 });
-
+    
                 await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
-
+    
                 let updateUser = await getFromDB("users", data.id);
-
+    
                 PubSub.publish({
                     event: "render_map",
                     detail: {
@@ -75,6 +94,7 @@ function answerListener (data, clue, storys) {
                         }
                     }
                 });
+            }
 
         } else {
             console.log("Wrong answer");

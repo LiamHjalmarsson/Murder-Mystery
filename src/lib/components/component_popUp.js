@@ -1,6 +1,6 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../js/functions.js";
-import { docUpdate, getClueDoc } from "../../utilities/functions/firebase_functions.js";
+import { docUpdate, getDocByClue } from "../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -77,9 +77,10 @@ function displayInformation ( res ) {
 
             box.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                let clueResponse = await getClueDoc(input.value); // hämtar clue gör lite kontroll om det är rätt 
 
-                if (clueResponse.params) {
+                let puzzel = await getDocByClue(input.value); 
+
+                if (puzzel.params) {
                     input.classList.add("error");
                 } else {
 
@@ -91,7 +92,7 @@ function displayInformation ( res ) {
                             response: {
                                 data: response.data,
                                 storys: response.storys,
-                                clue: clueResponse
+                                puzzel: puzzel
                             }
                         }
                     }); 
