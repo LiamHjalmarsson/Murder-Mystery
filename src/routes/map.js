@@ -50,7 +50,7 @@ async function detail_map (data) {
 
     let doneChapters = data.chapters.filter(chapter => chapter.completed);
 
-    if (userLocationsOnGoing.searchArea || !userOnGoingChapter.locationCharacter) {
+    if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
         map = L.map('map').setView([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], 16);
     } else {
         map = L.map('map').setView([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], 16);
@@ -84,7 +84,7 @@ async function detail_map (data) {
             popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
         });
 
-        if (userLocationsOnGoing.searchArea || !userOnGoingChapter.locationCharacter) {
+        if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
 
             L.circle([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], {
                 radius: userOnGoingChapter.searchRadius

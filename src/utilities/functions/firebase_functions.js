@@ -23,9 +23,9 @@ export const getUserDoc = async (username, password) => {
     }
 };
 
-export const getClueDoc = async (password) => {
-    let colRef = collection(db, "clues");
-    let queryRef = query(colRef, where("answer", "==", password));
+export const getDocByClue = async (answer) => {
+    let colRef = collection(db, "puzzel");
+    let queryRef = query(colRef, where("unlockRiddleKey", "==", answer));
     let result = await getDocs(queryRef);
 
     if (result.empty) {
