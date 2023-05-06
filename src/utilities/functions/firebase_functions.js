@@ -1,6 +1,7 @@
 import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
     query, updateDoc, arrayUnion, where } from "firebase/firestore";
+import { PubSub } from "../pubsub.js";
 
 export const db = getFirestore(App);
 
@@ -210,6 +211,14 @@ export const realTime = async (colName, id) => {
         onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
                 console.log("data", { ...docSnap.data(), id: docSnap.id });
+
+                let data = { ...docSnap.data(), id: docSnap.id }
+
+                PubSub.publish({
+                    event: "update_map", 
+                    detail: data
+                });
+                
                 isUpdating = true;
             } else {
                 console.log({ error: "No matching document found" });
@@ -225,5 +234,7 @@ export const realTime = async (colName, id) => {
             isUpdating = true;
         });
     }
+
+    
     return isUpdating;
 }
