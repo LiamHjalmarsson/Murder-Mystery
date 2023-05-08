@@ -37,7 +37,6 @@ async function render_map ( { response } ) {
 }
 
 async function detail_map (data) {
-
     let map; 
 
     // users chapters finds the chapters thats ongoing 

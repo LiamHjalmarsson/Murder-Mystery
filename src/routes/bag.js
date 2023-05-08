@@ -39,7 +39,7 @@ async function render_bag ( { response } ) {
         containerBag.remove();
     });
 
-    document.querySelector("#containerInventory").append(await renderInventory(data));
+    await renderInventory(data);
 }
 
 async function renderInventory (data) {
@@ -48,7 +48,6 @@ async function renderInventory (data) {
 
     cluesDb.forEach(clue => {
 
-        console.log(clue);
         const foundClue = createElement("div", "foundClue");
         const imgClue = createElement("div", "imgClue");
     
@@ -56,22 +55,20 @@ async function renderInventory (data) {
 
         imgClue.style.backgroundImage = found ? `url(../../src/lib/icons/${clue.imageRef}.png)` : `url(../../src/lib/icons/lock.png)`;
 
-        if (found) {
-            foundClue.addEventListener("click", (e) => {
-
+        foundClue.addEventListener("click", (e) => {
+            if (found) {
                 PubSub.publish({
                     event: "render_component_bag_detail",
-                    detail: {
-                        response: {
-                            clue: clue,
-                            data: data
-                        }
-                    }
+                    detail: clue
                 });
-            });
-        }
+            } else {
+                console.log("error");
+            }
+        });
+
         foundClue.append(imgClue);
         inventory.append(foundClue);
     });
-    return inventory;
+    
+    document.querySelector("#containerInventory").append(inventory);
 }

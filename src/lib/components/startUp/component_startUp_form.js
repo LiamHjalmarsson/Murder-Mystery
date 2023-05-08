@@ -133,7 +133,14 @@ export async function addUser (user) {
         password: password,
         username: username,
         clues: [],
-        charaters: [],
+        charaters: [
+            {
+                characterId: 1
+            },
+            {
+                characterId: 2
+            },
+        ],
         chapters: [
             {
                 chapter: 1,
@@ -146,8 +153,7 @@ export async function addUser (user) {
     }
 
     if (userExists === undefined) {
-        let user = await addDocAddData("users", docDataUser);
-        return user;
+        await addDocAddData("users", docDataUser);
     } else {
         console.log("error user exists in db", userExists);
     }

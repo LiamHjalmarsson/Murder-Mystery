@@ -15,7 +15,6 @@ export default {}
 function render_character_interaction ( { response }, counter = 0 ) {
     let { data, story } = response;
 
-    console.log(story);
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -47,17 +46,6 @@ function render_character_interaction ( { response }, counter = 0 ) {
             let btn = createElement("button", "", "");
             btn.textContent = "next"
             dialogBox.append(btn)
-            // btn.addEventListener("click", () => {
-            //     PubSub.publish({
-            //         event: "render_map",
-            //         detail: {
-            //             location: {
-            //                 lat: db.locationCharacter._lat,
-            //                 long: db.locationCharacter._long,
-            //             }, 
-            //         }
-            //     })
-            // })
         }
     });
 }

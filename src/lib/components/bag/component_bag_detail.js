@@ -12,11 +12,7 @@ export default {}
     
 })();
 
-function render_component_bag_detail ( { response } ) {
-    let { clue } = response;
-
-    console.log(response);
-    console.log(clue);
+function render_component_bag_detail (clue) {
     let app = document.querySelector("#app");
 
     let container = createElement("div", "containerPopUP", "containerItem");
