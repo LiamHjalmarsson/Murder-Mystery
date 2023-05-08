@@ -25,15 +25,6 @@
     width: 100%;
 }
 
-#close {
-    background-image: url("/src/lib/icons/close.png");
-    background-position: right;
-    background-size: contain;
-    height: 30px;
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
-
 #box {
     display: flex;
     flex-direction: column;

@@ -11,11 +11,17 @@ export default {}
         listener: render_map
     });
 
+    PubSub.subscribe({
+        event: "update_map",
+        listener: detail_map
+    });
+
 })();
+
 
 async function render_map ( { response } ) {
     let { data } = response;
-
+    
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -31,6 +37,7 @@ async function render_map ( { response } ) {
 }
 
 async function detail_map (data) {
+
     let map; 
 
     // users chapters finds the chapters thats ongoing 
@@ -43,9 +50,7 @@ async function detail_map (data) {
 
     let doneChapters = data.chapters.filter(chapter => chapter.completed);
 
-    console.log(userOnGoingChapter);
-
-    if (userLocationsOnGoing.searchArea || !userOnGoingChapter.locationCharacter) {
+    if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
         map = L.map('map').setView([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], 16);
     } else {
         map = L.map('map').setView([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], 16);
@@ -58,7 +63,7 @@ async function detail_map (data) {
     
     addMarkers();
     
-    map.on('click', coordinatesAlert);
+    // map.on('click', coordinatesAlert);
     
     PubSub.publish({
         event: "render_navigation",
@@ -79,7 +84,7 @@ async function detail_map (data) {
             popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
         });
 
-        if (userLocationsOnGoing.searchArea || !userOnGoingChapter.locationCharacter) {
+        if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
 
             L.circle([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], {
                 radius: userOnGoingChapter.searchRadius
@@ -93,10 +98,8 @@ async function detail_map (data) {
         }
 
         allChapters.forEach(chapterDb => {
-
             doneChapters.forEach(chapter => {
                 if (chapter.chapter === chapterDb.chapterId) {
-
                     if (chapter.completed) {
                         L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
                             .addTo(map).bindPopup(chapterDb.character);
@@ -108,13 +111,11 @@ async function detail_map (data) {
                         }).addTo(map).bindPopup(chapterDb.character);
                     }
                 }
-                
             });
-
         });
-
     }
 }
+
 
 function getLocation (map) {    
 

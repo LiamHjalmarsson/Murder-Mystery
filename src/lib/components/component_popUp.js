@@ -1,6 +1,6 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../js/functions.js";
-import { getClueDoc } from "../../utilities/functions/firebase_functions.js";
+import { docUpdate, getDocByClue } from "../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -23,27 +23,36 @@ function render_component_popup ( response ) {
 
     wrapperPopUp.append(containerPopUp);
 
-    let close = createElement("div", "", "close");
-    close.addEventListener("click", () => {
-        wrapperPopUp.remove();
-    });
-
-    containerPopUp.append(close);
-    containerPopUp.append(displayInformation(response));
+    displayInformation(response);
 }
 
 function displayInformation ( res ) { 
     let { params, response } = res;
 
     let box = createElement("form", "", "box");
-    let header = createElement("div", "smallheader", ""); 
-    let message = createElement("div", "popUp", ""); 
+    document.querySelector("#containerPopUp").appendChild(box);
 
-    box.append(header, message);
+    box.innerHTML = `
+        <div class="navContainer">
+            <div class="navClose"> 
+                <div class="close" id="popUpClose"> </div>
+            </div>
+            <h3 class="headerPopUp"> </h3>
+        </div>
+        <div class="popUp">
+        </div>
+    `
+    let header = document.querySelector(".headerPopUp"); 
+    let message = document.querySelector(".popUp"); 
+
+
+    document.querySelector("#popUpClose").addEventListener("click", () => {
+        document.querySelector("#wrapperPopUp").remove();
+    });
 
     switch(params) {
         case "error":
-            header.textContent = "Error";
+            header.textContent = "Error!";
             message.textContent = response.error; 
         break;
 
@@ -68,9 +77,10 @@ function displayInformation ( res ) {
 
             box.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                let clueResponse = await getClueDoc(input.value); // hämtar clue gör lite kontroll om det är rätt 
 
-                if (clueResponse.params) {
+                let puzzel = await getDocByClue(input.value); 
+
+                if (puzzel.params) {
                     input.classList.add("error");
                 } else {
 
@@ -82,7 +92,7 @@ function displayInformation ( res ) {
                             response: {
                                 data: response.data,
                                 storys: response.storys,
-                                clue: clueResponse
+                                puzzel: puzzel
                             }
                         }
                     }); 
@@ -90,5 +100,5 @@ function displayInformation ( res ) {
             });
         break;
     }
-    return box;
+
 }

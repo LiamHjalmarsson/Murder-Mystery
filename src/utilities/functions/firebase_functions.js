@@ -1,6 +1,7 @@
 import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
     query, updateDoc, arrayUnion, where } from "firebase/firestore";
+import { PubSub } from "../pubsub.js";
 
 export const db = getFirestore(App);
 
@@ -22,9 +23,9 @@ export const getUserDoc = async (username, password) => {
     }
 };
 
-export const getClueDoc = async (password) => {
-    let colRef = collection(db, "clues");
-    let queryRef = query(colRef, where("answer", "==", password));
+export const getDocByClue = async (answer) => {
+    let colRef = collection(db, "puzzel");
+    let queryRef = query(colRef, where("unlockRiddleKey", "==", answer));
     let result = await getDocs(queryRef);
 
     if (result.empty) {
@@ -210,6 +211,14 @@ export const realTime = async (colName, id) => {
         onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
                 console.log("data", { ...docSnap.data(), id: docSnap.id });
+
+                let data = { ...docSnap.data(), id: docSnap.id }
+
+                PubSub.publish({
+                    event: "update_map", 
+                    detail: data
+                });
+                
                 isUpdating = true;
             } else {
                 console.log({ error: "No matching document found" });
@@ -225,5 +234,7 @@ export const realTime = async (colName, id) => {
             isUpdating = true;
         });
     }
+
+    
     return isUpdating;
 }

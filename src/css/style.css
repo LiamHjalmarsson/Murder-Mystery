@@ -11,6 +11,8 @@ body {
     background-color: var(--Darkbackground);
 }
 
+/*  Buttons  */
+
 button {
     position: relative;
     color: var(--Text);
@@ -40,4 +42,52 @@ button.active {
 button.active:hover {
     background: var(--focusing);
     color: var(--Darkbackground);
+}
+
+/*  CSS FOR THE  */
+.navContainer {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    height: 75px;
+    align-items: center;
+    position: relative;
+}
+
+.navClose {
+    width: 40%;
+    display: flex;
+    justify-content: flex-start;
+    position: absolute;
+    left: 0;
+}
+
+.close {
+    background-image: url("/src/lib/icons/close.png");
+    background-position: right;
+    background-size: contain;
+    height: 30px;
+    width: 30px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+.headerPopUp {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.containerPopUP { 
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    /* display: flex;
+    justify-content: center;
+    align-items: end; */
+    width: 100vw;
+    background-color: var(--darkBrown);
+    overflow: scroll;
 }
