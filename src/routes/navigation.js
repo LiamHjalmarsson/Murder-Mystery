@@ -30,7 +30,6 @@ function renderNavigation ( response ) {
         PubSub.publish({
             event: "render_guess_murder",
         });
-    
     });
 } 
 
@@ -145,6 +144,11 @@ async function diffrentBtns (btn, { response } ) {
 
             PubSub.publish({
                 event: "render_suspects",
+                detail: {
+                    response: {
+                        data: data,
+                    }
+                }
             });
         
         break;
@@ -176,49 +180,3 @@ function countDown() {
 function stopCountdown() {
     clearInterval(intervalId);
 }
-
-
-
-
-
-
-
-
-
-// talk 
-// let app = document.querySelector("#app");
-
-// let wrapperPopUp = createElement("div", "", "wrapperPopUp");
-// app.appendChild(wrapperPopUp);
-
-// let containerPopUp = createElement("div", "", "containerPopUp"); 
-
-// wrapperPopUp.append(containerPopUp);
-
-// let close = createElement("div", "", "close");
-// let text = createElement("div", "", "text");
-// text.innerHTML = db.partsChapter[counter];
-
-// containerPopUp.append(close, text);
-
-// close.addEventListener("click", () => {
-//     counter++
-//     if (counter < db.partsChapter.length) {
-//         text.innerHTML = db.partsChapter[counter];
-//     } else {
-//         let btn = createElement("button", "", "");
-//         btn.textContent = "next"
-//         containerPopUp.append(btn)
-//         btn.addEventListener("click", () => {
-//             PubSub.publish({
-//                 event: "render_map",
-//                 detail: {
-//                     location: {
-//                         lat: db.locationCharacter._lat,
-//                         long: db.locationCharacter._long,
-//                     }, 
-//                 }
-//             })
-//         })
-//     }
-// });

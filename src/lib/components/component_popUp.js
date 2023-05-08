@@ -23,12 +23,6 @@ function render_component_popup ( response ) {
 
     wrapperPopUp.append(containerPopUp);
 
-    displayInformation(response);
-}
-
-function displayInformation ( res ) { 
-    let { params, response } = res;
-
     let box = createElement("form", "", "box");
     document.querySelector("#containerPopUp").appendChild(box);
 
@@ -42,13 +36,19 @@ function displayInformation ( res ) {
         <div class="popUp">
         </div>
     `
-    let header = document.querySelector(".headerPopUp"); 
-    let message = document.querySelector(".popUp"); 
-
 
     document.querySelector("#popUpClose").addEventListener("click", () => {
         document.querySelector("#wrapperPopUp").remove();
     });
+
+    displayInformation(response);
+}
+
+function displayInformation ( res ) { 
+    let { params, response } = res;
+
+    let header = document.querySelector(".headerPopUp"); 
+    let message = document.querySelector(".popUp"); 
 
     switch(params) {
         case "error":
@@ -73,32 +73,36 @@ function displayInformation ( res ) {
             button.textContent = "Submit your answer";
 
             message.append(input);
-            box.append(button);
+            document.querySelector("#box").append(button);
 
-            box.addEventListener("submit", async (e) => {
-                e.preventDefault();
-
-                let puzzel = await getDocByClue(input.value); 
-
-                if (puzzel.params) {
-                    input.classList.add("error");
-                } else {
-
-                    input.classList.remove("error");
-
-                    PubSub.publish({
-                        event: "render_riddle",
-                        detail: { 
-                            response: {
-                                data: response.data,
-                                storys: response.storys,
-                                puzzel: puzzel
-                            }
-                        }
-                    }); 
-                }
-            });
+            formListener(response);
         break;
     }
+}
 
+function formListener ( response ) {
+    document.querySelector("#box").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        let inputValue = document.querySelector(".popUp_input");
+        let puzzel = await getDocByClue(inputValue.value); 
+
+        if (puzzel.params) {
+            inputValue.classList.add("error");
+        } else {
+
+            inputValue.classList.remove("error");
+
+            PubSub.publish({
+                event: "render_riddle",
+                detail: { 
+                    response: {
+                        data: response.data,
+                        storys: response.storys,
+                        puzzel: puzzel
+                    }
+                }
+            }); 
+        }
+    });
 }

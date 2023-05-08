@@ -1,18 +1,22 @@
-import { PubSub } from "../../utilities/pubsub.js";
-import { createElement } from "../js/functions.js";
+import { PubSub } from "../../../utilities/pubsub.js";
+import { createElement } from "../../js/functions.js";
 
 export default {}
 
 ;(() => {
+
     PubSub.subscribe({
         event: "render_component_bag_detail",
         listener: render_component_bag_detail
     });
+    
 })();
 
 function render_component_bag_detail ( { response } ) {
-    let { data, clue } = response;
+    let { clue } = response;
 
+    console.log(response);
+    console.log(clue);
     let app = document.querySelector("#app");
 
     let container = createElement("div", "containerPopUP", "containerItem");
@@ -43,6 +47,5 @@ function render_component_bag_detail ( { response } ) {
     document.querySelector("#containerItemClose").addEventListener("click", () => {
         container.remove();
     });
-
 }
 

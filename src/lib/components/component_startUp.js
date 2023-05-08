@@ -2,8 +2,23 @@ import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../js/functions.js";
 import { getFromDB, addDocAddData } from "../../utilities/functions/firebase_functions.js";
 
-export function formLogReg (inputsDetail) {
+export function formLogReg () {
     let formStartUp = createElement("form", "", "formStartUp");
+
+    let inputsDetail = [
+        {
+            type: "text",
+            name: "username",
+            id: "username",
+            label: "Enter username"
+        },
+        {
+            type: "password",
+            name: "password",
+            id: "password",
+            label: "Enter password"
+        }
+    ];
 
     inputsDetail.forEach(element => {
         let div = createElement("div", "box_input");
@@ -19,7 +34,8 @@ export function formLogReg (inputsDetail) {
         div.append(input, label);
         formStartUp.appendChild(div);
     });
-    return formStartUp;
+
+    document.querySelector("#startUpContainer").appendChild(formStartUp);
 }
 
 export function btnsForm (params) {
@@ -55,7 +71,6 @@ export async function addUser (user) {
     
     let userExists = usersInDB.find(user => user.username === username); // kontroll om användarnamnt finns 
 
-    // object datan som ska läggas till 
     let docDataUser = {
         password: password,
         username: username,
@@ -78,52 +93,4 @@ export async function addUser (user) {
     } else {
         console.log("error user exists in db", userExists);
     }
-
 }
-
-
-
-
-// {
-            //     chapter: "chapterOne",
-            //     completed: false,
-            //     onGoing: true,
-            //     searchArea: false,
-            //     searchDone: false,
-            // }, 
-            // {
-            //     chapter: "chapterTwo",
-            // }, 
-            // {
-            //     chapter: "chapterThree",
-            // }, 
-            // {
-            //     chapter: "chapterFour",
-            // }, 
-            // {
-            //     chapter: "chapterFive",
-            // }, 
-            // {
-            //     chapter: "chapterSix",
-            // }, 
-            // {
-            //     chapter: "chapterSeven",
-            // }, 
-            // {
-            //     chapter: "chapterEight",
-            // }, 
-            // {
-            //     chapter: "chapterNine",
-            // }, 
-            // {
-            //     chapter: "chapterTen",
-            // }, 
-            // {
-            //     chapter: "chapterEleven",
-            // }, 
-            // {
-            //     chapter: "chapterTwelve",
-            // }, 
-            // {
-            //     chapter: "chapterThirteen",
-// }
