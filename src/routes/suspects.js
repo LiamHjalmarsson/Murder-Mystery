@@ -1,6 +1,7 @@
 
 import { getFromDB } from "../utilities/functions/firebase_functions.js";
 import { PubSub } from "../utilities/pubsub.js";
+import { createElement } from "../lib/js/functions.js";
 
 export default {}
 
@@ -12,17 +13,26 @@ export default {}
 })();
 
 async function render_suspects () {
-   document.querySelector("#app").innerHTML = "";
-    let div = document.createElement("div");
-    div.textContent("Misstänkta");
-    document.appendChild(div);
+ let app = document.querySelector("#app");
+ app.innerHTML ="";
+ let suspectsWrapper = createElement("div","", "wrapSus");
+
+ app.append(suspectsWrapper);
+ var rubrik = createElement("div","rubrik");
+var div = document.createElement('H1');
+    div.textContent = "Misstänkta";
+   rubrik.appendChild(div);
   
+   let exitBtn = createElement("div", "Xbtn");
+   exitBtn.innerHTML = "X";
+   rubrik.append(exitBtn);
 
-    var rubrik = document.createElement('H1');
-    rubrik.innerHTML = "Misstänkta";
+    // exitBtn.addEventListener("click");
+    // console.log("Klickad");
 
-    let suspectsContainer = createElement("div", "", "suspectsContainer");
-    app.append(suspectsContainer);
+
+    let suspectsContainer = createElement("div", "suspectsContainer");
+     suspectsWrapper.append(rubrik, suspectsContainer);
 
     let characters = await getFromDB ("charaters");
     console.log(characters);
@@ -31,63 +41,67 @@ async function render_suspects () {
 
     let susBtns = [
         {
-            text: "Josette Elina Petrova",
             id: "JosettePic",
-            icon: "(../../src/library/ProfilePics/Josette.png",
+            icon: "../../src/lib/ProfilePics/Josette.png",
+            text: "Josette",
         },
 
         {
-            text: "Björn Carl Höök",
             id: "BjörnPic",
-            icon: "(../../src/library/ProfilePics/Björn.png",
+            icon: "../../src/lib/ProfilePics/Björn.png",
+            text: "Björn",
         },
         {
-            text: "Brita Lisa Johansdotter Höök",
             id: "BritaPic",
-            icon: "(../../src/library/ProfilePics/Brita.png",
+            icon: "../../src/lib/ProfilePics/Brita.png",
+            text: "Brita",
             },
 
         {
-            text: "Juliette Abigail Williams",
             id: "JuliettePic",
-            icon: "(../../src/library/ProfilePics/Juliette.png",
+            icon: "../../src/lib/ProfilePics/Juliette.png",
+            text: "Juliette",
         },
         {
-            text: "Ingrid Britta Borelius",
             id: "IngridPic",
-            icon: "(../../src/library/ProfilePics/Ingrid.png",
+            icon: "../../src/lib/ProfilePics/Ingrid.png",
+            text: "Ingrid",
             },
 
         {
-            text: "Gustaf Otto Carl Borelius",
             id: "GustafPic",
-            icon: "(../../src/library/ProfilePics/Gustaf.png",
+            icon: "../../src/lib/ProfilePics/Gustaf.png",
+            text: "Gustaf",
             },
             {
-                text: "Janus Sune Silversson",
+               
                 id: "JanusPic",
-                icon: "(../../src/library/ProfilePics/Janus.png",
+                icon: "../../src/lib/ProfilePics/Janus.png",
+                text: "Janus",
             },
 
     ];
+    console.log(susBtns);
 
     susBtns.forEach(btn => {
         let SusBtnBox = createElement("div", "susBtn", btn.id);
-
-        let iconsDiv = createElement("div", "", "iconSus");
-        iconsDiv.style.backgroundImage = ``;
+         let iconsDiv = createElement("div", "", "iconSus");
+         iconsDiv.style.backgroundImage = `url(${btn.icon})`;
+         let name = createElement("div","name");
+         name.textContent =(btn.text);
+         
+   
+        // SusBtnBox.addEventListener("click", () => {
+        //     diffrentBtns(btn.text);
+        // });
         
-        SusBtnBox.addEventListener("click", () => {
-            diffrentBtns(btn.text);
-        });
-        
-        SusBtnBox.append(iconsDiv, button);
-        navigationBox.append(SusBtnBox);
+         SusBtnBox.append(iconsDiv);
+         SusBtnBox.append(name);
+         suspectsContainer.append(SusBtnBox);
 
-        let exitBtn = createElement("div", "Xbtn", btn.id)
-        exitBtn.innerHTML = "X";
-        exitBtn.append(SusBtnBox);
-    });
+   });
+
+ 
 
     
 }
