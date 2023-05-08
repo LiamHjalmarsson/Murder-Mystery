@@ -131,11 +131,7 @@ async function diffrentBtns (btn, { response } ) {
 
             PubSub.publish({
                 event: "render_bag",
-                detail: {
-                    response: {
-                        data: data,
-                    }
-                }
+                detail: data
             });
 
         break;

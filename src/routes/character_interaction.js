@@ -31,7 +31,7 @@ function render_character_interaction ( { response }, counter = 0 ) {
             <h3> ${ story.character } </h3>
         </div>
         <div id="dialogText"> 
-            <p> ${ story.partsChapter[counter] } </p>
+            ${ story.partsChapter[counter] }
         </div>
         <div>
             <div id="nextPart"> -> </div>
@@ -41,11 +41,27 @@ function render_character_interaction ( { response }, counter = 0 ) {
     document.querySelector("#nextPart").addEventListener("click", () => {
         counter++
         if (counter < story.partsChapter.length) {
-            text.innerHTML = story.partsChapter[counter];
+            document.querySelector("#dialogText").innerHTML = story.partsChapter[counter];
         } else {
-            let btn = createElement("button", "", "");
-            btn.textContent = "next"
-            dialogBox.append(btn)
-        }
+            document.querySelector("#nextPart").remove();
+            btnsChoice(data);
+        } 
     });
+}
+
+async function btnsChoice (data) {
+
+    let choiseContainer = createElement("div", "", "choiseContainer");
+    document.querySelector("#containerDialog").appendChild(choiseContainer);
+
+    choiseContainer.innerHTML = `
+        <div>
+            <button> Find a new charater </button>
+        </div>
+        <div> 
+            <button> Go to a search area </button>
+        </div>
+    `;
+
+    console.log(data);
 }

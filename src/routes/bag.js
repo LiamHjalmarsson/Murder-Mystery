@@ -13,8 +13,7 @@ export default {}
 
 })();
 
-async function render_bag ( { response } ) {
-    let { data } = response;
+async function render_bag ( data ) {
 
     let app = document.querySelector("#app");
 
