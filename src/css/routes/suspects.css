@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+}
+.rubrik {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+h1{
+    font-size: 30pt;
+    padding: 20px;
+    margin-right: 20px
+}
+
+.Xbtn {
+    font-size: 25pt;
+    margin-top: -15px;
+    margin-left: 40px;
+}
+
+#wrapSus { 
+    height: 100vh;
+    /* position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    background-color: var(--Darkbackground);
+    flex-direction: column;
+    overflow: scroll; */
+}
+.suspectsContainer{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+
+}
+#iconSus {
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    margin: 20px;
+    
+}
+.susBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+   
+
+}
+
