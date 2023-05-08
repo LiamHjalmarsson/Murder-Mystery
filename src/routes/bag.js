@@ -13,13 +13,10 @@ export default {}
 
 })();
 
-async function render_bag ( { response}) {
-
-    console.log(response);
+async function render_bag ( { response } ) {
     let { data } = response;
 
     let app = document.querySelector("#app");
-    // app.innerHTML = "";
 
     let containerBag = createElement("div", "containerPopUP", "containerBag");
     app.appendChild(containerBag);
@@ -47,20 +44,21 @@ async function render_bag ( { response}) {
 
 async function renderInventory (data) {
     let cluesDb = await getFromDB("clues");
-
     let inventory = createElement("div", "", "inventory");
 
     cluesDb.forEach(clue => {
+
+        console.log(clue);
         const foundClue = createElement("div", "foundClue");
-    
         const imgClue = createElement("div", "imgClue");
     
         const found = data.clues.some(userClue => userClue.clueId === clue.clueId);
-    
+
         imgClue.style.backgroundImage = found ? `url(../../src/lib/icons/${clue.imageRef}.png)` : `url(../../src/lib/icons/lock.png)`;
 
         if (found) {
             foundClue.addEventListener("click", (e) => {
+
                 PubSub.publish({
                     event: "render_component_bag_detail",
                     detail: {
@@ -74,7 +72,6 @@ async function renderInventory (data) {
         }
         foundClue.append(imgClue);
         inventory.append(foundClue);
-    })
-
+    });
     return inventory;
 }

@@ -76,7 +76,6 @@ async function detail_map (data) {
     });
 
     function addMarkers () {
-    
         let pinIcon = L.icon({
             iconUrl: '../../library/pin.png',
             iconSize: [38, 38], // size of the icon
@@ -118,7 +117,6 @@ async function detail_map (data) {
 
 
 function getLocation (map) {    
-
     navigator.geolocation.watchPosition(success);
 
     let marker, circle, zoomed;

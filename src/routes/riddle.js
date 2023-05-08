@@ -41,7 +41,6 @@ function render_riddle ( { response } ) {
 }
 
 function answerListener (response) {
-
     let { data, puzzel, storys } = response;
 
     document.querySelector("#btnAnswerRiddle").addEventListener("click", async (e) => {
@@ -63,12 +62,24 @@ function answerListener (response) {
                 });
 
             } else {
+
                 let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
                 let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
+                console.log(chapterId);
+
+                if (chapterId === undefined) { 
+                    return { 
+                        params: "error", 
+                        response : { 
+                            error: "Problems loging in try again!" 
+                        }};
+                }
+
+                console.log(indexChapter, chapterId);
 
                 let clues = await getFromDB("clues");
 
-                let clue = clues.find(clue => clue.clueId === puzzel.clueId);
+                let clue = clues.find(clue => clue.clueId === puzzel.clueId);   
 
                 await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
                     searchDone: true, searchOnGoing: false, onGoing: false 
@@ -86,6 +97,7 @@ function answerListener (response) {
     
                 let updateUser = await getFromDB("users", data.id);
     
+                console.log(updateUser);
                 PubSub.publish({
                     event: "render_map",
                     detail: {
