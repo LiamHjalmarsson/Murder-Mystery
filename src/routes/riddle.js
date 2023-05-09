@@ -51,21 +51,26 @@ function answerListener (response) {
 
             if (!puzzel.isClue) {
 
+                let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
+                // let chapterId = data.chapters.filter((chapter) => chapter.onGoing).map(id => id.chapter)[0]; 
+
+                await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                    onGoing: false, completed: true 
+                });
+
+                let updateUser = await getFromDB("users", data.id);
+
                 PubSub.publish({
                     event: "render_charater_interaction",
                     detail: {
                         response: {
-                            data: data,
+                            data: updateUser,
                             story: storys
                         }
                     }
                 });
 
             } else {
-
-                let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
-                let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
-                console.log(chapterId);
 
                 if (chapterId === undefined) { 
                     return { 
@@ -75,7 +80,9 @@ function answerListener (response) {
                         }};
                 }
 
-                console.log(indexChapter, chapterId);
+                let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
+                let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
+                console.log(chapterId);
 
                 let clues = await getFromDB("clues");
 
