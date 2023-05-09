@@ -57,7 +57,7 @@ async function btnsChoice (data) {
 
     choiseContainer.innerHTML = `
         <div>
-            <button> Find a new character </button>
+            <button id="btnCharacterFind"> Find a new character </button>
         </div>
         <div> 
             <button id="btnClueSearch"> Go to a search area </button>
@@ -79,12 +79,11 @@ function answerListener (data) {
                 let chapterId = data.chapters.filter((chapter) => chapter.completed).map(id => id.chapter)[0];
                 console.log(chapterId);
 
-                console.log(indexChapter, chapterId);
-
                 let characters = await getFromDB("characters");
 
                 let character = characters.some(character => character.Id === character.characterId);   
 
+                console.log(character);
               /*   await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
                     searchDone: true, searchOnGoing: false, onGoing: false 
                 }); */
