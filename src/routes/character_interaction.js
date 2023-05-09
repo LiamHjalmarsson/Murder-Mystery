@@ -1,5 +1,6 @@
 import { PubSub } from "../utilities/pubsub.js";
 import { createElement } from "../lib/js/functions.js";
+import { docUpdateArry, getFromDB, updateArrayMap } from "../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -56,12 +57,58 @@ async function btnsChoice (data) {
 
     choiseContainer.innerHTML = `
         <div>
-            <button> Find a new charater </button>
+            <button> Find a new character </button>
         </div>
         <div> 
-            <button> Go to a search area </button>
+            <button id="btnClueSearch"> Go to a search area </button>
         </div>
     `;
 
     console.log(data);
+    answerListener(data);
+}
+
+function answerListener (data) {
+
+    console.log(data, "correct");
+
+    document.querySelector("#btnClueSearch").addEventListener("click", async (e) => {
+        e.preventDefault();
+       
+               /*  let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true); */
+                let chapterId = data.chapters.filter((chapter) => chapter.completed).map(id => id.chapter)[0];
+                console.log(chapterId);
+
+                console.log(indexChapter, chapterId);
+
+                let characters = await getFromDB("characters");
+
+                let character = characters.some(character => character.Id === character.characterId);   
+
+              /*   await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                    searchDone: true, searchOnGoing: false, onGoing: false 
+                }); */
+    
+                await docUpdateArry("users", data.id, "chapters", {  
+                    chapter: chapterId + 1,
+                    completed: false,
+                    onGoing: true,
+                    searchDone: false,
+                    searchOnGoing: true,
+                });
+    
+               /*  await docUpdateArry("users", data.id, "characters", { characterId: character.Id });
+     */
+                let updateUser = await getFromDB("users", data.id);
+    
+                console.log(updateUser);
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        response: {
+                            data: updateUser
+                        }
+                    }
+                });
+    })
 }

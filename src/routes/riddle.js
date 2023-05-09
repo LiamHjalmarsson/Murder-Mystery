@@ -79,7 +79,7 @@ function answerListener (response) {
 
                 let clues = await getFromDB("clues");
 
-                let clue = clues.find(clue => clue.clueId === puzzel.clueId);   
+                let clue = clues.some(clue => clue.clueId === puzzel.clueId);   
 
                 await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
                     searchDone: true, searchOnGoing: false, onGoing: false 
