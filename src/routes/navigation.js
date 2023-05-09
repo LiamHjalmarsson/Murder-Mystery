@@ -61,7 +61,7 @@ function render_buttonsNav (response) {
             icon: "../../src/lib/icons/search.png",
         },
         {
-            text: "Loga Ut", 
+            text: "Logga ut", 
             id: "topRight",
             icon: "../../src/lib/icons/letter.png",
         },
@@ -116,7 +116,7 @@ async function diffrentBtns (btn, { response } ) {
 
         break;
         
-        case "Loga Ut":
+        case "Gissa mördaren":
 
             stopCountdown();
             localStorage.clear();
