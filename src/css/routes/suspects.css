@@ -2,6 +2,7 @@
     margin: 0;
 }
 .rubrik {
+    margin-top: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,20 +10,24 @@
 }
 
 h1{
+    font-family: var(--"bradley-djr");
     font-size: 30pt;
     padding: 20px;
     margin-right: 20px
 }
 
+.name {
+    font-family: var(--"gitan-latin");
+}
 .Xbtn {
-    font-size: 25pt;
+   font-size: 20pt;
     margin-top: -15px;
     margin-left: 40px;
 }
 
 #wrapSus { 
     height: 100vh;
-    /* position: fixed;
+     position: fixed;
     top: 0;
     left: 0;
     z-index: 3;
@@ -32,7 +37,7 @@ h1{
     width: 100vw;
     background-color: var(--Darkbackground);
     flex-direction: column;
-    overflow: scroll; */
+    overflow: scroll; 
 }
 .suspectsContainer{
     width: 100vw;
@@ -61,4 +66,5 @@ h1{
    
 
 }
+
 

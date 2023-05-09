@@ -10,19 +10,37 @@ export default {}
     });
 })();
 
-function render_component_suspects_bio () {
-    console.log("hello");
+function render_component_suspects_bio (chapter) {
+    console.log(chapter);
     let app = document.querySelector("#app");
-    app.innerHTML ="";
     let bioWrapper = createElement("div","", "wrapBio");
-    app.append(bioWrapper);
+    app.appendChild(bioWrapper);
 
-    var nameRubrik = createElement("H1");
-    // funktion som hämtar rätt namn till det som användaren klickat på
-    nameRubrik.textContent = "Alfred";
-    nameRubrik.appendChild(bioWrapper);
+    bioWrapper.innerHTML = `
+    <div id="SusBio">
+        <div class="CloseBio">
+            <div class="close" id="containerClose"></div>
+        </div>
+        
+        <div id="info">
+            <h1 class="title1">${chapter.fullName}</h1>
+            <h4 class="title2">${chapter.title}</h4>
+        </div>    
 
-    let X = createElement("div", "exitBtn");
-    X.inneerHTML = "X";
-    nameRubrik.append(X);
+    <div id="BioInfo">
+            <div id="SuspectInfo">
+            <p>${chapter.bio}</p>
+        
+            <div id="ImgBox">
+                 <div class="imgSus"></div>
+            </div>
+            </div>  
+    </div>
+    <`
+    document.querySelector(".imgSus").style.backgroundImage = `url(../../src/lib/BioPic/${chapter.imgref}.png)`;
+    document.querySelector(".CloseBio").addEventListener("click", () => {
+        bioWrapper.remove();
+    });
+
+
 }
