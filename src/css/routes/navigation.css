@@ -48,26 +48,27 @@
 
 /* Postionening for the four buttons */
 #topLeft {
-    top: 120px;
+    top: 70px;
     left: 10px;
 }
 
 #topRight {
-    top: 120px;
+    top: 70px;
     right: 10px;
 }
 
 #bottomLeft {
-    bottom: 60px;
+    bottom: 25px;
     left: 10px;
 }
 
 #bottomRight {
-    bottom: 60px;
+    bottom: 25px;
     right: 10px;
 }
 
 #iconNav {
+    margin: 10px;
     background-position: center;
     background-size: contain;
     height: 30px;
