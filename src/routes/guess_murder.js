@@ -11,81 +11,68 @@ export default {}
     });
 })();
 
-async function render_guess_murder () {
-    document.querySelector("#app").innerHTML = "";
-    let div = document.createElement("div");
-    div.textContent("Gissa mördaren!");
-    document.appendChild(div);
 
-    var titleGissa = document.createElement('H1');
-    titleGissa.innerHTML = "Gissa mördaren!";
+async function render_guess_murder ({response}) {
+    let {data} = response;
+ let app = document.querySelector("#app");
+ let guessMurderWrapper = createElement("div","", "wrapSus");
 
-    let suspectsContainer = createElement("div", "", "suspectsContainer");
-    app.append(suspectsContainer);
+ app.append(guessMurderWrapper);
+ var rubrik = createElement("div","rubrik");
+var div = document.createElement('H1');
+    div.textContent = "Gissa mördaren!";
+   rubrik.appendChild(div);
+  
+   let exitBtn = createElement("div","","Xbtn");
+   exitBtn.innerHTML = "X";
+   rubrik.append(exitBtn);
+ exitBtn.addEventListener("click", () => {
+    guessMurderWrapper.remove();
+ });
+
+    let GuessMurderContainer = createElement("div", "suspectsContainer");
+    guessMurderWrapper.append(rubrik, GuessMurderContainer);
 
     let characters = await getFromDB ("charaters");
     console.log(characters);
-    let dataDB = await getFromDB("charaters", "Alfred");
-    console.log(dataDB);
+    
 
-    let susBtns = [
-        {
-            text: "Josette Elina Petrova",
-            id: "JosettePic",
-            icon: "(../../src/library/ProfilePics/Josette.png",
-        },
+    
 
-        {
-            text: "Björn Carl Höök",
-            id: "BjörnPic",
-            icon: "(../../src/library/ProfilePics/Björn.png",
-        },
-        {
-            text: "Brita Lisa Johansdotter Höök",
-            id: "BritaPic",
-            icon: "(../../src/library/ProfilePics/Brita.png",
-            },
+    characters.forEach(chapter => {
+        let SusBtnBox = createElement("div", "susBtn", chapter.imgref);
+         let iconsDiv = createElement("div", "", "iconSus");
 
-        {
-            text: "Juliette Abigail Williams",
-            id: "JuliettePic",
-            icon: "(../../src/library/ProfilePics/Juliette.png",
-        },
-        {
-            text: "Ingrid Britta Borelius",
-            id: "IngridPic",
-            icon: "(../../src/library/ProfilePics/Ingrid.png",
-            },
+        //  const found = data.chapter.some(userChapter => userChapter.charaters === characters.Id);
 
-        {
-            text: "Gustaf Otto Carl Borelius",
-            id: "GustafPic",
-            icon: "(../../src/library/ProfilePics/Gustaf.png",
-            },
-            {
-                text: "Janus Sune Silversson",
-                id: "JanusPic",
-                icon: "(../../src/library/ProfilePics/Janus.png",
-            },
-
-    ];
-
-    susBtns.forEach(btn => {
-        let SusBtnBox = createElement("div", "susBtn", btn.id);
-
-        let iconsDiv = createElement("div", "", "iconSus");
-        iconsDiv.style.backgroundImage = ``;
+        //  if (found) {
+        //     iconsDiv.addEventListener("click", (e) => {
+        //         PubSub.publish({
+        //             event: "render_component_suspects_bio",
+        //             detail: chapter
+        //         });
+        //     });
+        // }
+         iconsDiv.style.backgroundImage = `url(../../src/lib/ProfilePics/${chapter.ImgProfile}.png)`;
+       
+       
+         iconsDiv.addEventListener("click", () => {
+            
+            PubSub.publish({
+                event: "render_guess_weaponMotive",
+                detail: chapter
+            })
+         })
+         let name = createElement("div","name");
+         name.textContent =(chapter.fullName);
         
-        SusBtnBox.addEventListener("click", () => {
-            diffrentBtns(btn.text);
-        });
-        
-        SusBtnBox.append(iconsDiv, button);
-        navigationBox.append(SusBtnBox);
+         SusBtnBox.append(iconsDiv);
+         SusBtnBox.append(name);
+         GuessMurderContainer.append(SusBtnBox);
 
-        let exitBtn = createElement("div", "Xbtn", btn.id)
-        exitBtn.innerHTML = "X";
-        exitBtn.append(SusBtnBox);
-    });
+   });
 
+ 
+
+    
 }
