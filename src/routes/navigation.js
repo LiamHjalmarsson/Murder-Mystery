@@ -29,6 +29,7 @@ function renderNavigation ( response ) {
     document.querySelector("#guessMurder").addEventListener("click", () => {
         PubSub.publish({
             event: "render_guess_murder",
+            detail: response
         });
     });
 } 
@@ -116,7 +117,7 @@ async function diffrentBtns (btn, { response } ) {
 
         break;
         
-        case "Gissa mördaren":
+        case "Log out":
 
             stopCountdown();
             localStorage.clear();
