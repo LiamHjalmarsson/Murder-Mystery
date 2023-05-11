@@ -36,20 +36,18 @@ async function render_map ( { response } ) {
     detail_map(data);
 }
 
-async function detail_map (data) {
-    let map; 
+async function detail_map(data) {
+    let map;
 
-    // users chapters finds the chapters thats ongoing 
+    // users chapters finds the chapters that are ongoing
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
-    // get all chapters 
+    // get all chapters
     let allChapters = await getFromDB("storyTelling");
-    
-    // filter out to get the correct chapter details 
+    let searchArea = await getFromDB("searchLocations");
+
+    // filter out to get the correct chapter details
     let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
-
-    let doneChapters = data.chapters.filter(chapter => chapter.completed);
-
-    if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
+    if (userLocationsOnGoing.searchOnGoing) {
         map = L.map('map').setView([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], 16);
     } else {
         map = L.map('map').setView([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], 16);
@@ -59,11 +57,11 @@ async function detail_map (data) {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
-    
-    addMarkers();
-    
+
+    addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
+
     // map.on('click', coordinatesAlert);
-    
+
     PubSub.publish({
         event: "render_navigation",
         detail: {
@@ -73,47 +71,25 @@ async function detail_map (data) {
             }
         }
     });
-
-    function addMarkers () {
-        let pinIcon = L.icon({
-            iconUrl: '../../library/pin.png',
-            iconSize: [38, 38], // size of the icon
-            iconAnchor: [18, 38], // point of the icon which will correspond to marker's location
-            popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
-        });
-
-        if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
-
-            L.circle([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], {
-                radius: userOnGoingChapter.searchRadius
-                }).addTo(map).bindPopup(userOnGoingChapter.character);
-
-        } else {
-
-            L.marker([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], { icon: pinIcon })
-                .addTo(map).bindPopup(userOnGoingChapter.character);
-
-        }
-
-        allChapters.forEach(chapterDb => {
-            doneChapters.forEach(chapter => {
-                if (chapter.chapter === chapterDb.chapterId) {
-                    if (chapter.completed) {
-                        L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
-                            .addTo(map).bindPopup(chapterDb.character);
-                    } 
-
-                    if (chapter.searchDone) {
-                        L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
-                            radius: chapterDb.searchRadius
-                        }).addTo(map).bindPopup(chapterDb.character);
-                    }
-                }
-            });
-        });
-    }
 }
 
+function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
+    let pinIcon = L.icon({
+        iconUrl: '../../library/pin.png',
+        iconSize: [38, 38], // size of the icon
+        iconAnchor: [18, 38], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
+    });
+
+    if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
+        L.circle([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], {
+            radius: userOnGoingChapter.searchRadius
+        }).addTo(map).bindPopup(userOnGoingChapter.character);
+    } else {
+        L.marker([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], { icon: pinIcon })
+            .addTo(map).bindPopup(userOnGoingChapter.character);
+    }
+}
 
 function getLocation (map) {    
     navigator.geolocation.watchPosition(success);

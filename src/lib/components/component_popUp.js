@@ -1,6 +1,6 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../js/functions.js";
-import { docUpdate, getDocByClue } from "../../utilities/functions/firebase_functions.js";
+import { getDocByClue } from "../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -35,7 +35,7 @@ function render_component_popup ( response ) {
         </div>
         <div class="popUp">
         </div>
-    `
+    `;
 
     document.querySelector("#popUpClose").addEventListener("click", () => {
         document.querySelector("#wrapperPopUp").remove();
@@ -87,10 +87,10 @@ function formListener ( response ) {
         let inputValue = document.querySelector(".popUp_input");
         let puzzel = await getDocByClue(inputValue.value); 
 
+        console.log("puzzel", puzzel);
         if (puzzel.params) {
             inputValue.classList.add("error");
         } else {
-
             inputValue.classList.remove("error");
 
             PubSub.publish({

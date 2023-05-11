@@ -14,7 +14,6 @@ export default {}
 })();
 
 async function render_bag ( data ) {
-
     let app = document.querySelector("#app");
 
     let containerBag = createElement("div", "containerPopUP", "containerBag");
@@ -54,7 +53,7 @@ async function renderInventory (data) {
 
         imgClue.style.backgroundImage = found ? `url(../../src/lib/icons/${clue.imageRef}.png)` : `url(../../src/lib/icons/lock.png)`;
 
-        foundClue.addEventListener("click", (e) => {
+        foundClue.addEventListener("click", () => {
             if (found) {
                 PubSub.publish({
                     event: "render_component_bag_detail",

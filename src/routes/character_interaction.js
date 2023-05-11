@@ -45,69 +45,109 @@ function render_character_interaction ( { response }, counter = 0 ) {
             document.querySelector("#dialogText").innerHTML = story.partsChapter[counter];
         } else {
             document.querySelector("#nextPart").remove();
-            btnsChoice(data);
+            btnsChoice(data, story);
         } 
     });
 }
 
-async function btnsChoice (data) {
-
+async function btnsChoice (data, story) {
     let choiseContainer = createElement("div", "", "choiseContainer");
     document.querySelector("#containerDialog").appendChild(choiseContainer);
 
-    choiseContainer.innerHTML = `
-        <div>
-            <button id="btnCharacterFind"> Find a new character </button>
-        </div>
-        <div> 
-            <button id="btnClueSearch"> Go to a search area </button>
-        </div>
-    `;
+    if (story.locationSearch && !story.alley) {
+        choiseContainer.innerHTML = `
+            <div>
+                <button id="btnCharacterFind"> Find a new character </button>
+            </div>
+            <div> 
+                <button id="btnClueSearch"> Go to a search area </button>
+            </div>
+        `;
 
-    console.log(data);
-    answerListener(data);
+    } else if (story.locationSearch && story.alley) {
+        choiseContainer.innerHTML = `
+            <div> 
+                <button id="btnClueSearch"> Go to a search area </button>
+            </div>
+        `;
+
+    } else {
+        choiseContainer.innerHTML = `
+            <div>
+                <button id="btnCharacterFind"> Find a new character </button>
+            </div>
+        `;
+    }
+    
+    answerListener(data, story);
 }
 
-function answerListener (data) {
+function answerListener (data, story) {
 
-    console.log(data, "correct");
+    if (document.querySelector("#btnClueSearch")) {
+        document.querySelector("#btnClueSearch").addEventListener("click", async (e) => {
+            e.preventDefault();
 
-    document.querySelector("#btnClueSearch").addEventListener("click", async (e) => {
-        e.preventDefault();
-       
-               /*  let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true); */
-                let chapterId = data.chapters.filter((chapter) => chapter.completed).map(id => id.chapter)[0];
-                console.log(chapterId);
-
-                let characters = await getFromDB("characters");
-
-                let character = characters.some(character => character.Id === character.characterId);   
-
-                console.log(character);
-              /*   await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-                    searchDone: true, searchOnGoing: false, onGoing: false 
-                }); */
-    
-                await docUpdateArry("users", data.id, "chapters", {  
-                    chapter: chapterId + 1,
-                    completed: false,
-                    onGoing: true,
-                    searchDone: false,
-                    searchOnGoing: true,
-                });
-    
-               /*  await docUpdateArry("users", data.id, "characters", { characterId: character.Id });
-     */
-                let updateUser = await getFromDB("users", data.id);
-    
-                console.log(updateUser);
-                PubSub.publish({
-                    event: "render_map",
-                    detail: {
-                        response: {
-                            data: updateUser
-                        }
+            let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
+        
+            await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                searchOnGoing: true, 
+            });
+        
+            let updateUser = await getFromDB("users", data.id);
+        
+            PubSub.publish({
+                event: "render_map",
+                detail: {
+                    response: {
+                        data: updateUser
                     }
-                });
-    })
+                }
+            });
+        });
+    }
+
+    if (document.querySelector("#btnCharacterFind")) {
+        document.querySelector("#btnCharacterFind").addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);
+            
+            await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                completed: true, onGoing: false
+            });
+
+            const completedChapters = data.chapters.filter((chapter) => chapter.onGoing);
+            const lastCorrectChapter = completedChapters.length > 0 ? completedChapters[completedChapters.length - 1].chapter : null;
+
+            let characters = await getFromDB("charaters");
+            let character = characters.filter(character => character.Id === story.characterId)[0]; 
+
+            await docUpdateArry("users", data.id, "characters", { characterId: character.Id });
+            
+            // prova att göra en collection för story och en för search area 
+            // när man klickar på knappen för marker går man in i collection story och går nan'
+            // in i search läger man till sök område.
+
+            // när man är klar med en search ska man också gå vidare till en ny story.. 
+            await docUpdateArry("users", data.id, "chapters", {  
+                chapter: lastCorrectChapter + 1,
+                completed: false,
+                onGoing: true,
+                searchDone: false,
+                searchOnGoing: false,
+            });
+        
+            let updateUser = await getFromDB("users", data.id);
+        
+            PubSub.publish({
+                event: "render_map",
+                detail: {
+                    response: {
+                        data: updateUser
+                    }
+                }
+            });
+        });
+    }
 }

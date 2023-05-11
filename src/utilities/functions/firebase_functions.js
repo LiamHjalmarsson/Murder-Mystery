@@ -82,7 +82,6 @@ export const getFromDB = async (colName, docId) => {
 
 
 export const addDocAddData = async (colName, docData, docId) => {
-
     let colRef = collection(db, colName);
 
     if (docId) {
@@ -94,7 +93,6 @@ export const addDocAddData = async (colName, docData, docId) => {
         });
 
     } else {
-
         let document = doc(colRef);
 
         return await setDoc(document, {
@@ -103,7 +101,6 @@ export const addDocAddData = async (colName, docData, docId) => {
         });
     
     }
-
 }
 
 
@@ -160,7 +157,7 @@ export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
             [arr]: arraryToUpdate
         });
 
-        console.log(`Document with ID ${docId} successfully updated.`);
+        console.log("helo fro the firebase", arraryToUpdate);
         return arraryToUpdate;
     } catch (error) {
         console.error(`Error updating document with ID ${docId}:`, error);

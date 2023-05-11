@@ -121,7 +121,7 @@ async function formListener (e, params) {
     }
 }
 
-export async function addUser (user) {
+async function addUser () {
     let usersInDB = await getFromDB("users");
     
     let username = document.querySelector("#username").value;
@@ -132,7 +132,7 @@ export async function addUser (user) {
     let docDataUser = {
         password: password,
         username: username,
-        clues: [],
+        // clues: [],
         charaters: [
             {
                 characterId: 1
@@ -150,6 +150,10 @@ export async function addUser (user) {
                 searchDone: false,
             }, 
         ],
+        // searchLocations: [
+        //     {
+        //     }
+        // ]
     }
 
     if (userExists === undefined) {

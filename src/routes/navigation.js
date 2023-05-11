@@ -51,7 +51,6 @@ function renderTopMenu () {
 }
 
 function render_buttonsNav (response) {
-
     let navigationBox = createElement("div", "", "navigationBox");
 
     let buttons = [
