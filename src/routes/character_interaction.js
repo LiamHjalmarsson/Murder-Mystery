@@ -117,13 +117,10 @@ function answerListener (data, story) {
                 completed: true, onGoing: false
             });
 
-            const completedChapters = data.chapters.filter((chapter) => chapter.onGoing);
-            const lastCorrectChapter = completedChapters.length > 0 ? completedChapters[completedChapters.length - 1].chapter : null;
+            let completedChapters = data.chapters.filter((chapter) => chapter.onGoing);
+            let lastCorrectChapter = completedChapters.length > 0 ? completedChapters[completedChapters.length - 1].chapter : null;
 
-            let characters = await getFromDB("charaters");
-            let character = characters.filter(character => character.Id === story.characterId)[0]; 
-
-            await docUpdateArry("users", data.id, "characters", { characterId: character.Id });
+            await docUpdateArry("users", data.id, "characters", { characterId: story.characterId });
         
             await docUpdateArry("users", data.id, "chapters", {  
                 chapter: lastCorrectChapter + 1,
@@ -131,7 +128,9 @@ function answerListener (data, story) {
             });
         
             let updateUser = await getFromDB("users", data.id);
-        
+
+            console.log(updateUser);
+
             PubSub.publish({
                 event: "render_map",
                 detail: {

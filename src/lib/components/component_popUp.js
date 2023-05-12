@@ -82,7 +82,6 @@ function displayInformation ( res ) {
 }
 
 function formListener ( response ) {
-
     let isClue = response.data.chapters.some(chapter => chapter.searchOnGoing);
 
     if (isClue) {

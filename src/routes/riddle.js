@@ -82,15 +82,12 @@ function answerListener (response) {
                 
                 let allStorys = await getFromDB("storyTelling");
 
+                let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1)
+
                 let lastIndex = data.searchArea ? data.searchArea.length: 0;
                 await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
 
-                console.log("lastIndex", data);
-                console.log("lastIndex", data.searchArea);
-                console.log("lastIndex", lastIndex);
-
-                let nextChapter = allStorys.filter(story => story.partAfterSearch)[lastIndex];
-                console.log(nextChapter);
+                let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
 
                 if (nextChapter) {
                     await docUpdateArry("users", data.id, "chapters", {  
