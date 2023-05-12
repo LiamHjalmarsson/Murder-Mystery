@@ -39,11 +39,11 @@ async function render_map ( { response } ) {
 async function detail_map(data) {
     let map;
 
+    console.log("map", data);
     // users chapters finds the chapters that are ongoing
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
     // get all chapters
     let allChapters = await getFromDB("storyTelling");
-    let searchArea = await getFromDB("searchLocations");
 
     // filter out to get the correct chapter details
     let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
@@ -60,7 +60,9 @@ async function detail_map(data) {
 
     addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
 
-    // map.on('click', coordinatesAlert);
+    chaptersDone(map, allChapters, data);
+
+    map.on('click', coordinatesAlert);
 
     PubSub.publish({
         event: "render_navigation",
@@ -89,6 +91,27 @@ function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
         L.marker([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], { icon: pinIcon })
             .addTo(map).bindPopup(userOnGoingChapter.character);
     }
+}
+
+function chaptersDone (map, allChapters, data) {
+    let doneChapters = data.chapters.filter(chapter => chapter.completed);
+
+    allChapters.forEach(chapterDb => {
+        
+        doneChapters.forEach(chapter => {
+
+            if ( chapter.chapter === chapterDb.chapterId ) {
+                L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
+                    .addTo(map).bindPopup("done create restart");
+            }
+
+            if ( chapter.chapter === chapterDb.chapterId && chapter.searchDone) {
+                L.marker([chapterDb.locationSearch._lat, chapterDb.locationSearch._long])
+                    .addTo(map).bindPopup("Clue Found");
+            }
+            
+        });
+    });
 }
 
 function getLocation (map) {    

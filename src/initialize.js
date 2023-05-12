@@ -18,7 +18,6 @@ import component_character_interaction from "./lib/components/component_characte
 import component_suspects_bio from "./lib/components/component_suspects_bio.js";
 
 import character_interaction from "./routes/character_interaction.js";
-import clues from "./routes/clues.js";
 import guess_murder from "./routes/guess_murder.js";
 import guess_weaponMotive from "./routes/guess_weaponMotive.js";
 import suspects from "./routes/suspects.js";

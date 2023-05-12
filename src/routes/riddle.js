@@ -14,8 +14,6 @@ export default {}
 })();
 
 function render_riddle ( { response } ) {
-    let { data, puzzel, storys } = response;
-
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -27,7 +25,7 @@ function render_riddle ( { response } ) {
             <div>
                 <div id="riddleIcon"></div>
                 <div id="riddleText">
-                    <p>${puzzel.riddle}</p>
+                    <p>${response.puzzel.riddle}</p>
                 </div>
                 <input type="text" id="riddleAnswer">
                 <div>
@@ -47,46 +45,24 @@ function answerListener (response) {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
 
-        if (riddleAnswerInput === puzzel.answer) {
+            if (riddleAnswerInput === puzzel.answer) {
+            // To get riddles to go to character interaction
+            if (!puzzel.clueId) {
 
-            if (!puzzel.isClue) {
-
-                if (storys.alley) {
-                    data.chapters.forEach( async (chapter, index) => {
-                        if (chapter.onGoing) {
-                            let updateUser = await getFromDB("users", data.id);
+                let updateUser = await getFromDB("users", data.id);
         
-                            PubSub.publish({
-                                event: "render_charater_interaction",
-                                detail: {
-                                    response: {
-                                        data: updateUser,
-                                        story: storys
-                                    }
-                                }
-                            });
+                console.log("correct riddle to go to character interaction");
+                PubSub.publish({
+                    event: "render_charater_interaction",
+                    detail: {
+                        response: {
+                            data: updateUser,
+                            story: storys
                         }
-                    });
-                    
-                } else {
-                    // let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
-                    // await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-                    //     completed: true, onGoing: false
-                    // });
+                    }
+                });
 
-                    let updateUser = await getFromDB("users", data.id);
-        
-                    PubSub.publish({
-                        event: "render_charater_interaction",
-                        detail: {
-                            response: {
-                                data: updateUser,
-                                story: storys
-                            }
-                        }
-                    });
-                }
-
+            // When you go to a riddle for a search area to update clues etc
             } else {
 
                 let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
@@ -95,20 +71,10 @@ function answerListener (response) {
                 if (chapterId === undefined) { 
                     console.log("error", undefined);
                     return;
-                    // PubSub.publish({ 
-                    //     event: "",
-                    //     detail: { 
-                    //         params: "error", 
-                    //         response : { 
-                    //             error: "Problems loging in try again!" 
-                    //         }
-                    //     }
-                    // });
                 }
 
                 let clues = await getFromDB("clues");
-
-                let clue = clues.filter(clue => clue.clueId === puzzel.clueId)[0];  
+                let clue = clues.filter(clue => clue.clueId === puzzel.clueId)[0];
                 
                 await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
                     searchDone: true, searchOnGoing: false, onGoing: false, completed: true
@@ -116,31 +82,36 @@ function answerListener (response) {
                 
                 let allStorys = await getFromDB("storyTelling");
 
-                allStorys.forEach(async (story) => {
-                    const storyUser = data.chapters.filter((chapter) => chapter.chapter === story.chapterId).map(chapter => chapter.chapterId);
-                    
-                    if (story.partAfterSearch && storyUser) {
-                        await docUpdateArry("users", data.id, "chapters", {  
-                            chapter: story.chapterId,
-                            completed: false,
-                            onGoing: true,
-                            searchDone: false,
-                            searchOnGoing: false,
-                        });
-                        await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
+                let lastIndex = data.searchArea ? data.searchArea.length: 0;
+                await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
+
+                console.log("lastIndex", data);
+                console.log("lastIndex", data.searchArea);
+                console.log("lastIndex", lastIndex);
+
+                let nextChapter = allStorys.filter(story => story.partAfterSearch)[lastIndex];
+                console.log(nextChapter);
+
+                if (nextChapter) {
+                    await docUpdateArry("users", data.id, "chapters", {  
+                        chapter: nextChapter.chapterId,
+                        onGoing: true,
+                        searchOnGoing: false,
+                    });
+
+                    await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
             
-                        let updateUser = await getFromDB("users", data.id);
-            
-                        PubSub.publish({
-                            event: "render_map",
-                            detail: {
-                                response: {
-                                    data: updateUser
-                                }
+                    let updateUser = await getFromDB("users", data.id);
+
+                    PubSub.publish({
+                        event: "render_map",
+                        detail: {
+                            response: {
+                                data: updateUser
                             }
-                        });
-                    }
-                });
+                        }
+                    });
+                }
             }
 
         } else {

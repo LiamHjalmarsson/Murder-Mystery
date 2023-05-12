@@ -23,21 +23,37 @@ export const getUserDoc = async (username, password) => {
     }
 };
 
-export const getDocByClue = async (answer) => {
-    let colRef = collection(db, "puzzel");
+export const getDocByClue = async (colName, answer, response) => {
+
+    let colRef = collection(db, colName);
     let queryRef = query(colRef, where("unlockRiddleKey", "==", answer));
     let result = await getDocs(queryRef);
 
     if (result.empty) {
-
         return { 
             params: "error", 
             response : { 
                 error: "Wrong answer" 
             }};
-
     } else {
-        return result.docs[0].data();
+        let newData = result.docs[0].data();
+
+        if (colName === "puzzelStory") {
+            const dataStoryExists = response.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
+    
+            if (dataStoryExists === undefined || !dataStoryExists.onGoing) {
+                return { 
+                    params: "error", 
+                    response : { 
+                        error: "Already enter this value" 
+                    }}; ;
+            } else {
+                return newData;
+            }
+        } else {
+            return newData;
+        }
+
     }
 };
 
@@ -120,13 +136,12 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
 
     let dataToUpdate = { [arrayField]: arrayUnion(newValue) };
 
-    console.log(dataToUpdate);
     try {
         await updateDoc(refDoc, dataToUpdate);
 
-        console.log(`Document with ID ${docId} successfully updated.`);
+        console.log(`Document with ID ${docId} successfully updated.`, newValue);
 
-        return true;
+        return newValue;
     } catch (error) {
         console.error(`Error updating document with ID ${docId}:`, error);
 
@@ -157,7 +172,6 @@ export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
             [arr]: arraryToUpdate
         });
 
-        console.log("helo fro the firebase", arraryToUpdate);
         return arraryToUpdate;
     } catch (error) {
         console.error(`Error updating document with ID ${docId}:`, error);

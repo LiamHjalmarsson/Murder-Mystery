@@ -42,6 +42,7 @@ function render_component_popup ( response ) {
     });
 
     displayInformation(response);
+
 }
 
 function displayInformation ( res ) { 
@@ -81,13 +82,21 @@ function displayInformation ( res ) {
 }
 
 function formListener ( response ) {
+
+    let isClue = response.data.chapters.some(chapter => chapter.searchOnGoing);
+
+    if (isClue) {
+        document.querySelector("#box").classList.add("puzzelClues");
+    } else {
+        document.querySelector("#box").classList.add("puzzelStory");
+    }
+
     document.querySelector("#box").addEventListener("submit", async (e) => {
         e.preventDefault();
 
         let inputValue = document.querySelector(".popUp_input");
-        let puzzel = await getDocByClue(inputValue.value); 
+        let puzzel = await getDocByClue(e.target.className, inputValue.value, response.data); 
 
-        console.log("puzzel", puzzel);
         if (puzzel.params) {
             inputValue.classList.add("error");
         } else {
@@ -106,3 +115,4 @@ function formListener ( response ) {
         }
     });
 }
+

@@ -91,7 +91,7 @@ function answerListener (data, story) {
             let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
         
             await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-                searchOnGoing: true, 
+                searchOnGoing: true, completed: true
             });
         
             let updateUser = await getFromDB("users", data.id);
@@ -124,18 +124,10 @@ function answerListener (data, story) {
             let character = characters.filter(character => character.Id === story.characterId)[0]; 
 
             await docUpdateArry("users", data.id, "characters", { characterId: character.Id });
-            
-            // prova att göra en collection för story och en för search area 
-            // när man klickar på knappen för marker går man in i collection story och går nan'
-            // in i search läger man till sök område.
-
-            // när man är klar med en search ska man också gå vidare till en ny story.. 
+        
             await docUpdateArry("users", data.id, "chapters", {  
                 chapter: lastCorrectChapter + 1,
-                completed: false,
                 onGoing: true,
-                searchDone: false,
-                searchOnGoing: false,
             });
         
             let updateUser = await getFromDB("users", data.id);
@@ -151,3 +143,10 @@ function answerListener (data, story) {
         });
     }
 }
+
+
+            // prova att göra en collection för story och en för search area 
+            // när man klickar på knappen för marker går man in i collection story och går nan'
+            // in i search läger man till sök område.
+
+            // när man är klar med en search ska man också gå vidare till en ny story.. 

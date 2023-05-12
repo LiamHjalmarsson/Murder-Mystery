@@ -132,8 +132,8 @@ async function addUser () {
     let docDataUser = {
         password: password,
         username: username,
-        // clues: [],
-        charaters: [
+        clues: [],
+        characters: [
             {
                 characterId: 1
             },
@@ -144,16 +144,10 @@ async function addUser () {
         chapters: [
             {
                 chapter: 1,
-                completed: false,
                 onGoing: true,
-                searchOnGoing   : false,
-                searchDone: false,
+                searchOnGoing: false,
             }, 
         ],
-        // searchLocations: [
-        //     {
-        //     }
-        // ]
     }
 
     if (userExists === undefined) {
