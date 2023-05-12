@@ -11,15 +11,28 @@ export default {}
         listener: render_character_interaction
     });
 
+    PubSub.subscribe({
+        event: "map_found_charater_interaction",
+        listener: render_character_interaction
+    });
+
 })();
 
 function render_character_interaction ( { response }, counter = 0 ) {
-    let { data, story } = response;
+    let { data, story, found } = response;
 
     let app = document.querySelector("#app");
-    app.innerHTML = "";
+
+    if (!found) {
+        app.innerHTML = "";
+    }
 
     let containerDialog = createElement("div", "", "containerDialog");
+
+    if (found) {
+        containerDialog.classList.add("chapterFoundReading"); 
+    }
+    
     app.appendChild(containerDialog);
 
     containerDialog.style.backgroundImage = `url(../../src/lib/images/${story.imageRef}.jpg)`;
@@ -44,8 +57,13 @@ function render_character_interaction ( { response }, counter = 0 ) {
         if (counter < story.partsChapter.length) {
             document.querySelector("#dialogText").innerHTML = story.partsChapter[counter];
         } else {
-            document.querySelector("#nextPart").remove();
-            btnsChoice(data, story);
+
+            if (found) {
+                containerDialog.remove();
+            } else {
+                document.querySelector("#nextPart").remove();
+                btnsChoice(data, story);
+            }
         } 
     });
 }
@@ -54,7 +72,25 @@ async function btnsChoice (data, story) {
     let choiseContainer = createElement("div", "", "choiseContainer");
     document.querySelector("#containerDialog").appendChild(choiseContainer);
 
-    if (story.locationSearch && !story.alley) {
+    // let found = data.chapters.find(chapter => chapter.chapter === story.chapterId + 1);
+    
+    // console.log(found);
+    // if (found == undefined) {
+    //     found = false;
+    // } 
+
+    // if (found) {
+    //     PubSub.publish({
+    //         event: "render_map",
+    //         detail: {
+    //             response: {
+    //                 data: data
+    //             }
+    //         }
+    //     });
+    // }
+
+    if (story.locationSearch && !story.alley ) {
         choiseContainer.innerHTML = `
             <div>
                 <button id="btnCharacterFind"> Find a new character </button>
@@ -63,14 +99,12 @@ async function btnsChoice (data, story) {
                 <button id="btnClueSearch"> Go to a search area </button>
             </div>
         `;
-
     } else if (story.locationSearch && story.alley) {
         choiseContainer.innerHTML = `
             <div> 
                 <button id="btnClueSearch"> Go to a search area </button>
             </div>
         `;
-
     } else {
         choiseContainer.innerHTML = `
             <div>
@@ -85,15 +119,15 @@ async function btnsChoice (data, story) {
 function answerListener (data, story) {
 
     if (document.querySelector("#btnClueSearch")) {
+
         document.querySelector("#btnClueSearch").addEventListener("click", async (e) => {
             e.preventDefault();
-
+            
             let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
-        
             await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
                 searchOnGoing: true, completed: true
             });
-        
+
             let updateUser = await getFromDB("users", data.id);
         
             PubSub.publish({
@@ -109,6 +143,7 @@ function answerListener (data, story) {
 
     if (document.querySelector("#btnCharacterFind")) {
         document.querySelector("#btnCharacterFind").addEventListener("click", async (e) => {
+
             e.preventDefault();
 
             let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);
@@ -128,8 +163,6 @@ function answerListener (data, story) {
             });
         
             let updateUser = await getFromDB("users", data.id);
-
-            console.log(updateUser);
 
             PubSub.publish({
                 event: "render_map",

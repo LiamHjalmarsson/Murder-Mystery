@@ -51,17 +51,15 @@ function answerListener (response) {
 
                 let updateUser = await getFromDB("users", data.id);
         
-                console.log("correct riddle to go to character interaction");
                 PubSub.publish({
                     event: "render_charater_interaction",
                     detail: {
                         response: {
                             data: updateUser,
-                            story: storys
+                            story: storys,
                         }
                     }
                 });
-
             // When you go to a riddle for a search area to update clues etc
             } else {
 
@@ -76,20 +74,22 @@ function answerListener (response) {
                 let clues = await getFromDB("clues");
                 let clue = clues.filter(clue => clue.clueId === puzzel.clueId)[0];
                 
-                await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-                    searchDone: true, searchOnGoing: false, onGoing: false, completed: true
-                });
-                
                 let allStorys = await getFromDB("storyTelling");
 
                 let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1)
 
                 let lastIndex = data.searchArea ? data.searchArea.length: 0;
-                await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
 
                 let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
 
                 if (nextChapter) {
+
+                    await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                        searchDone: true, searchOnGoing: false, onGoing: false, completed: true
+                    });
+
+                    await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
+
                     await docUpdateArry("users", data.id, "chapters", {  
                         chapter: nextChapter.chapterId,
                         onGoing: true,

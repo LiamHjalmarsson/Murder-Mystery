@@ -47,6 +47,7 @@ async function detail_map(data) {
 
     // filter out to get the correct chapter details
     let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
+    
     if (userLocationsOnGoing.searchOnGoing) {
         map = L.map('map').setView([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], 16);
     } else {
@@ -93,25 +94,46 @@ function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
     }
 }
 
-function chaptersDone (map, allChapters, data) {
+function chaptersDone(map, allChapters, data) {
     let doneChapters = data.chapters.filter(chapter => chapter.completed);
 
     allChapters.forEach(chapterDb => {
-        
         doneChapters.forEach(chapter => {
-
-            if ( chapter.chapter === chapterDb.chapterId ) {
-                L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
-                    .addTo(map).bindPopup("done create restart");
+            if (chapter.chapter === chapterDb.chapterId) {
+                let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
+                button.textContent = `Story ${chapterDb.chapterId}`;
+                button.addEventListener('click', () => {
+                    handleButtonClick(chapterDb, data);
+                });
+    
+                let popupContent = createElement('div');
+                popupContent.appendChild(button);
+    
+                let marker = L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
+                .addTo(map)
+                .bindPopup(popupContent);
             }
-
-            if ( chapter.chapter === chapterDb.chapterId && chapter.searchDone) {
-                L.marker([chapterDb.locationSearch._lat, chapterDb.locationSearch._long])
-                    .addTo(map).bindPopup("Clue Found");
+    
+            if (chapter.chapter === chapterDb.chapterId && chapter.searchDone) {
+            L.marker([chapterDb.locationSearch._lat, chapterDb.locationSearch._long])
+                .addTo(map)
+                .bindPopup("Search Completed");
             }
-            
         });
     });
+
+    function handleButtonClick(chapterDb, data) {
+        PubSub.publish({
+            event: "map_found_charater_interaction",
+            detail: {
+                response: {
+                    data: data,
+                    story: chapterDb,
+                    found: true
+                }
+            }
+        });
+    }
 }
 
 function getLocation (map) {    
