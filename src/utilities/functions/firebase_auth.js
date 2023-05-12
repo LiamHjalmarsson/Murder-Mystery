@@ -6,13 +6,13 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
 
 export const auth = getAuth(App);
 
-export const registerPlayer = async (email, password) => {
-    if (!validateField(email)) {
+export const registerPlayer = async (username, password) => {
+    if (!validateField(username)) {
         console.log("Please enter a valid username");
         return;
     }
 
-    if (!validatePassword(email)) {
+    if (!validatePassword(password)) {
         console.log("Please enter a password longer then 4 charaters");
         return;
     }

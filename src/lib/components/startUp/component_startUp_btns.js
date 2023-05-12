@@ -1,6 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement } from "../../js/functions.js";
-import { getFromDB, addDocAddData } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -14,7 +13,6 @@ export default {}
 })();
 
 function component_startUp_btns (params) {
-
     let btnContainer = createElement("div", "", "btnContainer");
     let btnDeatils = ["register", "login"];
 

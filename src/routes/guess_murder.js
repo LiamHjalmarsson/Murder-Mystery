@@ -11,7 +11,6 @@ export default {}
     });
 })();
 
-
 async function render_guess_murder ({response}) {
     let {data} = response;
  let app = document.querySelector("#app");
@@ -71,8 +70,5 @@ var div = document.createElement('H1');
          GuessMurderContainer.append(SusBtnBox);
 
    });
-
- 
-
     
 }

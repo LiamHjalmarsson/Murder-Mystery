@@ -52,7 +52,6 @@ function renderTopMenu () {
 }
 
 function render_buttonsNav (response) {
-
     let navigationBox = createElement("div", "", "navigationBox");
 
     let buttons = [
@@ -101,6 +100,10 @@ function render_buttonsNav (response) {
 async function diffrentBtns (btn, { response } ) {
     let { data, storys } = response;
 
+    if (document.querySelector("#wrapperPopUp")) {
+        document.querySelector("#wrapperPopUp").remove();
+    }
+    
     switch (btn) {
         case "Lös Gåta":
             
@@ -117,9 +120,10 @@ async function diffrentBtns (btn, { response } ) {
 
         break;
         
-        case "Log out":
+        case "Logga ut":
 
-            stopCountdown();
+
+            // imagesRef();
             localStorage.clear();
             PubSub.publish({
                 event: "render_startUp",

@@ -1,6 +1,6 @@
 import { PubSub } from "../../utilities/pubsub.js";
 import { createElement } from "../js/functions.js";
-import { docUpdate, getDocByClue } from "../../utilities/functions/firebase_functions.js";
+import { getDocByClue } from "../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -35,13 +35,14 @@ function render_component_popup ( response ) {
         </div>
         <div class="popUp">
         </div>
-    `
+    `;
 
     document.querySelector("#popUpClose").addEventListener("click", () => {
         document.querySelector("#wrapperPopUp").remove();
     });
 
     displayInformation(response);
+
 }
 
 function displayInformation ( res ) { 
@@ -81,16 +82,23 @@ function displayInformation ( res ) {
 }
 
 function formListener ( response ) {
+    let isClue = response.data.chapters.some(chapter => chapter.searchOnGoing);
+
+    if (isClue) {
+        document.querySelector("#box").classList.add("puzzelClues");
+    } else {
+        document.querySelector("#box").classList.add("puzzelStory");
+    }
+
     document.querySelector("#box").addEventListener("submit", async (e) => {
         e.preventDefault();
 
         let inputValue = document.querySelector(".popUp_input");
-        let puzzel = await getDocByClue(inputValue.value); 
+        let puzzel = await getDocByClue(e.target.className, inputValue.value, response.data); 
 
         if (puzzel.params) {
             inputValue.classList.add("error");
         } else {
-
             inputValue.classList.remove("error");
 
             PubSub.publish({
@@ -106,3 +114,4 @@ function formListener ( response ) {
         }
     });
 }
+

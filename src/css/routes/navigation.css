@@ -48,22 +48,22 @@
 
 /* Postionening for the four buttons */
 #topLeft {
-    top: 70px;
+    top: 12vh;
     left: 10px;
 }
 
 #topRight {
-    top: 70px;
+    top: 12vh;
     right: 10px;
 }
 
 #bottomLeft {
-    bottom: 25px;
+    bottom: 4vh;
     left: 10px;
 }
 
 #bottomRight {
-    bottom: 25px;
+    bottom: 4vh;
     right: 10px;
 }
 

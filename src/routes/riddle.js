@@ -14,8 +14,6 @@ export default {}
 })();
 
 function render_riddle ( { response } ) {
-    let { data, puzzel, storys } = response;
-
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -27,7 +25,7 @@ function render_riddle ( { response } ) {
             <div>
                 <div id="riddleIcon"></div>
                 <div id="riddleText">
-                    <p>${puzzel.riddle}</p>
+                    <p>${response.puzzel.riddle}</p>
                 </div>
                 <input type="text" id="riddleAnswer">
                 <div>
@@ -47,65 +45,70 @@ function answerListener (response) {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
 
-        if (riddleAnswerInput === puzzel.answer) {
+            if (riddleAnswerInput === puzzel.answer) {
+            // To get riddles to go to character interaction
+            if (!puzzel.clueId) {
 
-            if (!puzzel.isClue) {
-
+                let updateUser = await getFromDB("users", data.id);
+        
                 PubSub.publish({
                     event: "render_charater_interaction",
                     detail: {
                         response: {
-                            data: data,
-                            story: storys
+                            data: updateUser,
+                            story: storys,
                         }
                     }
                 });
-
+            // When you go to a riddle for a search area to update clues etc
             } else {
 
                 let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
                 let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
-                console.log(chapterId);
-
+                
                 if (chapterId === undefined) { 
-                    return { 
-                        params: "error", 
-                        response : { 
-                            error: "Problems loging in try again!" 
-                        }};
+                    console.log("error", undefined);
+                    return;
                 }
 
-                console.log(indexChapter, chapterId);
-
                 let clues = await getFromDB("clues");
+                let clue = clues.filter(clue => clue.clueId === puzzel.clueId)[0];
+                
+                let allStorys = await getFromDB("storyTelling");
 
-                let clue = clues.some(clue => clue.clueId === puzzel.clueId);   
+                let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1)
 
-                await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-                    searchDone: true, searchOnGoing: false, onGoing: false 
-                });
-    
-                await docUpdateArry("users", data.id, "chapters", {  
-                    chapter: chapterId + 1,
-                    completed: false,
-                    onGoing: true,
-                    searchDone: false,
-                    searchOnGoing: false,
-                });
-    
-                await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
-    
-                let updateUser = await getFromDB("users", data.id);
-    
-                console.log(updateUser);
-                PubSub.publish({
-                    event: "render_map",
-                    detail: {
-                        response: {
-                            data: updateUser
+                let lastIndex = data.searchArea ? data.searchArea.length: 0;
+
+                let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
+
+                if (nextChapter) {
+
+                    await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                        searchDone: true, searchOnGoing: false, onGoing: false, completed: true
+                    });
+
+                    await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
+
+                    await docUpdateArry("users", data.id, "chapters", {  
+                        chapter: nextChapter.chapterId,
+                        onGoing: true,
+                        searchOnGoing: false,
+                    });
+
+                    await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
+            
+                    let updateUser = await getFromDB("users", data.id);
+
+                    PubSub.publish({
+                        event: "render_map",
+                        detail: {
+                            response: {
+                                data: updateUser
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
 
         } else {
