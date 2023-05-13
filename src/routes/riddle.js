@@ -76,7 +76,7 @@ function answerListener (response) {
                 
                 let allStorys = await getFromDB("storyTelling");
 
-                let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1)
+                let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1);
 
                 let lastIndex = data.searchArea ? data.searchArea.length: 0;
 

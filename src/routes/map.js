@@ -42,43 +42,55 @@ async function detail_map(data) {
     console.log("map", data);
     // users chapters finds the chapters that are ongoing
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
+
     // get all chapters
     let allChapters = await getFromDB("storyTelling");
-
-    // filter out to get the correct chapter details
-    let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
     
-    if (userLocationsOnGoing.searchOnGoing) {
-        map = L.map('map').setView([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], 16);
-    } else {
-        map = L.map('map').setView([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], 16);
-    }
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
-    addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
-
-    chaptersDone(map, allChapters, data);
-
-    map.on('click', coordinatesAlert);
-
-    PubSub.publish({
-        event: "render_navigation",
-        detail: {
-            response: {
-                data: data,
-                storys: userOnGoingChapter
-            }
+    if (userLocationsOnGoing !== undefined) {
+        // filter out to get the correct chapter details
+        let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
+        
+        if (userLocationsOnGoing.searchOnGoing) {
+            map = L.map('map').setView([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], 16);
+        } else {
+            map = L.map('map').setView([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], 16);
         }
-    });
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
+        chaptersDone(map, allChapters, data);
+
+        map.on('click', coordinatesAlert);
+
+        PubSub.publish({
+            event: "render_navigation",
+            detail: {
+                response: {
+                    data: data,
+                    storys: userOnGoingChapter
+                }
+            }
+        });
+    } else {
+        map = L.map('map').setView([55.6050, 13.0038], 16);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        console.log("!!!!! Missing something to be ongoing !!!! ");
+        console.log("!!!!! Missing something to be ongoing !!!! ");
+    }
 }
 
 function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
     let pinIcon = L.icon({
-        iconUrl: '../../library/pin.png',
+        iconUrl: '../../library/icons/pin.png',
         iconSize: [38, 38], // size of the icon
         iconAnchor: [18, 38], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
@@ -109,15 +121,16 @@ function chaptersDone(map, allChapters, data) {
                 let popupContent = createElement('div');
                 popupContent.appendChild(button);
     
-                let marker = L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
-                .addTo(map)
-                .bindPopup(popupContent);
+                L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
+                .addTo(map).bindPopup(popupContent);
             }
     
             if (chapter.chapter === chapterDb.chapterId && chapter.searchDone) {
-            L.marker([chapterDb.locationSearch._lat, chapterDb.locationSearch._long])
-                .addTo(map)
-                .bindPopup("Search Completed");
+                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
+                    radius: chapterDb.searchRadius,
+                    color: "lightgreen",
+                    fillOpacity: 0.4
+                }).addTo(map).bindPopup("Search Completed");
             }
         });
     });
