@@ -1,22 +1,15 @@
 #bagNav {
     display: flex;
     justify-content: center;
-    padding: 10px;
-    height: 75px;
+    height: 100px;
     align-items: center;
-    position: relative;
+    /* position: relative; */   
 }
 
 .bagClose {
-    width: 40%;
-    display: flex;
-    justify-content: flex-start;
     position: absolute;
     left: 0;
-}
-
-.bagClose > div {
-    /* width: 35px; */
+    padding: 20px;
 }
 
 .bagHeader {
@@ -27,34 +20,34 @@
 #containerInventory {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding-bottom: 30px;
+    padding-bottom: 50px;
 }
 
 #inventory {
     background-color: var(--lightBrown);
-    width: 70%;
+    width: 80%;
+    padding: 10px;
     border-radius: 5px;
     min-width: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
 }
 
 .foundClue, .notFound {
-    height: 100px;
+    height: 125px;
     width: 70%;
+    padding: 10px;
     background-color: var(--Darkbackground);
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px;
 }
 
 .imgClue {
-    background-image: url("../../src/lib/icons/sömnMedel.png");
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     height: 70%;

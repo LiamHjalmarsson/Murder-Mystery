@@ -22,7 +22,7 @@
 
 #riddleIcon {
     height: 20vh;
-    background-image: url("../../lib/icons/spyware.png");
+    background-image: url("../../../lib/icons/spyware.png");
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;

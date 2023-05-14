@@ -1,6 +1,6 @@
-import { PubSub } from "../utilities/pubsub.js";
-import { createElement } from "../lib/js/functions.js";
-import { getFromDB } from "../utilities/functions/firebase_functions.js";
+import { PubSub } from "../../../utilities/pubsub.js";
+import { createElement } from "../../js/functions.js";
+import { getFromDB } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -90,10 +90,10 @@ async function detail_map(data) {
 
 function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
     let pinIcon = L.icon({
-        iconUrl: '../../library/icons/pin.png',
-        iconSize: [38, 38], // size of the icon
-        iconAnchor: [18, 38], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -31] // point from which the popup should open relative to the iconAnchor
+        iconUrl: '../../library/pin.png',
+        iconSize: [38, 38], 
+        iconAnchor: [18, 38],
+        popupAnchor: [0, -31]
     });
 
     if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {

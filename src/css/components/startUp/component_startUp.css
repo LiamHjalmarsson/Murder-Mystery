@@ -76,29 +76,8 @@
     background-color: var(--Darkbackground);
 }
 
-/* .playGame {
-    position: relative;
-    color: var(--Text);
-    outline: none;
-    background: none;
-    border: 0.15rem solid var(--borderLight);
-    border-radius: var(--btnRadius);
-    cursor: pointer;
-    padding: 0.8rem;
-
-    transition: border-color 0.4s ease-in;
-} */
-
-/* .playGame:hover{
-    border-color: var(--lightHover);
-}  */
-
 #btnContainer {
     display: flex;
     justify-content: center;
     gap: var(--gap);
 }
-
-/* #btnContainer > button {
-    width: 40%;
-} */

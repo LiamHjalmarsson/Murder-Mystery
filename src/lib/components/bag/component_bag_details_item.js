@@ -38,7 +38,7 @@ function render_component_bag_detail (clue) {
         </div>
     `;
 
-    document.querySelector("#imgClue").style.backgroundImage = `url(../../src/lib/icons/${clue.imageRef}.png)`;
+    document.querySelector("#imgClue").style.backgroundImage = `url(${clue.imageRef})`;
 
     document.querySelector("#containerItemClose").addEventListener("click", () => {
         container.remove();
