@@ -12,11 +12,7 @@ export const getUserDoc = async (username, password) => {
 
     if (result.empty) {
 
-        return { 
-            params: "error", 
-            response : { 
-                error: "Problems loging in try again!" 
-            }};
+        return false;
 
     } else {
         return result.docs[0].data();
@@ -179,25 +175,16 @@ export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
     }
 };
 
-
-
-
-
-
 export async function checkLoginStatus() {
-
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
     if (storedUser) {
-        // Authenticate the user using the stored user ID
         const isAuthenticated = await getUserDoc(storedUser.username, storedUser.password)
         
-        if (!storedUser) {
-            // If the stored user ID is invalid, remove it from local storage
+        if (!isAuthenticated) {
             localStorage.removeItem("userId");
-            return { error: "failed to authenticate" }
+            return false;
         }
-
         return { detail: true, data: isAuthenticated }
     }
 }
@@ -245,7 +232,5 @@ export const realTime = async (colName, id) => {
             isUpdating = true;
         });
     }
-
-    
     return isUpdating;
 }

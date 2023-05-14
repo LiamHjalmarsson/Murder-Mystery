@@ -48,15 +48,7 @@ function component_startUp_form (params) {
 
     document.querySelector("#startUpContainer").appendChild(formStartUp);
 
-    formStartUp.querySelectorAll("div > input").forEach(input => {
-        input.addEventListener("keyup", (e) => {
-            if (e.target.value !== "") {
-                e.target.parentElement.lastElementChild.classList.add("active");
-            } else {
-                e.target.parentElement.lastElementChild.classList.remove("active");
-            }
-        });
-    });
+    inputAddClass(formStartUp);
 
     PubSub.publish({
         event: "render_component_startUp_btns",
@@ -68,13 +60,24 @@ function component_startUp_form (params) {
     });
 }
 
+function inputAddClass (formStartUp) {
+    formStartUp.querySelectorAll("div > input").forEach(input => {
+        input.addEventListener("keyup", (e) => {
+            if (e.target.value !== "") {
+                e.target.parentElement.lastElementChild.classList.add("active");
+            } else {
+                e.target.parentElement.lastElementChild.classList.remove("active");
+            }
+        });
+    });
+}
+
 async function formListener (e, params) { 
     e.preventDefault();
     let username = document.querySelector("#username").value;
     let password = document.querySelector("#password").value;
 
     if (params === "login") {
-
         let user = await getUserDoc(username, password);
 
         if (user.params === "error") {
@@ -106,7 +109,6 @@ async function formListener (e, params) {
             PubSub.publish({
                 event: "render_counDown"
             });
-
         }
 
     } else {
@@ -117,7 +119,6 @@ async function formListener (e, params) {
             event: "render_startUp", 
             detail: "login"
         });
-
     }
 }
 
@@ -136,16 +137,12 @@ async function addUser () {
         characters: [
             {
                 characterId: 1
-            },
-            {
-                characterId: 2
-            },
+            }
         ],
         chapters: [
             {
                 chapter: 1,
                 onGoing: true,
-                searchOnGoing: false,
             }, 
         ],
     }
@@ -153,6 +150,6 @@ async function addUser () {
     if (userExists === undefined) {
         await addDocAddData("users", docDataUser);
     } else {
-        console.log("error user exists in db", userExists);
+        console.log("error user exists in db");
     }
 }

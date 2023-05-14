@@ -10,8 +10,8 @@
 }
 
 #itemImgBox {
-    height: 100px;
-    width: 70%;
+    height: 300px;
+    width: 80%;
     background-color: var(--Darkbackground);
     border-radius: 5px;
     display: flex;
@@ -23,6 +23,6 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    height: 70%;
+    height: 100%;
     width: 100%;
 }

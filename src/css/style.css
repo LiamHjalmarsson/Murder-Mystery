@@ -63,7 +63,7 @@ button.active:hover {
 }
 
 .close {
-    background-image: url("/src/lib/icons/close.png");
+    background-image: url("../lib/icons/close.png");
     background-position: right;
     background-size: contain;
     height: 30px;

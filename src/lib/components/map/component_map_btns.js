@@ -1,79 +1,41 @@
-import { PubSub } from "../utilities/pubsub.js";
-import { createElement } from "../lib/js/functions.js";
-import { getFromDB, addDocAddData, realTime } from "../utilities/functions/firebase_functions.js";
+import { PubSub } from "../../../utilities/pubsub.js";
+import { createElement } from "../../js/functions.js";
+
 export default {}
 
 ;(() => {
     
     PubSub.subscribe({
         event: "render_navigation",
-        listener: renderNavigation
-    });
-
-    PubSub.subscribe({
-        event: "render_counDown",
-        listener: countDown
+        listener: render_buttonsNav
     });
 
 })();
 
-let intervalId;
-
-function renderNavigation ( response ) {
-    let container_map = document.querySelector("#container_map");
-    let map = document.querySelector("#map");
-
-    container_map.insertBefore(renderTopMenu(), map);
-    container_map.append(render_buttonsNav(response)); 
-
-    document.querySelector("#guessMurder").addEventListener("click", () => {
-        PubSub.publish({
-            event: "render_guess_murder",
-            detail: response
-        });
-    });
-} 
-
-function renderTopMenu () {
-    let topNavigation = createElement("div", "", "topNavigation");
-
-    topNavigation.innerHTML = `
-        <div id="navigationContainer">
-            <div id="guessMurderBox">
-                <button id="guessMurder" class="topNav"> Gissa mördaren </button>
-            </div>
-            <div id="timeContainer"> 
-                <h3 id="timeLeft"> </h3>
-            </div>
-        </div>
-    `;
-
-    return topNavigation;
-}
-
 function render_buttonsNav (response) {
+    let container_map = document.querySelector("#container_map");
     let navigationBox = createElement("div", "", "navigationBox");
 
     let buttons = [
         {
             text: "Lös Gåta",
             id: "topLeft",
-            icon: "../../src/lib/icons/search.png",
+            icon: "../../../../src/lib/icons/search.png",
         },
         {
             text: "Logga ut", 
             id: "topRight",
-            icon: "../../src/lib/icons/letter.png",
+            icon: "../../../../src/lib/icons/letter.png",
         },
         {
             text: "Väska",
             id: "bottomLeft",
-            icon: "../../src/lib/icons/backpack.png",
+            icon: "../../../../src/lib/icons/backpack.png",
         },
         {
             text: "Misstänkta",
             id: "bottomRight",
-            icon: "../../src/lib/icons/spyware.png",
+            icon: "../../../../src/lib/icons/spyware.png",
         }
     ];
 
@@ -94,7 +56,7 @@ function render_buttonsNav (response) {
         navigationBox.append(buttonBox);
     });
 
-    return navigationBox;
+    container_map.append(navigationBox); 
 }
 
 async function diffrentBtns (btn, { response } ) {
@@ -122,9 +84,7 @@ async function diffrentBtns (btn, { response } ) {
         
         case "Logga ut":
 
-
-            // imagesRef();
-            localStorage.clear();
+        localStorage.clear();
             PubSub.publish({
                 event: "render_startUp",
                 detail: "login"
@@ -154,30 +114,4 @@ async function diffrentBtns (btn, { response } ) {
         
         break;
     }
-
-}
-
-function countDown() {
-    let remainingTime = 4 * 60 * 60; 
-    
-    intervalId = setInterval(() => {
-        if (remainingTime > 0) {
-            remainingTime--;
-
-            let remainingHours = Math.floor(remainingTime / 3600);
-            let remainingMinutes = Math.floor((remainingTime % 3600) / 60);
-            let remainingSeconds = remainingTime % 60;
-
-            if (document.querySelector("#timeLeft")) {
-                document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${remainingHours}: ${remainingMinutes}m : ${remainingSeconds}s`
-            }
-        } else {
-            clearInterval(intervalId);
-        }
-    }, 1000);
-
-}
-
-function stopCountdown() {
-    clearInterval(intervalId);
 }

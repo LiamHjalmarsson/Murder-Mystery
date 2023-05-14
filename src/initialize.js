@@ -1,27 +1,32 @@
-// ROUTES
-import startUp from "./routes/startUp.js";
-import map from "./routes/map.js";
-import navigation from "./routes/navigation.js";
-import bag from "./routes/bag.js";
-import riddle from "./routes/riddle.js";
-
-// Componentes
-import component_popUp from "./lib/components/component_popUp.js";
-import component_bag_detail from "./lib/components/bag/component_bag_detail.js";
-
-// new components 
+// components startUp 
+import startUp from "./lib/components/startUp/component_startUp.js";
 import component_startUp_form from "./lib/components/startUp/component_startUp_form.js";
 import component_startUp_btns from "./lib/components/startUp/component_startUp_btns.js";
 
-// left to do 
-import component_character_interaction from "./lib/components/component_character_interaction.js";
+// components Bag
+import bag from "./lib/components/bag/component_bag.js";
+import component_bag_details from "./lib/components/bag/component_bag_details.js";
+import component_bag_details_item from "./lib/components/bag/component_bag_details_item.js";
+
+// component Map
+import map from "./lib/components/map/component_map.js";
+import topMenu from "./lib/components/map/component_map_top_menu.js";
+import buttonsNav from "./lib/components/map/component_map_btns.js";
+import timer from "./lib/components/map/component_map_timer.js";
+
+// components Riddle
+import riddle from "./lib/components/riddle/component_riddle.js";
+
+// componentes PopUp
+import component_popUp from "./lib/components/popUp/component_popUp.js";
+
+// left adjust
+import component_character_interaction from "./lib/components/character_interaction/component_character_interaction.js";
+import component_character_interaction_btns from "./lib/components/character_interaction/component_character_interacion_btns.js";
+import component_charachter_interaction_reOpen from "./lib/components/character_interaction/component_charachter_interaction_reOpen.js";
+
 import component_suspects_bio from "./lib/components/component_suspects_bio.js";
 
-import character_interaction from "./routes/character_interaction.js";
 import guess_murder from "./routes/guess_murder.js";
 import guess_weaponMotive from "./routes/guess_weaponMotive.js";
 import suspects from "./routes/suspects.js";
-
-
-// REMOVE
-import test from "./routes/testFirebase.js";

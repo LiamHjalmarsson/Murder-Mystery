@@ -27,13 +27,6 @@
     cursor: pointer; 
 }
 
-#navigationBox {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
 .navigationBtn {
     position: absolute;
     width: 100px;
@@ -58,12 +51,12 @@
 }
 
 #bottomLeft {
-    bottom: 4vh;
+    bottom: 6vh;
     left: 10px;
 }
 
 #bottomRight {
-    bottom: 4vh;
+    bottom: 6vh;
     right: 10px;
 }
 

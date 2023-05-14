@@ -1,4 +1,3 @@
-import { PubSub } from "../pubsub.js";
 import App from "../firebase.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
     signOut, onAuthStateChanged
