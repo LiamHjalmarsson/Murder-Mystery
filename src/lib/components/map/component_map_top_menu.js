@@ -12,7 +12,7 @@ export default {}
 
 })();
 
-function renderTopMenu () {
+function renderTopMenu (response) {
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
 
