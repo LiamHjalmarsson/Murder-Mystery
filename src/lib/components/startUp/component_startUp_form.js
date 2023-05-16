@@ -98,7 +98,7 @@ async function formListener (e, params) {
             localStorage.setItem("user", JSON.stringify(userLocal));
 
             PubSub.publish({ 
-                event: "render_startUp",
+                event: "render_map",
                 detail: {
                     response: {
                         data: user
