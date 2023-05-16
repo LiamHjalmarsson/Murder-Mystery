@@ -6,17 +6,24 @@ import { PubSub } from "../pubsub.js";
 export const db = getFirestore(App);
 
 export const getUserDoc = async (username, password) => {
-    let colRef = collection(db, "users");
-    let queryRef = query(colRef, where("username", "==", username), where("password", "==", password));
-    let result = await getDocs(queryRef);
 
-    if (result.empty) {
-
+    if (username === "" || password === "") {
         return false;
-
     } else {
-        return result.docs[0].data();
+
+        let colRef = collection(db, "users");
+        let queryRef = query(colRef, where("username", "==", username), where("password", "==", password));
+        let result = await getDocs(queryRef);
+    
+        if (result.empty) {
+    
+            return false;
+    
+        } else {
+            return result.docs[0].data();
+        }
     }
+
 };
 
 export const getDocByClue = async (colName, answer, response) => {
@@ -35,7 +42,7 @@ export const getDocByClue = async (colName, answer, response) => {
         let newData = result.docs[0].data();
 
         if (colName === "puzzelStory") {
-            const dataStoryExists = response.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
+            let dataStoryExists = response.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
     
             if (dataStoryExists === undefined || !dataStoryExists.onGoing) {
                 return { 
@@ -47,7 +54,10 @@ export const getDocByClue = async (colName, answer, response) => {
                 return newData;
             }
         } else {
+
+            let dataSearchArea = response.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
             return newData;
+
         }
 
     }

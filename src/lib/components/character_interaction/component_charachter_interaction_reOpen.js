@@ -13,7 +13,8 @@ export default {}
 
 })();
 
-async function renderCharacterFindButton(data, story) {
+async function renderCharacterFindButton( { response } ) {
+    let { data, story } = response;
     let choiseContainer = createElement("div", "", "choiseContainer");
     document.querySelector("#containerDialog").appendChild(choiseContainer);
 

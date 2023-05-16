@@ -98,7 +98,7 @@ async function formListener (e, params) {
             localStorage.setItem("user", JSON.stringify(userLocal));
 
             PubSub.publish({ 
-                event: "render_map",
+                event: "render_startUp",
                 detail: {
                     response: {
                         data: user
@@ -113,12 +113,15 @@ async function formListener (e, params) {
 
     } else {
 
-        await addUser();
-        
-        PubSub.publish({
-            event: "render_startUp", 
-            detail: "login"
-        });
+        if (username !== "" && password !== "") {
+            await addUser();
+            
+            PubSub.publish({
+                event: "render_startUp", 
+                detail: "login"
+            });
+        }
+
     }
 }
 
