@@ -32,7 +32,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 55vw;
+    width: 50vw;
     margin-left: 0;
     padding: 5px;
     font-size: 10pt;
@@ -68,7 +68,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 130px;
+    width: 50vw;
     height: 50vh;
     background-size: cover;
     padding: 10px;
