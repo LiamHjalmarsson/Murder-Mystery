@@ -15,7 +15,6 @@ export default {}
 
 async function render_bag ( data ) {
     let app = document.querySelector("#app");
-
     let cluesDb = await getFromDB("clues");
 
     let containerBag = createElement("div", "containerPopUP", "containerBag");

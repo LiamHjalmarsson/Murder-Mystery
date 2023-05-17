@@ -68,9 +68,8 @@ async function diffrentBtns (btn, { response } ) {
     
     switch (btn) {
         case "Lös Gåta":
-            
             PubSub.publish({
-                event: "render_component_popup",
+                event: "render_popup",
                 detail: {
                     params: "",  
                     response: {
@@ -79,30 +78,24 @@ async function diffrentBtns (btn, { response } ) {
                     }
                 }
             });
-
         break;
         
         case "Logga ut":
-
-        localStorage.clear();
+            localStorage.clear();
             PubSub.publish({
                 event: "render_startUp",
                 detail: "login"
             });
-
         break;
 
         case "Väska":
-
             PubSub.publish({
                 event: "render_bag",
                 detail: data
             });
-
         break;
 
         case "Misstänkta":
-
             PubSub.publish({
                 event: "render_suspects",
                 detail: {
@@ -111,7 +104,6 @@ async function diffrentBtns (btn, { response } ) {
                     }
                 }
             });
-        
         break;
     }
 }

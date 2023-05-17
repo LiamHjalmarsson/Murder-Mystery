@@ -45,16 +45,12 @@ function answerListener (response) {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
 
-        console.log(riddleAnswerInput, puzzel.removeThis);
         if (riddleAnswerInput === puzzel.removeThis) {
-        // if (riddleAnswerInput === puzzel.answer) {
-
             if (!puzzel.clueId) {
                 btnCharacterInteraction(data, storys);
             } else {
                 btnSearchArea(data, puzzel);
             }
-        
         } else {
             console.log("Wrong answer");
         }
@@ -76,7 +72,7 @@ async function btnCharacterInteraction (data, storys) {
 }
 
 async function btnSearchArea (data, puzzel) {
-    let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
+    let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing);
     let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
     
     if (chapterId === undefined) { 
@@ -88,14 +84,15 @@ async function btnSearchArea (data, puzzel) {
     let clue = clues.filter(clue => clue.clueId === puzzel.clueId)[0];
     
     let allStorys = await getFromDB("storyTelling");
-
     let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1);
-
     let lastIndex = data.searchArea ? data.searchArea.length: 0;
 
     if (clue.clueId !== 7) {
+
         let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
+
         if (nextChapter !== undefined) {
+
             await docUpdateArry("users", data.id, "chapters", {  
                 chapter: nextChapter.chapterId,
                 onGoing: true,
@@ -113,7 +110,6 @@ async function btnSearchArea (data, puzzel) {
     }
 
     await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
-
     await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
 
     let updateUser = await getFromDB("users", data.id);

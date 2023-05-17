@@ -6,13 +6,13 @@ export default {}
 ;(() => {
 
     PubSub.subscribe({
-        event: "render_component_startUp_btns",
-        listener: component_startUp_btns
+        event: "render_startUp_btns",
+        listener: render_startUp_btns
     });
     
 })();
 
-function component_startUp_btns (params) {
+function render_startUp_btns (params) {
     let btnContainer = createElement("div", "", "btnContainer");
     let btnDeatils = ["register", "login"];
 

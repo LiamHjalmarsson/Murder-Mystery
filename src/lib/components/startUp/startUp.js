@@ -12,7 +12,6 @@ export default {}
 
 })();
 
-// start up of the form 
 function render_startUp ( params ) {
     let app = document.querySelector("#app");
     app.innerHTML = "";
@@ -26,7 +25,7 @@ function render_startUp ( params ) {
     formContainer.append(gameTitle);
 
     PubSub.publish({
-        event: "render_component_startUp_form",
+        event: "render_startUp_form",
         detail: params
     });
 }

@@ -62,9 +62,6 @@ async function detail_map(data, myLocation) {
         addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
         chaptersDone(map, allChapters, data);
 
-        // my Location 
-        // getLocation(map);
-
         map.on('click', coordinatesAlert);
 
         PubSub.publish({
@@ -97,7 +94,7 @@ async function detail_map(data, myLocation) {
         });
 
         PubSub.publish({
-            event: "render_component_popup",
+            event: "render_popup",
             detail: {
                 params: "completed",  
                 response: {
@@ -143,6 +140,13 @@ function chaptersDone(map, allChapters, data) {
     
                 L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
                 .addTo(map).bindPopup(popupContent);
+            }
+
+            if (chapter.chapter === chapterDb.chapterId && chapter.paused) {
+                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
+                    radius: chapterDb.searchRadius,
+                    color: "yellow"
+                }).addTo(map).bindPopup("paused");
             }
     
             if (chapter.chapter === chapterDb.chapterId && chapter.searchDone) {

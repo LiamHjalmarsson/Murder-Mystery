@@ -15,7 +15,6 @@ export default {}
 function renderTopMenu (response) {
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
-
     let topNavigation = createElement("div", "", "topNavigation");
 
     topNavigation.innerHTML = `

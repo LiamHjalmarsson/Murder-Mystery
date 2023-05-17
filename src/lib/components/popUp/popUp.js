@@ -7,13 +7,13 @@ export default {}
 ;(() => {
 
     PubSub.subscribe({
-        event: "render_component_popup",
-        listener: render_component_popup
+        event: "render_popup",
+        listener: render_popup
     });
 
 })();
 
-function render_component_popup ( response ) {
+function render_popup ( response ) {
     let app = document.querySelector("#app");
 
     let wrapperPopUp = createElement("div", "", "wrapperPopUp");
@@ -33,8 +33,7 @@ function render_component_popup ( response ) {
             </div>
             <h3 class="headerPopUp"> </h3>
         </div>
-        <div class="popUp">
-        </div>
+        <div class="popUp"></div>
     `;
 
     document.querySelector("#popUpClose").addEventListener("click", () => {
@@ -69,22 +68,29 @@ function displayInformation ( res ) {
         break;
 
         default:
-            header.textContent = "Skriv in kod";
-            let input = createElement("input", "popUp_input", ""); 
-            input.placeholder  = "Enter the clue!";
-            
-            let button = createElement("button", "", ""); 
-            button.textContent = "Skicka in ditt svar";
-
-            message.append(input);
-            document.querySelector("#box").append(button);
-
-            formListener(response);
+            inputPopUp(response);
         break;
     }
 }
 
-function formListener ( response ) {
+function inputPopUp (response) {
+    let header = document.querySelector(".headerPopUp"); 
+    let message = document.querySelector(".popUp"); 
+
+    header.textContent = "Skriv in kod";
+    let input = createElement("input", "popUp_input", ""); 
+    input.placeholder  = "Enter the clue!";
+    
+    let button = createElement("button", "", ""); 
+    button.textContent = "Skicka in ditt svar";
+
+    message.append(input);
+    document.querySelector("#box").append(button);
+
+    formListener(response);
+}
+
+function formListener (response) {
     let isClue = response.data.chapters.some(chapter => chapter.searchOnGoing);
 
     if (isClue) {

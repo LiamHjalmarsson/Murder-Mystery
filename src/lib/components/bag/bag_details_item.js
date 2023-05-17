@@ -6,13 +6,13 @@ export default {}
 ;(() => {
 
     PubSub.subscribe({
-        event: "render_component_bag_detail",
-        listener: render_component_bag_detail
+        event: "render_bag_details_item",
+        listener: render_bag_details_item
     });
     
 })();
 
-function render_component_bag_detail (clue) {
+function render_bag_details_item (clue) {
     let app = document.querySelector("#app");
 
     let container = createElement("div", "containerPopUP", "containerItem");
@@ -33,7 +33,7 @@ function render_component_bag_detail (clue) {
                 <div class="imgClue" id="imgClue"></div>
             </div>
             <div id="itemInformation">
-                <p> ${clue.information} </p>
+                <p>Information: ${clue.information} </p>
             </div>
         </div>
     `;
