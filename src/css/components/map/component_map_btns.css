@@ -62,11 +62,11 @@
 
 #iconNav {
     margin: 10px;
-    background-position: center;
-    background-size: contain;
     height: 30px;
-    background-repeat: no-repeat;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .infoNavBtn{
