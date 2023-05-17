@@ -7,13 +7,13 @@ export default {}
 ;(() => {
 
     PubSub.subscribe({
-        event: "render_component_startUp_form",
-        listener: component_startUp_form
+        event: "render_startUp_form",
+        listener: render_startUp_form
     });
     
 })();
 
-function component_startUp_form (params) {
+function render_startUp_form (params) {
     let formStartUp = createElement("form", "", "formStartUp");
 
     let inputsDetail = [
@@ -51,7 +51,7 @@ function component_startUp_form (params) {
     inputAddClass(formStartUp);
 
     PubSub.publish({
-        event: "render_component_startUp_btns",
+        event: "render_startUp_btns",
         detail: params
     });
 
@@ -83,7 +83,7 @@ async function formListener (e, params) {
         if (user.params === "error") {
 
             PubSub.publish({
-                event: "render_component_popup",
+                event: "render_popup",
                 detail: user
             });
 
@@ -121,7 +121,6 @@ async function formListener (e, params) {
                 detail: "login"
             });
         }
-
     }
 }
 
@@ -153,6 +152,10 @@ async function addUser () {
     if (userExists === undefined) {
         await addDocAddData("users", docDataUser);
     } else {
+        PubSub.publish({
+            event: "render_popup",
+            detail: "error"
+        });
         console.log("error user exists in db");
     }
 }

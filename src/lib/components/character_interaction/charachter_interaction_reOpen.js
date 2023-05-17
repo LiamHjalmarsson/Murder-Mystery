@@ -15,8 +15,9 @@ export default {}
 
 async function renderCharacterFindButton( { response } ) {
     let { data, story } = response;
+
     let choiseContainer = createElement("div", "", "choiseContainer");
-    document.querySelector("#containerDialog").appendChild(choiseContainer);
+    document.querySelector("#dialogBox").appendChild(choiseContainer);
 
     choiseContainer.innerHTML = `
         <div>
@@ -30,14 +31,15 @@ async function renderCharacterFindButton( { response } ) {
     
         await updateArrayMap("users", data.id, "chapters", indexChapter, {
             searchOnGoing: false,
-            searchPaused: true,
+            paused: true,
             onGoing: false,
         });
-    
+
         await docUpdateArry("users", data.id, "chapters", {
             chapter: chapterId.chapter + 1,
             onGoing: true,
         });
+    
     
         let updateUser = await getFromDB("users", data.id);
     

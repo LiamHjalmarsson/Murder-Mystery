@@ -7,14 +7,13 @@ export default {}
 
     PubSub.subscribe({
         event: "render_bag_details",
-        listener: renderInventory
+        listener: render_bag_details
     });
 
 })();
 
-async function renderInventory ( { response }) {
+async function render_bag_details ( { response }) {
     let { data, clues } = response;
-
     let inventory = createElement("div", "", "inventory");
 
     clues.sort((a, b) => a.clueId > b.clueId);
@@ -30,7 +29,7 @@ async function renderInventory ( { response }) {
         foundClue.addEventListener("click", () => {
             if (found) {
                 PubSub.publish({
-                    event: "render_component_bag_detail",
+                    event: "render_bag_details_item",
                     detail: clue
                 });
             } else {

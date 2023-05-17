@@ -3,17 +3,15 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 100vh;
-    /* width: 80%; */
-    width: 100%;
+    width: 80%;
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: var(--lightBrown);
-    /* border-radius: 20px; */
-
+    border-radius: 20px;
     box-shadow: 3px 25px 50px -26px rgba(0,0,0,0.62);
+    opacity: 0;
+    transition: opacity 0.5s;
 }
 
 #containerPopUp {
@@ -30,6 +28,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap);
+    padding-bottom: 40px;
 }
 
 .smallheader {
@@ -40,7 +39,7 @@
 .popUp_input {
     width: 100%;
     height: 100%;
-    border: 0.15rem solid var(--borderLight);
+    border: 0.15rem solid var(--darkBrown);
     border-radius: 0.5rem;
     outline: none;
     padding: 1.25rem;

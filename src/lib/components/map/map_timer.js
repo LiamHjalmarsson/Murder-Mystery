@@ -19,7 +19,6 @@ export default {}
 let intervalId;
 
 function countDown() {
-
     let remainingTime = 4 * 60 * 60; 
     
     intervalId = setInterval(() => {

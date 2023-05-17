@@ -1,5 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
-import { createElement } from "../../js/functions.js";
+import { createElement, fadeInElement } from "../../js/functions.js";
 import { docUpdateArry, getFromDB, updateArrayMap } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
@@ -15,7 +15,7 @@ export default {}
 
 function render_riddle ( { response } ) {
     let app = document.querySelector("#app");
-    app.innerHTML = "";
+    // app.innerHTML = "";
 
     let riddleContainer = createElement("div", "", "riddleContainer");
     app.append(riddleContainer);
@@ -36,6 +36,8 @@ function render_riddle ( { response } ) {
     `;
 
     answerListener(response);
+
+    fadeInElement(riddleContainer);
 }
 
 function answerListener (response) {
@@ -45,14 +47,12 @@ function answerListener (response) {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
 
-        if (riddleAnswerInput === puzzel.answer) {
-
+        if (riddleAnswerInput === puzzel.removeThis) {
             if (!puzzel.clueId) {
                 btnCharacterInteraction(data, storys);
             } else {
                 btnSearchArea(data, puzzel);
             }
-            
         } else {
             console.log("Wrong answer");
         }
@@ -61,7 +61,7 @@ function answerListener (response) {
 
 async function btnCharacterInteraction (data, storys) {
     let updateUser = await getFromDB("users", data.id);
-        
+    
     PubSub.publish({
         event: "render_charater_interaction",
         detail: {
@@ -74,7 +74,7 @@ async function btnCharacterInteraction (data, storys) {
 }
 
 async function btnSearchArea (data, puzzel) {
-    let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing === true);
+    let indexChapter = data.chapters.findIndex((chapter) => chapter.searchOnGoing);
     let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
     
     if (chapterId === undefined) { 
@@ -86,25 +86,32 @@ async function btnSearchArea (data, puzzel) {
     let clue = clues.filter(clue => clue.clueId === puzzel.clueId)[0];
     
     let allStorys = await getFromDB("storyTelling");
-
     let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1);
-
     let lastIndex = data.searchArea ? data.searchArea.length: 0;
 
-    let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
+    if (clue.clueId !== 7) {
 
-    await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-        searchDone: true, searchOnGoing: false, onGoing: false, completed: true
-    });
+        let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
+
+        if (nextChapter !== undefined) {
+
+            await docUpdateArry("users", data.id, "chapters", {  
+                chapter: nextChapter.chapterId,
+                onGoing: true,
+                searchOnGoing: false,
+            });
+
+            await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                searchDone: true, searchOnGoing: false, onGoing: false, completed: true
+            });
+        }
+    } else {
+        await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+            searchDone: true, searchOnGoing: false, onGoing: false, completed: true, gameFinished: true
+        });
+    }
 
     await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
-
-    await docUpdateArry("users", data.id, "chapters", {  
-        chapter: nextChapter.chapterId,
-        onGoing: true,
-        searchOnGoing: false,
-    });
-
     await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
 
     let updateUser = await getFromDB("users", data.id);

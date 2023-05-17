@@ -3,6 +3,16 @@
     display: flex;
     justify-content: center;
     align-items: end;
+    background-color: var(--lightBrown);
+
+    position: fixed;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    opacity: 0;
+    transition: opacity 0.5s;
 }
 
 #riddleBox {
@@ -39,11 +49,11 @@
     top: 0;
     left: 0;
     width: 100%;
-    border: 0.15rem solid var(--borderLight);
+    border: 0.15rem solid var(--darkBrown);
     border-radius: var(--btnRadius);
     outline: none;
     padding: 1.25rem;
     background: none;
     color: var(--Text);
-    transition: all 0.2s ease-in;
+    transition: all 0.4s ease-in;
 }

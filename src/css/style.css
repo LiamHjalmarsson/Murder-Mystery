@@ -11,45 +11,53 @@ body {
     background-color: var(--Darkbackground);
 }
 
-/*  Buttons  */
-
+/* Buttons */
 button {
     position: relative;
     color: var(--Text);
     outline: none;
     background: none;
-    border: 0.15rem solid var(--borderLight);
+    border: 0.15rem solid var(--darkBrown);
     border-radius: var(--btnRadius);
     cursor: pointer;
-
     width: 100%;
-    
+    box-shadow: -4px 14px 25px -10px rgba(0,0,0,0.20);
     padding: 0.8rem;
-
-    transition: border-color 0.4s ease-in;
+    transition: border-color 0.4s ease-in-out;
 }
 
 button:hover {
-    border-color: var(--lightHover);
+    border-color: var(--lightYellow);
 }
 
 button.active {
-    background: var(--focusing);
+    background: var(--lightYellow);
     border-color: var(--lightHover);
-    transition: background 0.4s ease-in, color 0.4s ease-in;
+    transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
 }
 
 button.active:hover {
-    background: var(--focusing);
+    background: var(--lightYellow);
     color: var(--Darkbackground);
 }
 
+/* Inputs */
+input:hover {
+    border-color: var(--lightYellow);
+}
+
+input:focus {
+    border-color: var(--lightYellow);
+}
+
+
 /*  CSS FOR THE  */
 .navContainer {
+    /* height: 75px; */
     display: flex;
     justify-content: center;
     padding: 10px;
-    height: 75px;
+    height: 60px;
     align-items: center;
     position: relative;
 }
@@ -63,14 +71,15 @@ button.active:hover {
 }
 
 .close {
-    background-image: url("../lib/icons/close.png");
-    background-position: right;
-    background-size: contain;
     height: 30px;
     width: 30px;
     background-repeat: no-repeat;
     cursor: pointer;
     margin-left: 15px;
+}
+
+.fa-xmark, .fa-arrow-right {
+    font-size: 35px;
 }
 
 .headerPopUp {
@@ -84,10 +93,20 @@ button.active:hover {
     top: 0;
     left: 0;
     z-index: 3;
-    /* display: flex;
-    justify-content: center;
-    align-items: end; */
     width: 100vw;
-    background-color: var(--darkBrown);
+    background-color: var(--lightBrown);
+    opacity: 0;
+    transition: opacity 0.5s;
     overflow: scroll;
+}
+
+/* fade in out  */
+#wrapperPopUp.fade-in, .containerPopUP.fade-in, #riddleContainer.fade-in,
+#containerDialog.fade-in{
+    opacity:1;
+}
+
+#wrapperPopUp.fade-out, .containerPopUP.fade-out, #riddleContainer.fade-out,
+#containerDialog.fade-out{
+    opacity:0;
 }

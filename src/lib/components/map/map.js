@@ -18,9 +18,9 @@ export default {}
 
 })();
 
-
+// renders the map 
 async function render_map ( { response } ) {
-    let { data } = response;
+    let { data, myLocation } = response;
     
     let app = document.querySelector("#app");
     app.innerHTML = "";
@@ -33,16 +33,14 @@ async function render_map ( { response } ) {
     
     document.querySelector("#map").style.display = "flex";
 
-    detail_map(data);
+    // gets the informations to display on the map 
+    detail_map(data, myLocation);
 }
 
-async function detail_map(data) {
+async function detail_map(data, myLocation) {
     let map;
-
-    console.log("map", data);
     // users chapters finds the chapters that are ongoing
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
-
     // get all chapters
     let allChapters = await getFromDB("storyTelling");
     
@@ -75,6 +73,7 @@ async function detail_map(data) {
                 }
             }
         });
+    // if the users has no chapter that is ongoing 
     } else {
         map = L.map('map').setView([55.6050, 13.0038], 16);
 
@@ -83,8 +82,26 @@ async function detail_map(data) {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        console.log("!!!!! Missing something to be ongoing !!!! ");
-        console.log("!!!!! Missing something to be ongoing !!!! ");
+        chaptersDone(map, allChapters, data);
+
+        PubSub.publish({
+            event: "render_navigation",
+            detail: {
+                response: {
+                    data: data,
+                }
+            }
+        });
+
+        PubSub.publish({
+            event: "render_popup",
+            detail: {
+                params: "completed",  
+                response: {
+                    data: data,
+                }
+            }
+        }); 
     }
 }
 
@@ -123,6 +140,13 @@ function chaptersDone(map, allChapters, data) {
     
                 L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
                 .addTo(map).bindPopup(popupContent);
+            }
+
+            if (chapter.chapter === chapterDb.chapterId && chapter.paused) {
+                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
+                    radius: chapterDb.searchRadius,
+                    color: "yellow"
+                }).addTo(map).bindPopup("paused");
             }
     
             if (chapter.chapter === chapterDb.chapterId && chapter.searchDone) {
@@ -185,53 +209,3 @@ function getLocation (map) {
 function coordinatesAlert(e) {
     alert("latitude" + e.latlng);
 }
-
-
-
-// function getLocation (map) {
-//     if (!navigator.geolocation) {
-
-//     } else {
-//         setInterval(() => {
-//             navigator.geolocation.getCurrentPosition(getPostion)
-//         }, 5000);
-//     }
-
-//     let marker, circle
-
-//     function getPostion (position) {
-//         const latitude = position.coords.latitude;
-//         const longitude = position.coords.longitude;
-//         const accuracy = position.coords.accuracy;
-    
-//         if (marker) {
-//             map.removeLayer(marker);
-//         }
-
-//         if (circle) {
-//             map.removeLayer(circle);
-//         }
-
-//         marker = L.marker([latitude, longitude]).addTo(map)
-//         circle = L.circle([latitude, longitude], accuracy).addTo(map);
-
-//         // let featureGroup = L.featureGroup([marker, circle]).addTo(map);
-
-//         // map.fitBounds(featureGroup.getBounds());
-//         map.setView([latitude, longitude]);
-
-//     }
-// }
-
-
-    // get the location
-    // map.on('locationfound', onLocationFound);
-
-    // function onLocationFound(e) {
-    //     let  radius = e.accuracy;
-    
-    //     L.marker(e.latlng).addTo(map)
-    //         .bindPopup("You location").openPopup();
-    
-    //     L.circle(e.latlng, radius).addTo(map);
-    // }

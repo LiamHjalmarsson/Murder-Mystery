@@ -18,7 +18,7 @@ function render_component_suspects_bio (chapter) {
     bioWrapper.innerHTML = `
         <div id="SusBio">
             <div class="CloseBio">
-                <div class="close" id="containerClose"></div>
+                <div class="close" id="containerClose"><i class="fa-solid fa-xmark"></i></div>
             </div>
             
             <div id="info">

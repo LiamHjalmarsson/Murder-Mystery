@@ -1,5 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
-import { createElement } from "../../js/functions.js";
+import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
 import { getDocByClue } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
@@ -7,15 +7,14 @@ export default {}
 ;(() => {
 
     PubSub.subscribe({
-        event: "render_component_popup",
-        listener: render_component_popup
+        event: "render_popup",
+        listener: render_popup
     });
 
 })();
 
-function render_component_popup ( response ) {
+function render_popup ( response ) {
     let app = document.querySelector("#app");
-
     let wrapperPopUp = createElement("div", "", "wrapperPopUp");
     app.appendChild(wrapperPopUp);
 
@@ -24,24 +23,25 @@ function render_component_popup ( response ) {
     wrapperPopUp.append(containerPopUp);
 
     let box = createElement("form", "", "box");
-    document.querySelector("#containerPopUp").appendChild(box);
+    containerPopUp.appendChild(box);
 
     box.innerHTML = `
         <div class="navContainer">
             <div class="navClose"> 
-                <div class="close" id="popUpClose"> </div>
+                <div class="close" id="popUpClose"> <i class="fa-solid fa-xmark"></i> </div>
             </div>
             <h3 class="headerPopUp"> </h3>
         </div>
-        <div class="popUp">
-        </div>
+        <div class="popUp"></div>
     `;
 
     document.querySelector("#popUpClose").addEventListener("click", () => {
-        document.querySelector("#wrapperPopUp").remove();
+        fadeOutElement(wrapperPopUp);
     });
 
     displayInformation(response);
+
+    fadeInElement(wrapperPopUp);
 
 }
 
@@ -65,23 +65,35 @@ function displayInformation ( res ) {
             header.textContent = "Grattis";
         break;
 
+        case "completed": 
+            header.textContent = "Du har nu kommit till slutet";
+            message.textContent = "Du har nu kvar att gissa på mördaren eller möjligheten att hitta saker du missat genom att trycka på de färdig makerade markörerna på kartan"; 
+        break;
+
         default:
-            header.textContent = "Skriv in kod";
-            let input = createElement("input", "popUp_input", ""); 
-            input.placeholder  = "Enter the clue!";
-            
-            let button = createElement("button", "", ""); 
-            button.textContent = "Submit your answer";
-
-            message.append(input);
-            document.querySelector("#box").append(button);
-
-            formListener(response);
+            inputPopUp(response);
         break;
     }
 }
 
-function formListener ( response ) {
+function inputPopUp (response) {
+    let header = document.querySelector(".headerPopUp"); 
+    let message = document.querySelector(".popUp"); 
+
+    header.textContent = "Skriv in kod";
+    let input = createElement("input", "popUp_input", ""); 
+    input.placeholder  = "Enter the clue!";
+    
+    let button = createElement("button", "", ""); 
+    button.textContent = "Skicka in ditt svar";
+
+    message.append(input);
+    document.querySelector("#box").append(button);
+
+    formListener(response);
+}
+
+function formListener (response) {
     let isClue = response.data.chapters.some(chapter => chapter.searchOnGoing);
 
     if (isClue) {
@@ -92,9 +104,8 @@ function formListener ( response ) {
 
     document.querySelector("#box").addEventListener("submit", async (e) => {
         e.preventDefault();
-
         let inputValue = document.querySelector(".popUp_input");
-        let puzzel = await getDocByClue(e.target.className, inputValue.value, response.data); 
+        let puzzel = await getDocByClue(e.target.className, inputValue.value, response); 
 
         if (puzzel.params) {
             inputValue.classList.add("error");

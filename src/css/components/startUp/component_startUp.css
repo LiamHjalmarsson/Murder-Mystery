@@ -3,7 +3,7 @@
     height: 100vh;
     display: flex;
     place-items: center;
-    background-color: var(--Darkbackground);
+    background: var(--lightBrown);
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -36,7 +36,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border: 0.15rem solid var(--borderLight);
+    border: 0.15rem solid var(--darkBrown);
     border-radius: var(--btnRadius);
     outline: none;
     padding: 1.25rem;
@@ -46,11 +46,11 @@
 }
 
 .formStartUp_input:hover {
-    border-color: var(--lightHover);
+    border-color: var(--lightYellow);
 }
 
 .formStartUp_input:focus {
-    border-color: var(--focusing);
+    border-color: var(--lightYellow);
 }
 
 .labelInput {
@@ -66,14 +66,14 @@
     top: -0.5rem;
     font-size: var(--fontSizeTextSmall);
     left: 0.8rem;
-    background-color: var(--Darkbackground);
+    background-color: var(--lightBrown);
 }
 
 .labelInput.active {
     top: -0.5rem;
     font-size: var(--fontSizeTextSmall);
     left: 0.8rem;
-    background-color: var(--Darkbackground);
+    background-color: var(--lightBrown);
 }
 
 #btnContainer {
