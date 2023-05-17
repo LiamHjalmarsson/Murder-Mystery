@@ -7,6 +7,8 @@
     flex-direction: column;
     background: var(--lightBrown);
     box-shadow: 3px 25px 50px -26px rgba(0,0,0,0.62);
+    opacity: 0;
+    transition: opacity 0.5s;
 
     background-size: cover;
     background-position-x: center;
@@ -42,8 +44,25 @@
     width: 80%;
 }
 
-#choiseContainer > div {
-    border-radius: 10px;
-    width: 50%;
-    background-color: var(--lightBrown);
+#btnCharacterFind, #btnClueSearch {
+    background: var(--lightBrown);
+}
+
+#dialogText {
+    white-space: pre-line;
+}
+
+.typing {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing-animation 4s steps(40) 1s forwards;
+}
+
+@keyframes typing-animation {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
 }

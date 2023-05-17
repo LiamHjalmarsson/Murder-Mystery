@@ -1,5 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
-import { createElement } from "../../js/functions.js";
+import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
 import { docUpdateArry, getFromDB, updateArrayMap } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
@@ -18,7 +18,7 @@ export default {}
 
 })();
 
-function render_character_interaction ( { response }, counter = 0 ) {
+function render_character_interaction({ response }, counter = 0) {
     let { data, story, found } = response;
     let app = document.querySelector("#app");
 
@@ -30,69 +30,90 @@ function render_character_interaction ( { response }, counter = 0 ) {
     app.appendChild(containerDialog);
 
     if (found) {
-        containerDialog.classList.add("chapterFoundReading"); 
+        containerDialog.classList.add("chapterFoundReading");
     }
 
     containerDialog.style.backgroundImage = `url(../../src/lib/images/${story.imageRef}.jpg)`;
 
-    let dialogBox = createElement("div", "", "dialogBox"); 
+    let dialogBox = createElement("div", "", "dialogBox");
     containerDialog.append(dialogBox);
 
-    dialogBox.innerHTML = `
-        <div>
-            <h3> ${ story.character } </h3>
-        </div>
-        <div id="dialogText"> 
-            ${ story.partsChapter[counter] }
-        </div>
-        <div>
-            <div id="nextPart"> -> </div>
-        </div>
-    `;
+    fadeInElement(containerDialog);
 
-    nextPartListner(data, story, found, counter);
+    let dialogText = createElement("div", "", "dialogText");
+    dialogBox.appendChild(dialogText);
+
+    let text = story.partsChapter[counter];
+
+    writeOutText(dialogText, text);
+
+    let nextPart = createElement("div", "nextPart", "nextPart");
+    nextPart.innerHTML = `<i class="fa-solid fa-arrow-right"></i>`;
+    dialogBox.appendChild(nextPart);
+
+    nextPartListener(data, story, found, counter);
 }
 
-function nextPartListner (data, story, found, counter) {
-    document.querySelector("#nextPart").addEventListener("click", () => {
-        counter++
+function nextPartListener(data, story, found, counter) {
+    const nextPartButton = document.querySelector("#nextPart");
+    const dialogText = document.querySelector("#dialogText");
+
+    nextPartButton.addEventListener("click", () => {
+        counter++;
+    
         if (counter < story.partsChapter.length) {
-            document.querySelector("#dialogText").innerHTML = story.partsChapter[counter];
+            let text = story.partsChapter[counter];
+            writeOutText(dialogText, text);
         } else {
-
             if (!found) {
-                document.querySelector("#nextPart").remove();
-
+                nextPartButton.remove();
+        
                 PubSub.publish({
                     event: "render_charater_interaction_btns",
                     detail: {
-                        response: {
-                            data: data,
-                            story: story
-                        }
-                    }
+                    response: {
+                        data: data,
+                        story: story,
+                    },
+                    },
                 });
-
             } else {
-                let nextChapter = data.chapters.find(chapter => chapter.chapter === story.chapterId + 1); 
-                document.querySelector("#nextPart").remove();
-
-                // fix ingrid and later ones in the chapter to not get an option on completed button press on map 
+                let nextChapter = data.chapters.find(
+                    (chapter) => chapter.chapter === story.chapterId + 1
+                );
+                nextPartButton.remove();
+        
                 if (nextChapter === undefined) {
-
                     PubSub.publish({
-                        event: "render_charater_interaction_reOpen",
-                        detail: {
-                            response: {
-                                data: data,
-                                story: story
-                            }
-                        }
+                    event: "render_charater_interaction_reOpen",
+                    detail: {
+                        response: {
+                        data: data,
+                        story: story,
+                        },
+                    },
                     });
                 } else {
                     document.querySelector("#containerDialog").remove();
                 }
             }
-        } 
+        }
     });
+}
+
+function writeOutText(element, text) {
+    let index = 0;
+    const speed = 35;
+
+    element.textContent = "";
+
+    function addNextLetter() {
+        if (index < text.length) {
+            element.textContent += text[index];
+            index++;
+            setTimeout(addNextLetter, speed);
+        }
+    }
+
+    addNextLetter();
 }

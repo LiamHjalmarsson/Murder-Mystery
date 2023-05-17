@@ -1,5 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
-import { createElement } from "../../js/functions.js";
+import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
 import { getDocByClue } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
@@ -15,7 +15,6 @@ export default {}
 
 function render_popup ( response ) {
     let app = document.querySelector("#app");
-
     let wrapperPopUp = createElement("div", "", "wrapperPopUp");
     app.appendChild(wrapperPopUp);
 
@@ -24,12 +23,12 @@ function render_popup ( response ) {
     wrapperPopUp.append(containerPopUp);
 
     let box = createElement("form", "", "box");
-    document.querySelector("#containerPopUp").appendChild(box);
+    containerPopUp.appendChild(box);
 
     box.innerHTML = `
         <div class="navContainer">
             <div class="navClose"> 
-                <div class="close" id="popUpClose"> </div>
+                <div class="close" id="popUpClose"> <i class="fa-solid fa-xmark"></i> </div>
             </div>
             <h3 class="headerPopUp"> </h3>
         </div>
@@ -37,9 +36,13 @@ function render_popup ( response ) {
     `;
 
     document.querySelector("#popUpClose").addEventListener("click", () => {
-        document.querySelector("#wrapperPopUp").remove();
+        fadeOutElement(wrapperPopUp);
     });
+
     displayInformation(response);
+
+    fadeInElement(wrapperPopUp);
+
 }
 
 function displayInformation ( res ) { 

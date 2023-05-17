@@ -22,11 +22,11 @@ async function render_suspects ({response}) {
     app.append(suspectsWrapper);
     var rubrik = createElement("div","rubrik");
     var div = document.createElement('H1');
-        div.textContent = "Misstänkta";
+    div.textContent = "Misstänkta";
     rubrik.appendChild(div);
     
     let exitBtn = createElement("div","","Xbtn");
-    exitBtn.innerHTML = "X";
+    exitBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
     rubrik.append(exitBtn);
     exitBtn.addEventListener("click", () => {
         suspectsWrapper.remove();

@@ -3,7 +3,7 @@
 }
 
 #navigationContainer {
-    background-color: var(--darkBrown);
+    background: var(--darkBrown);
     height: 100%;
     display: flex;
     justify-content: space-between;

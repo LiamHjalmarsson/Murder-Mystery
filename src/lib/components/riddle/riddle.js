@@ -1,5 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
-import { createElement } from "../../js/functions.js";
+import { createElement, fadeInElement } from "../../js/functions.js";
 import { docUpdateArry, getFromDB, updateArrayMap } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
@@ -15,7 +15,7 @@ export default {}
 
 function render_riddle ( { response } ) {
     let app = document.querySelector("#app");
-    app.innerHTML = "";
+    // app.innerHTML = "";
 
     let riddleContainer = createElement("div", "", "riddleContainer");
     app.append(riddleContainer);
@@ -36,6 +36,8 @@ function render_riddle ( { response } ) {
     `;
 
     answerListener(response);
+
+    fadeInElement(riddleContainer);
 }
 
 function answerListener (response) {

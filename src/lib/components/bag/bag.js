@@ -1,5 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
-import { createElement } from "../../js/functions.js";
+import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
 import { getFromDB } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
@@ -26,7 +26,9 @@ async function render_bag ( data ) {
     containerWrapper.innerHTML = ` 
         <div id="bagNav">
             <div class="bagClose"> 
-                <div class="close" id="containerBagClose"> </div>
+                <div class="close" id="containerBagClose"> 
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
             </div>
             <h2 class="bagHeader"> Väska </h2>
         </div>
@@ -35,8 +37,10 @@ async function render_bag ( data ) {
     `;
 
     document.querySelector("#containerBagClose").addEventListener("click", () => {
-        containerBag.remove();
+        fadeOutElement(containerBag);
     });
+
+    fadeInElement(containerBag);
 
     PubSub.publish({
         event: "render_bag_details", 

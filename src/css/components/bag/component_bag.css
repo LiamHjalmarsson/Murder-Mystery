@@ -3,7 +3,6 @@
     justify-content: center;
     height: 100px;
     align-items: center;
-    /* position: relative; */   
 }
 
 .bagClose {
@@ -24,7 +23,7 @@
 }
 
 #inventory {
-    background-color: var(--lightBrown);
+    background-color: var(--darkBrown);
     width: 80%;
     padding: 10px;
     border-radius: 5px;

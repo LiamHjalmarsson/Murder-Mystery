@@ -1,5 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
-import { createElement } from "../../js/functions.js";
+import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
 
 export default {}
 
@@ -18,13 +18,16 @@ function render_bag_details_item (clue) {
     let container = createElement("div", "containerPopUP", "containerItem");
     app.appendChild(container);
 
+    fadeInElement(container);
     let containerWrapper = createElement("div", "", "containerWrapper");
     container.append(containerWrapper);
 
     containerWrapper.innerHTML = ` 
         <div id="bagNav">
             <div class="bagClose"> 
-                <div class="close" id="containerItemClose"> </div>
+                <div class="close" id="containerItemClose"> 
+                    <i class="fa-solid fa-xmark"></i> 
+                </div>
             </div>
             <h3 class="bagHeader"> ${clue.clue} </h3>
         </div>
@@ -41,7 +44,7 @@ function render_bag_details_item (clue) {
     document.querySelector("#imgClue").style.backgroundImage = `url(${clue.imageRef})`;
 
     document.querySelector("#containerItemClose").addEventListener("click", () => {
-        container.remove();
+        fadeOutElement(container);
     });
 }
 
