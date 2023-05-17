@@ -20,22 +20,22 @@ function render_buttonsNav (response) {
         {
             text: "Lös Gåta",
             id: "topLeft",
-            icon: "../../../../src/lib/icons/search.png",
+            icon: `<i class="fa-sharp fa-solid fa-magnifying-glass-location"></i>`,
         },
         {
             text: "Logga ut", 
             id: "topRight",
-            icon: "../../../../src/lib/icons/letter.png",
+            icon: `<i class="fa-solid fa-right-from-bracket"></i>`,
         },
         {
             text: "Väska",
             id: "bottomLeft",
-            icon: "../../../../src/lib/icons/backpack.png",
+            icon: `<i class="fa-sharp fa-solid fa-suitcase"></i>`,
         },
         {
             text: "Misstänkta",
             id: "bottomRight",
-            icon: "../../../../src/lib/icons/spyware.png",
+            icon: `<i class="fa-solid fa-user-secret"></i>`,
         }
     ];
 
@@ -43,7 +43,7 @@ function render_buttonsNav (response) {
         let buttonBox = createElement("div", "navigationBtn", btn.id);
 
         let iconsDiv = createElement("div", "", "iconNav");
-        iconsDiv.style.backgroundImage = `url(${btn.icon})`;
+        iconsDiv.innerHTML = btn.icon;
     
         let button = createElement("div", "infoNavBtn");
         button.textContent = btn.text;
