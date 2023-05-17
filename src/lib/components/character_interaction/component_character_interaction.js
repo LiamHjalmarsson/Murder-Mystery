@@ -76,7 +76,8 @@ function nextPartListner (data, story, found, counter) {
             } else {
                 let nextChapter = data.chapters.find(chapter => chapter.chapter === story.chapterId + 1); 
                 document.querySelector("#nextPart").remove();
-                
+
+                // fix ingrid and later ones in the chapter to not get an option on completed button press on map 
                 if (nextChapter === undefined) {
 
                     PubSub.publish({

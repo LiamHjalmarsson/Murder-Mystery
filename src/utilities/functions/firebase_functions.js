@@ -27,6 +27,7 @@ export const getUserDoc = async (username, password) => {
 };
 
 export const getDocByClue = async (colName, answer, response) => {
+    let { data, storys } = response;
 
     let colRef = collection(db, colName);
     let queryRef = query(colRef, where("unlockRiddleKey", "==", answer));
@@ -42,24 +43,30 @@ export const getDocByClue = async (colName, answer, response) => {
         let newData = result.docs[0].data();
 
         if (colName === "puzzelStory") {
-            let dataStoryExists = response.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
+            let dataStoryExists = data.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
     
             if (dataStoryExists === undefined || !dataStoryExists.onGoing) {
                 return { 
                     params: "error", 
                     response : { 
                         error: "Already enter this value" 
-                    }}; ;
+                    }};
             } else {
                 return newData;
             }
         } else {
 
-            let dataSearchArea = response.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
-            return newData;
-
+            let dataSearchArea = data.clues.some((clue) => clue.clueId === newData.clueId);
+            if (storys.clueId === newData.clueId) {   
+                return newData;
+            } else {
+                return { 
+                    params: "error", 
+                    response : { 
+                        error: "Already enter this value" 
+                    }};
+            }
         }
-
     }
 };
 

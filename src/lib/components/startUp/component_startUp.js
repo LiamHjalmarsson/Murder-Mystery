@@ -12,6 +12,7 @@ export default {}
 
 })();
 
+// start up of the form 
 function render_startUp ( params ) {
     let app = document.querySelector("#app");
     app.innerHTML = "";

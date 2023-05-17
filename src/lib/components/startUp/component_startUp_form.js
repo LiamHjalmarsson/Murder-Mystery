@@ -13,6 +13,7 @@ export default {}
     
 })();
 
+// form of the start up creating inputs with information 
 function component_startUp_form (params) {
     let formStartUp = createElement("form", "", "formStartUp");
 
@@ -48,8 +49,10 @@ function component_startUp_form (params) {
 
     document.querySelector("#startUpContainer").appendChild(formStartUp);
 
+    // function to change the class 
     inputAddClass(formStartUp);
 
+    // publish to bts of form to get the active one and display 
     PubSub.publish({
         event: "render_component_startUp_btns",
         detail: params
@@ -72,6 +75,7 @@ function inputAddClass (formStartUp) {
     });
 }
 
+// form to either login, or create the user 
 async function formListener (e, params) { 
     e.preventDefault();
     let username = document.querySelector("#username").value;
@@ -125,7 +129,9 @@ async function formListener (e, params) {
     }
 }
 
+// Creates the user 
 async function addUser () {
+    // get the users from the db
     let usersInDB = await getFromDB("users");
     
     let username = document.querySelector("#username").value;
@@ -151,6 +157,7 @@ async function addUser () {
     }
 
     if (userExists === undefined) {
+        // add the user 
         await addDocAddData("users", docDataUser);
     } else {
         console.log("error user exists in db");

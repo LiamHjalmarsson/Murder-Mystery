@@ -15,9 +15,11 @@ export default {}
 
 async function render_character_interaction_btns ( { response } ) {
     let { data, story } = response;
-
+    
     let choiseContainer = createElement("div", "", "choiseContainer");
     document.querySelector("#containerDialog").appendChild(choiseContainer);
+
+    // let gotClue = data.clues.find((clue) => clue.clueId === story.clueId);
 
     if (story.secoundCharacter) {
         choiseContainer.innerHTML = `
@@ -39,6 +41,13 @@ async function render_character_interaction_btns ( { response } ) {
             </div>
         `;
     } 
+    // else if (gotClue) {
+    //     choiseContainer.innerHTML = `
+    //     <div> 
+    //         <button id="btnContuineOnPausedChapter"> Continue old path  </button>
+    //     </div>
+    // `;
+    // }
     else if (story.locationSearch && story.alley) {
         choiseContainer.innerHTML = `
             <div> 
@@ -53,6 +62,7 @@ async function render_character_interaction_btns ( { response } ) {
             </div>
         `;
     }
+
     answerListener(data, story);
 }
 
@@ -69,6 +79,11 @@ function answerListener (data, story) {
     if (document.querySelector("#btnsecoundCharacterFind")) {
         btnSecoundCharacterOption(data, story);
     }
+
+    // if (document.querySelector("#btnContuineOnPausedChapter")) {
+    //     btnContuineOnPausedChapter(data, story);
+    // }
+
 }
 
 function btnSearchListner (data) {
@@ -152,3 +167,25 @@ function btnSecoundCharacterOption (data, story) {
         });
     });
 }
+
+// function btnContuineOnPausedChapter(data, story) {
+//     document.querySelector("#btnContuineOnPausedChapter").addEventListener("click", async () => {
+//         let indexChapter = data.chapters.findIndex((chapter) => chapter.paused === true);
+//         let chapter = data.chapters.find((chapter) => chapter.paused === true);
+
+//         await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+//             onGoing: true, paused: false
+//         });
+
+//         let updateUser = await getFromDB("users", data.id);
+    
+//         PubSub.publish({
+//             event: "render_map",
+//             detail: {
+//                 response: {
+//                     data: updateUser
+//                 }
+//             }
+//         });
+//     });
+// }

@@ -45,14 +45,16 @@ function answerListener (response) {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
 
-        if (riddleAnswerInput === puzzel.answer) {
+        console.log(riddleAnswerInput, puzzel.removeThis);
+        if (riddleAnswerInput === puzzel.removeThis) {
+        // if (riddleAnswerInput === puzzel.answer) {
 
             if (!puzzel.clueId) {
                 btnCharacterInteraction(data, storys);
             } else {
                 btnSearchArea(data, puzzel);
             }
-            
+        
         } else {
             console.log("Wrong answer");
         }
@@ -61,7 +63,7 @@ function answerListener (response) {
 
 async function btnCharacterInteraction (data, storys) {
     let updateUser = await getFromDB("users", data.id);
-        
+    
     PubSub.publish({
         event: "render_charater_interaction",
         detail: {
@@ -91,19 +93,26 @@ async function btnSearchArea (data, puzzel) {
 
     let lastIndex = data.searchArea ? data.searchArea.length: 0;
 
-    let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
+    if (clue.clueId !== 7) {
+        let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
+        if (nextChapter !== undefined) {
+            await docUpdateArry("users", data.id, "chapters", {  
+                chapter: nextChapter.chapterId,
+                onGoing: true,
+                searchOnGoing: false,
+            });
 
-    await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-        searchDone: true, searchOnGoing: false, onGoing: false, completed: true
-    });
+            await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                searchDone: true, searchOnGoing: false, onGoing: false, completed: true
+            });
+        }
+    } else {
+        await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+            searchDone: true, searchOnGoing: false, onGoing: false, completed: true, gameFinished: true
+        });
+    }
 
     await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });
-
-    await docUpdateArry("users", data.id, "chapters", {  
-        chapter: nextChapter.chapterId,
-        onGoing: true,
-        searchOnGoing: false,
-    });
 
     await docUpdateArry("users", data.id, "clues", { clueId: clue.clueId });
 

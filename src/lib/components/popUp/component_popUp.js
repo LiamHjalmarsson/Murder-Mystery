@@ -40,9 +40,7 @@ function render_component_popup ( response ) {
     document.querySelector("#popUpClose").addEventListener("click", () => {
         document.querySelector("#wrapperPopUp").remove();
     });
-
     displayInformation(response);
-
 }
 
 function displayInformation ( res ) { 
@@ -65,13 +63,18 @@ function displayInformation ( res ) {
             header.textContent = "Grattis";
         break;
 
+        case "completed": 
+            header.textContent = "Du har nu kommit till slutet";
+            message.textContent = "Du har nu kvar att gissa på mördaren eller möjligheten att hitta saker du missat genom att trycka på de färdig makerade markörerna på kartan"; 
+        break;
+
         default:
             header.textContent = "Skriv in kod";
             let input = createElement("input", "popUp_input", ""); 
             input.placeholder  = "Enter the clue!";
             
             let button = createElement("button", "", ""); 
-            button.textContent = "Submit your answer";
+            button.textContent = "Skicka in ditt svar";
 
             message.append(input);
             document.querySelector("#box").append(button);
@@ -92,9 +95,8 @@ function formListener ( response ) {
 
     document.querySelector("#box").addEventListener("submit", async (e) => {
         e.preventDefault();
-
         let inputValue = document.querySelector(".popUp_input");
-        let puzzel = await getDocByClue(e.target.className, inputValue.value, response.data); 
+        let puzzel = await getDocByClue(e.target.className, inputValue.value, response); 
 
         if (puzzel.params) {
             inputValue.classList.add("error");
