@@ -3,41 +3,42 @@
     --Text: #fff;
     /* --Darkbackground: #2b2a2a; */
     --Darkbackground: #a2704eff;
-
+  
     --darkRed: #660000ff;
     --lightRed: #c22a2aff;
-
+  
     --darkBrown: #582915ff;
     --middleBrown: rgb(167, 94, 63);
     --lightBrown: #a2704eff;
-
+  
     --darkBlue: #134f5cff;
     --lightBlue: #76a5afff;
-
+  
     --darkGray: #999999ff;
     --lightGray: #ebeaeaff;
-
+  
     --darkYellow: #bd7812ff;
     --lightYellow: #e4931bff;
-
+  
     --darkGreen: #344d10ff;
     --lightGreen: #608d1eff;
-
+  
     --lightHover: #e4931bff;
     --focusing: #f3b52f;
     --borderLight: #dad2d2;
     --transparet: #ffffff00;
-
+  
     /* Font related */
     --fontSizeHeader: 32px;
     --fontSizeText: 16px;
     --fontSizeTextSmall: 12px;
-
-    --fontHeader: var(--"bradley-djr, sans-serif");
-    --fontText  : var(--"gitan-latin, sans-serif");
-
+  
+    --fontHeader: 'bradley-djr', sans-serif;
+    --fontText: 'gitan-latin', sans-serif;
+  
     /* Borders & gap */
     --gap: 20px;
-
+  
     --btnRadius: 10px;
-}
+  }
+  
