@@ -95,6 +95,7 @@ input:focus {
     z-index: 3;
     width: 100vw;
     background-color: var(--lightBrown);
+    font-style: var(--fontText);
     opacity: 0;
     transition: opacity 0.5s;
     overflow: scroll;
