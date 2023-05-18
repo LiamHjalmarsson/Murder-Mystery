@@ -12,5 +12,28 @@ export default {}
 })();
 
 function render_start_endLetter () {
-    console.log("helo");
+    console.log("hello");
+    const div = document.createElement('div');
+    const img = document.createElement('img');
+    img.src = 'path/to/image.jpg';
+
+    const button = document.createElement('button');
+    button.textContent = 'Go to map';
+    button.addEventListener('click', ()=> {
+        const user= '...';
+
+        PubSub.publish({
+            event: "render_map",
+            detail: {
+                response: {
+                    data: user
+                }
+            }
+        })
+    });
+
+    div.appendChild(img);
+    div.appendChild(button);
+
+    console.log ("hello");
 }
