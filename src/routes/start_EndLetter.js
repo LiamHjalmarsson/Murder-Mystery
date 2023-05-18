@@ -15,7 +15,7 @@ function render_start_endLetter () {
     console.log("hello");
     const div = document.createElement('div');
     const img = document.createElement('img');
-    img.src = 'path/to/image.jpg';
+    img.src = 'path/to/startletter.png';
 
     const button = document.createElement('button');
     button.textContent = 'Go to map';
