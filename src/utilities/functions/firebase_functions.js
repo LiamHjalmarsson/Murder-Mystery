@@ -1,6 +1,6 @@
 import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
-    query, updateDoc, arrayUnion, where } from "firebase/firestore";
+    query, updateDoc, arrayUnion, where, serverTimestamp } from "firebase/firestore";
 import { PubSub } from "../pubsub.js";
 
 export const db = getFirestore(App);
@@ -70,7 +70,6 @@ export const getDocByClue = async (colName, answer, response) => {
     }
 };
 
-
 export const getFromDB = async (colName, docId) => {
     let colRef = collection(db, colName);
 
@@ -109,7 +108,6 @@ export const getFromDB = async (colName, docId) => {
     }
 }
 
-
 export const addDocAddData = async (colName, docData, docId) => {
     let colRef = collection(db, colName);
 
@@ -126,12 +124,12 @@ export const addDocAddData = async (colName, docData, docId) => {
 
         return await setDoc(document, {
             ...docData,
-            id: document.id
+            id: document.id,
+            createdAt: serverTimestamp()
         });
     
     }
 }
-
 
 export const docUpdate = async (colName, docId, upData) => {
     let colRef = collection(db, colName);
@@ -141,7 +139,6 @@ export const docUpdate = async (colName, docId, upData) => {
 
     return update;
 }
-
 
 export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
     let colRef = collection(db, colName);
@@ -160,9 +157,7 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
 
         return false;
     }
-
 }
-
 
 export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
     const colRef = collection(db, colName);
@@ -206,14 +201,66 @@ export async function checkLoginStatus() {
     }
 }
 
+let countdownStart;
+let countdownInterval;
 
+export const startCountdown = async (userId) => {
+    let colRef = collection(db, "users");
+    let docRef = doc(colRef, userId);
+    let docSnap = await getDoc(docRef);
 
+    if (docSnap.exists() && docSnap.data().countdownStart) {
+        countdownStart = docSnap.data().countdownStart;
+    } else {
+        countdownStart = new Date().getTime();
+    }
 
+    let currentTime = new Date().getTime();
+    let elapsedTime = currentTime - countdownStart;
+    let remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
 
+    if (remainingTime > 0) {
+        countdownInterval = setInterval(function() {
+            currentTime = new Date().getTime();
+            elapsedTime = currentTime - countdownStart;
+            remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
+            displayCountdown(remainingTime);
+        }, 1000);
+    }
+    displayCountdown(remainingTime);
+}
 
+export const logout = async (userId) => {
+    let colRef = collection(db, "users");
+    let docRef = doc(colRef, userId);
+    await setDoc(docRef, {
+        countdownStart: countdownStart
+    }, { merge: true });
+    clearInterval(countdownInterval); 
+}
 
+window.addEventListener('beforeunload', async function() {
+    let user = JSON.parse(localStorage.getItem("user"));
 
+    if (user !== null) {
+        let colRef = collection(db, "users");
+        let docRef = doc(colRef, user.userId);
+        await setDoc(docRef, {
+            countdownStart: countdownStart
+        }, { merge: true });
+    }
+});
 
+function displayCountdown(remainingTime) {
+    let hours = Math.floor(remainingTime / (1000 * 60 * 60));
+    let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+    if (document.querySelector("#timeLeft")) {
+        document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${hours}: ${minutes}m : ${seconds}s`;
+    }
+    console.log(hours + " hours, " + minutes + " minutes, " + seconds + " seconds remaining.");
+}
 
 // Används inte för tillfället kommer kanseke inte användas 
 // updaterar document om de ändras lämna om behövs 

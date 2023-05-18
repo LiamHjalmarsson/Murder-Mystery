@@ -1,5 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement } from "../../js/functions.js";
+import { logout } from "../../../utilities/functions/firebase_functions.js"
 
 export default {}
 
@@ -81,7 +82,9 @@ async function diffrentBtns (btn, { response } ) {
         break;
         
         case "Logga ut":
-            localStorage.clear();
+            localStorage.removeItem("user");
+            logout(data.id);
+
             PubSub.publish({
                 event: "render_startUp",
                 detail: "login"

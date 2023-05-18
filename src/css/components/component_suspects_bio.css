@@ -4,8 +4,8 @@
 
 #wrapBio {
     display: flex;
-   justify-content: center;
-   align-items: center;
+    justify-content: center;
+    align-items: center;
     position: fixed;
     z-index: 1000;
     top: 50%;
@@ -24,8 +24,6 @@
     align-items: center;
     justify-content: center;
     margin-left: 0;
-    
-    
 }
 
 p {

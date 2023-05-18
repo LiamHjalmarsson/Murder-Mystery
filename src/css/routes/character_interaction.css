@@ -48,6 +48,22 @@
     background: var(--lightBrown);
 }
 
+#nextPart {
+    display: flex;
+    justify-content: end;
+    cursor: pointer;
+}
+
+#nextPart > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    background: var(--lightBrown);
+}
+
 #dialogText {
     white-space: pre-line;
 }

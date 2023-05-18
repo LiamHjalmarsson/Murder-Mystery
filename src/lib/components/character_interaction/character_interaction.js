@@ -18,7 +18,7 @@ export default {}
 
 })();
 
-function render_character_interaction({ response }, counter = 0) {
+async function render_character_interaction({ response }, counter = 0) {
     let { data, story, found } = response;
     let app = document.querySelector("#app");
 
@@ -47,8 +47,16 @@ function render_character_interaction({ response }, counter = 0) {
 
     writeOutText(dialogText, text);
 
+    setTimeout(() => {
+
+    })
     let nextPart = createElement("div", "nextPart", "nextPart");
-    nextPart.innerHTML = `<i class="fa-solid fa-arrow-right"></i>`;
+    nextPart.innerHTML = `
+        <div>
+            <i class="fa-solid fa-arrow-right"></i>
+        </div>
+    `;
+
     dialogBox.appendChild(nextPart);
 
     nextPartListener(data, story, found, counter);
