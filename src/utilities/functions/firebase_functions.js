@@ -259,7 +259,6 @@ function displayCountdown(remainingTime) {
     if (document.querySelector("#timeLeft")) {
         document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${hours}: ${minutes}m : ${seconds}s`;
     }
-    console.log(hours + " hours, " + minutes + " minutes, " + seconds + " seconds remaining.");
 }
 
 // Används inte för tillfället kommer kanseke inte användas 
