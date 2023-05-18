@@ -89,7 +89,6 @@ async function formListener (e, params) {
 
         } else {
 
-            console.log(user);
             let userLocal = {
                 userId: user.id,
                 password: password,
@@ -112,16 +111,8 @@ async function formListener (e, params) {
             localStorage.setItem("user", JSON.stringify(userLocal));
 
             PubSub.publish({ 
-                event: "render_map",
-                detail: {
-                    response: {
-                        data: user
-                    }
-                }
-            });
-
-            PubSub.publish({
-                event: "render_counDown"
+                event: "render_start_endLetter",
+                detail: user
             });
         }
 

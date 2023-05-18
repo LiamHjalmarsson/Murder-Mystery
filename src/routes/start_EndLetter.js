@@ -11,16 +11,21 @@ export default {}
 
 })();
 
-function render_start_endLetter () {
-    console.log("hello");
+function render_start_endLetter (user) {
+    let app = document.querySelector("#app");
+    app.innerHTML = "";
+
     const div = document.createElement('div');
     const img = document.createElement('img');
-    img.src = 'path/to/startletter.png';
+    img.src = '../../library/startletter.png';
+
+    let box = document.createElement('div');
+    box.id = "startletterBox";
 
     const button = document.createElement('button');
+    button.id = "startGameLetter";
     button.textContent = 'Go to map';
     button.addEventListener('click', ()=> {
-        const user= '...';
 
         PubSub.publish({
             event: "render_map",
@@ -29,11 +34,16 @@ function render_start_endLetter () {
                     data: user
                 }
             }
-        })
+        });
+
+        PubSub.publish({
+            event: "render_counDown"
+        });
     });
 
     div.appendChild(img);
-    div.appendChild(button);
+    div.appendChild(box);
+    box.append(button);
 
-    console.log ("hello");
+    app.append(div);
 }
