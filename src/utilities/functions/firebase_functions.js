@@ -201,6 +201,67 @@ export async function checkLoginStatus() {
     }
 }
 
+let countdownStart;
+let countdownInterval;
+
+export const startCountdown = async (userId) => {
+    let colRef = collection(db, "users");
+    let docRef = doc(colRef, userId);
+    let docSnap = await getDoc(docRef);
+
+    if (docSnap.exists() && docSnap.data().countdownStart) {
+        countdownStart = docSnap.data().countdownStart;
+    } else {
+        countdownStart = new Date().getTime();
+    }
+
+    let currentTime = new Date().getTime();
+    let elapsedTime = currentTime - countdownStart;
+    let remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
+
+    if (remainingTime > 0) {
+        countdownInterval = setInterval(function() {
+            currentTime = new Date().getTime();
+            elapsedTime = currentTime - countdownStart;
+            remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
+            displayCountdown(remainingTime);
+        }, 1000);
+    }
+    displayCountdown(remainingTime);
+}
+
+export const logout = async (userId) => {
+    let colRef = collection(db, "users");
+    let docRef = doc(colRef, userId);
+    await setDoc(docRef, {
+        countdownStart: countdownStart
+    }, { merge: true });
+    clearInterval(countdownInterval); 
+}
+
+window.addEventListener('beforeunload', async function() {
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    if (user !== null) {
+        let colRef = collection(db, "users");
+        let docRef = doc(colRef, user.userId);
+        await setDoc(docRef, {
+            countdownStart: countdownStart
+        }, { merge: true });
+    }
+});
+
+function displayCountdown(remainingTime) {
+    let hours = Math.floor(remainingTime / (1000 * 60 * 60));
+    let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+    if (document.querySelector("#timeLeft")) {
+        document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${hours}: ${minutes}m : ${seconds}s`;
+    }
+    console.log(hours + " hours, " + minutes + " minutes, " + seconds + " seconds remaining.");
+}
+
 // Används inte för tillfället kommer kanseke inte användas 
 // updaterar document om de ändras lämna om behövs 
 export const realTime = async (colName, id) => {

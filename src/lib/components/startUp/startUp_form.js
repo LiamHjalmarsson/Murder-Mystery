@@ -107,7 +107,6 @@ async function formListener (e, params) {
                 }
             }
 
-            console.log(userTime);
 
             localStorage.setItem("userCount", JSON.stringify(userTime));
             localStorage.setItem("user", JSON.stringify(userLocal));
