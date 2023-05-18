@@ -24,7 +24,7 @@ async function render_bag_details ( { response }) {
     
         const found = data.clues.some(userClue => userClue.clueId === clue.clueId);
 
-        imgClue.style.backgroundImage = found ? `url(${clue.imageRef})` : `url(../../src/lib/icons/lock.png)`;
+        imgClue.style.backgroundImage = found ? `url(${clue.imageRef})` : `url(../../../../../../library/lock.png)`;
 
         foundClue.addEventListener("click", () => {
             if (found) {
