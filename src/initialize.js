@@ -25,6 +25,8 @@ import component_character_interaction from "./lib/components/character_interact
 import component_character_interaction_btns from "./lib/components/character_interaction/character_interacion_btns.js";
 import component_charachter_interaction_reOpen from "./lib/components/character_interaction/charachter_interaction_reOpen.js";
 
+import render_start_endLetter from "./routes/start_EndLetter.js";
+
 import component_suspects_bio from "./lib/components/component_suspects_bio.js";
 
 import guess_murder from "./routes/guess_murder.js";
