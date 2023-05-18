@@ -89,12 +89,27 @@ async function formListener (e, params) {
 
         } else {
 
-            const userLocal = {
+            console.log(user);
+            let userLocal = {
                 userId: user.id,
                 password: password,
                 username: username
             };
 
+            let userTime;
+            if (user.countdownStart) {
+                userTime = {
+                    userCount: user.countdownStart
+                }
+            } else {
+                userTime = {
+                    userCount: user.createdAt
+                }
+            }
+
+            console.log(userTime);
+
+            localStorage.setItem("userCount", JSON.stringify(userTime));
             localStorage.setItem("user", JSON.stringify(userLocal));
 
             PubSub.publish({ 

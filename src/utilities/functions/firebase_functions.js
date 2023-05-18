@@ -1,6 +1,6 @@
 import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
-    query, updateDoc, arrayUnion, where } from "firebase/firestore";
+    query, updateDoc, arrayUnion, where, serverTimestamp } from "firebase/firestore";
 import { PubSub } from "../pubsub.js";
 
 export const db = getFirestore(App);
@@ -70,7 +70,6 @@ export const getDocByClue = async (colName, answer, response) => {
     }
 };
 
-
 export const getFromDB = async (colName, docId) => {
     let colRef = collection(db, colName);
 
@@ -109,7 +108,6 @@ export const getFromDB = async (colName, docId) => {
     }
 }
 
-
 export const addDocAddData = async (colName, docData, docId) => {
     let colRef = collection(db, colName);
 
@@ -126,12 +124,12 @@ export const addDocAddData = async (colName, docData, docId) => {
 
         return await setDoc(document, {
             ...docData,
-            id: document.id
+            id: document.id,
+            createdAt: serverTimestamp()
         });
     
     }
 }
-
 
 export const docUpdate = async (colName, docId, upData) => {
     let colRef = collection(db, colName);
@@ -141,7 +139,6 @@ export const docUpdate = async (colName, docId, upData) => {
 
     return update;
 }
-
 
 export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
     let colRef = collection(db, colName);
@@ -160,9 +157,7 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
 
         return false;
     }
-
 }
-
 
 export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
     const colRef = collection(db, colName);
@@ -205,15 +200,6 @@ export async function checkLoginStatus() {
         return { detail: true, data: isAuthenticated }
     }
 }
-
-
-
-
-
-
-
-
-
 
 // Används inte för tillfället kommer kanseke inte användas 
 // updaterar document om de ändras lämna om behövs 

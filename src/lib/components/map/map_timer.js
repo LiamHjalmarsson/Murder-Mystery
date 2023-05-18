@@ -1,4 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
+// import { startCountdown } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -9,35 +10,66 @@ export default {}
         listener: countDown
     });
 
-    PubSub.subscribe({
-        event: "render_stopCounDown",
-        listener: stopCountDown
-    });
+    // PubSub.subscribe({
+    //     event: "render_stopCounDown",
+    //     listener: stopCountDown
+    // });
 
 })();
 
-let intervalId;
+let countdownStart;
 
 function countDown() {
-    let remainingTime = 4 * 60 * 60; 
+    // let user = JSON.parse(localStorage.getItem("user"));
+    let countDown = JSON.parse(localStorage.getItem("userCount"));
+
+    countdownStart = countDown.userCount;
+
+    let currentTime = new Date().getTime();
+    let elapsedTime = currentTime - countdownStart;
+    let remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
+
+    if (remainingTime > 0) {
+        setInterval(function() {
+            currentTime = new Date().getTime();
+            elapsedTime = currentTime - countdownStart;
+            remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
+            displayCountdown(remainingTime);
+        }, 1000);
+    }
+}
+
+function displayCountdown(remainingTime) {
+    let hours = Math.floor(remainingTime / (1000 * 60 * 60));
+    let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+    if (document.querySelector("#timeLeft")) {
+        document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${hours}: ${minutes}m : ${seconds}s`;
+    }
+}
+
+
+
+
+//     let remainingTime = 4 * 60 * 60; 
     
-    intervalId = setInterval(() => {
-        if (remainingTime > 0) {
-            remainingTime--;
+//     countdownStart = setInterval(() => {
+//         if (remainingTime > 0) {
+//             remainingTime--;
 
-            let remainingHours = Math.floor(remainingTime / 3600);
-            let remainingMinutes = Math.floor((remainingTime % 3600) / 60);
-            let remainingSeconds = remainingTime % 60;
+//             let remainingHours = Math.floor(remainingTime / 3600);
+//             let remainingMinutes = Math.floor((remainingTime % 3600) / 60);
+//             let remainingSeconds = remainingTime % 60;
 
-            if (document.querySelector("#timeLeft")) {
-                document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${remainingHours}: ${remainingMinutes}m : ${remainingSeconds}s`
-            }
-        } else {
-            clearInterval(intervalId);
-        }
-    }, 1000);
-}
+//             if (document.querySelector("#timeLeft")) {
+//                 document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${remainingHours}: ${remainingMinutes}m : ${remainingSeconds}s`
+//             }
+//         } else {
+//             clearInterval(countdownStart);
+//         }
+//     }, 1000);
+// }
 
-function stopCountDown() {
-    clearInterval(intervalId);
-}
+// function stopCountDown() {
+//     clearInterval(countdownStart);
