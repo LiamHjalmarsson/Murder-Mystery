@@ -110,10 +110,25 @@ async function formListener (e, params) {
             localStorage.setItem("userCount", JSON.stringify(userTime));
             localStorage.setItem("user", JSON.stringify(userLocal));
 
-            PubSub.publish({ 
-                event: "render_start_endLetter",
-                detail: user
-            });
+            if (user.newStart) {
+                PubSub.publish({ 
+                    event: "render_start_endLetter",
+                    detail: user
+                });
+            } else {
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        response: {
+                            data: user
+                        }
+                    }
+                });
+        
+                PubSub.publish({
+                    event: "render_counDown"
+                });
+            }
         }
 
     } else {
@@ -152,6 +167,7 @@ async function addUser () {
                 onGoing: true,
             }, 
         ],
+        newStart: true
     }
 
     if (userExists === undefined) {
