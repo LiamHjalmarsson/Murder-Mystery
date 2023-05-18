@@ -47,7 +47,7 @@ function answerListener (response) {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
 
-        if (riddleAnswerInput === puzzel.removeThis) {
+        if (riddleAnswerInput === puzzel.removeThis || riddleAnswerInput === puzzel.answer) {
             if (!puzzel.clueId) {
                 btnCharacterInteraction(data, storys);
             } else {
