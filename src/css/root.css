@@ -33,8 +33,8 @@
     --fontSizeText: 16px;
     --fontSizeTextSmall: 12px;
   
-    --fontHeader: 'gitan-latin', sans-serif;
-    --fontText: 'bradley-djr', sans-serif;
+    --fontText: 'gitan-latin', sans-serif;
+    --fontHeader: 'bradley-djr', sans-serif;
   
     /* Borders & gap */
     --gap: 20px;
