@@ -52,3 +52,7 @@
     border: 1px solid var(--lightRed);
     color: var(--lightRed);
 }
+
+.popUp {
+    text-align: center;
+}

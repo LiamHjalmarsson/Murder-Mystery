@@ -78,9 +78,13 @@ input:focus {
     margin-left: 15px;
 }
 
-.fa-xmark, .fa-arrow-right, .fa-solid fa-suitcase, .fa-solid {
+.fa-xmark, .fa-arrow-right, .fa-solid fa-suitcase, .fa-solid, fa-person-walking {
     color: var(--darkBrown);
     font-size: 35px;
+}
+
+.fa-right-from-bracket {
+    color: var(--lightBrown);
 }
 
 .headerPopUp {

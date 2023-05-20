@@ -112,7 +112,7 @@ function nextPartListener(data, story, found, counter) {
 
 function writeOutText(element, text) {
     let index = 0;
-    const speed = 40;
+    const speed = 5;
     element.textContent = "";
 
     function addNextLetter() {

@@ -1,5 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement } from "../../js/functions.js";
+import { logout } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -12,7 +13,8 @@ export default {}
 
 })();
 
-function renderTopMenu (response) {
+function renderTopMenu ({response}) {
+    let { data } = response;
     let container_map = document.querySelector("#container_map");
     let map = document.querySelector("#map");
     let topNavigation = createElement("div", "", "topNavigation");
@@ -20,10 +22,13 @@ function renderTopMenu (response) {
     topNavigation.innerHTML = `
         <div id="navigationContainer">
             <div id="guessMurderBox">
-                <button id="guessMurder" class="topNav"> Gissa mördaren </button>
+                <button id="guessMurder" class="topNav"> Gissa <br> mördaren </button>
             </div>
             <div id="timeContainer"> 
                 <h3 id="timeLeft"> </h3>
+                <div id="logOut">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </div>
             </div>
         </div>
     `;
@@ -36,4 +41,14 @@ function renderTopMenu (response) {
             detail: response
         });
     });
+
+    document.querySelector("#logOut").addEventListener("click", () => {
+            localStorage.removeItem("user");
+            logout(data.id);
+
+            PubSub.publish({
+                event: "render_startUp",
+                detail: "login"
+            });
+    }); 
 }
