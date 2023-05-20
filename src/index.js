@@ -4,7 +4,6 @@ import { checkLoginStatus } from "./utilities/functions/firebase_functions";
 let check = await checkLoginStatus();
 
 if (check) {
-
     PubSub.publish({
         event: "render_counDown"
     });
@@ -17,14 +16,11 @@ if (check) {
             }
         }
     });
-
 } else {
-
     PubSub.publish({
         event: "render_startUp",
         detail: "login"
     });
-    
 }
 
 

@@ -1,6 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement } from "../../js/functions.js";
-import { getFromDB } from "../../../utilities/functions/firebase_functions.js";
+import { getFromDB, updateArrayMap, deleteArrayMap } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -22,6 +22,7 @@ export default {}
 async function render_map ( { response } ) {
     let { data, myLocation } = response;
     
+    console.log(response);
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -29,15 +30,23 @@ async function render_map ( { response } ) {
     app.appendChild(container_map);
     
     let mapBox = createElement("div", "", "map");
-    container_map.append(mapBox);
+    document.querySelector("#container_map").append(mapBox);
     
     document.querySelector("#map").style.display = "flex";
+    
+    PubSub.publish({
+        event: "render_navigation",
+        detail: {
+            response: {
+                data: data,
+            }
+        }
+    });
 
-    // gets the informations to display on the map 
     detail_map(data, myLocation);
 }
 
-async function detail_map(data, myLocation) {
+async function detail_map(data, location) {
     let map;
     // users chapters finds the chapters that are ongoing
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
@@ -64,16 +73,6 @@ async function detail_map(data, myLocation) {
 
         map.on('click', coordinatesAlert);
 
-        PubSub.publish({
-            event: "render_navigation",
-            detail: {
-                response: {
-                    data: data,
-                    storys: userOnGoingChapter
-                }
-            }
-        });
-    // if the users has no chapter that is ongoing 
     } else {
         map = L.map('map').setView([55.6050, 13.0038], 16);
 
@@ -83,15 +82,6 @@ async function detail_map(data, myLocation) {
         }).addTo(map);
 
         chaptersDone(map, allChapters, data);
-
-        PubSub.publish({
-            event: "render_navigation",
-            detail: {
-                response: {
-                    data: data,
-                }
-            }
-        });
 
         PubSub.publish({
             event: "render_popup",
@@ -107,7 +97,7 @@ async function detail_map(data, myLocation) {
 
 function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
     let pinIcon = L.icon({
-        iconUrl: '../../library/pin.png',
+        iconUrl: '../../library/redPin.png',
         iconSize: [38, 38], 
         iconAnchor: [18, 38],
         popupAnchor: [0, -31]
@@ -124,11 +114,42 @@ function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
 }
 
 function chaptersDone(map, allChapters, data) {
-    let doneChapters = data.chapters.filter(chapter => chapter.completed);
+    let pinIcon = L.icon({
+        iconUrl: '../../library/bluePin.png',
+        iconSize: [38, 38], 
+        iconAnchor: [18, 38],
+        popupAnchor: [0, -31]
+    });
+
+    let doneChapters = data.chapters.filter(chapter => chapter);
 
     allChapters.forEach(chapterDb => {
         doneChapters.forEach(chapter => {
-            if (chapter.chapter === chapterDb.chapterId) {
+
+            if (chapter.chapter === chapterDb.chapterId && chapter.searchDone) {
+                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
+                    radius: chapterDb.searchRadius,
+                    color: "lightgreen",
+                    fillOpacity: 0.4
+                }).addTo(map).bindPopup("Search Completed");
+            }
+            else if (chapter.chapter === chapterDb.chapterId && chapter.paused) {
+                let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
+                button.textContent = `Story ${chapterDb.chapterId}`;
+                button.addEventListener('click', () => {
+                    handleButtonClickPaused(data);
+                });
+    
+                let popupContent = createElement('div');
+                popupContent.appendChild(button);
+
+                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
+                    radius: chapterDb.searchRadius,
+                    color: "yellow"
+                }).addTo(map).bindPopup(popupContent);
+            }
+            
+            if (chapter.chapter === chapterDb.chapterId && chapter.completed) {
                 let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
                 button.textContent = `Story ${chapterDb.chapterId}`;
                 button.addEventListener('click', () => {
@@ -138,53 +159,65 @@ function chaptersDone(map, allChapters, data) {
                 let popupContent = createElement('div');
                 popupContent.appendChild(button);
     
-                L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long])
+                L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long], { icon: pinIcon })
                 .addTo(map).bindPopup(popupContent);
-            }
-
-            if (chapter.chapter === chapterDb.chapterId && chapter.paused) {
-                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
-                    radius: chapterDb.searchRadius,
-                    color: "yellow"
-                }).addTo(map).bindPopup("paused");
-            }
-    
-            if (chapter.chapter === chapterDb.chapterId && chapter.searchDone) {
-                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
-                    radius: chapterDb.searchRadius,
-                    color: "lightgreen",
-                    fillOpacity: 0.4
-                }).addTo(map).bindPopup("Search Completed");
             }
         });
     });
-
-    function handleButtonClick(chapterDb, data) {
-        PubSub.publish({
-            event: "map_found_charater_interaction",
-            detail: {
-                response: {
-                    data: data,
-                    story: chapterDb,
-                    found: true
-                }
-            }
-        });
-    }
 }
 
-function getLocation (map) {    
-    navigator.geolocation.watchPosition(success);
+function handleButtonClick(chapterDb, data) {
+    PubSub.publish({
+        event: "map_found_charater_interaction",
+        detail: {
+            response: {
+                data: data,
+                story: chapterDb,
+                found: true
+            }
+        }
+    });
+}
 
+async function handleButtonClickPaused(data) {
+    let completedChapterTrue= data.chapters.some(chapter => chapter.paused && chapter.completed);
+    let pausedChapterIndex = data.chapters.findIndex(chapter => chapter.paused);
+    let onGoingIndex = data.chapters.findIndex(chapter => chapter.onGoing);
+
+    await deleteArrayMap("users", data.id, "chapters", onGoingIndex);
+    
+    if(completedChapterTrue) {
+        await updateArrayMap("users", data.id, "chapters", pausedChapterIndex, {
+                paused: false, onGoing: true, searchOnGoing: true
+        });
+    } 
+    else if (pausedChapterTrue) {
+        await updateArrayMap("users", data.id, "chapters", pausedChapterIndex, {
+            paused: false, onGoing: true
+        });
+    }
+
+    let updateUser = await getFromDB("users", data.id);
+
+    PubSub.publish({
+        event: "render_map",
+        detail: {
+            response: {
+                data: updateUser
+            }
+        }
+    });
+}
+
+function getLocation(map) {
+    let watchId;
     let marker, circle, zoomed;
 
     function success(position) {
-    
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        const accuracy = position.coords.accuracy;
-    
-        // Removes any existing marker and circule 
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        let accuracy = position.coords.accuracy;
+
         if (marker) {
             map.removeLayer(marker);
         }
@@ -192,18 +225,30 @@ function getLocation (map) {
         if (circle) {
             map.removeLayer(circle);
         }
-        // Adds marker to the map and a circle for accuracy
+
         marker = L.marker([latitude, longitude]).addTo(map);
         circle = L.circle([latitude, longitude], accuracy).addTo(map);
-    
-        // Set zoom to boundaries of accuracy circle
+
         if (!zoomed) {
-            zoomed = map.fitBounds(circle.getBounds()); 
+            zoomed = map.fitBounds(circle.getBounds());
         }
-    
-        // Set map focus to current user position
+
         map.setView([latitude, longitude]);
     }
+
+    if (navigator.geolocation) {
+        watchId = navigator.geolocation.watchPosition(success);
+    }
+
+    function removeTracking() {
+        if (watchId) {
+            navigator.geolocation.clearWatch(watchId);
+        }
+    }
+
+    return {
+        removeTracking: removeTracking
+    };
 }
 
 function coordinatesAlert(e) {

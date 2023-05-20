@@ -33,12 +33,16 @@ async function render_character_interaction({ response }, counter = 0) {
         containerDialog.classList.add("chapterFoundReading");
     }
 
-    containerDialog.style.backgroundImage = `url(../../src/lib/images/${story.imageRef}.jpg)`;
+    containerDialog.style.backgroundImage = `url()`;
 
     let dialogBox = createElement("div", "", "dialogBox");
     containerDialog.append(dialogBox);
 
     fadeInElement(containerDialog);
+
+    let personDialog = createElement("div", "", "personDialog");
+    personDialog.textContent = story.character;
+    dialogBox.appendChild(personDialog);
 
     let dialogText = createElement("div", "", "dialogText");
     dialogBox.appendChild(dialogText);

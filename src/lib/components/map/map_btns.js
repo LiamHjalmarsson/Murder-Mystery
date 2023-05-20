@@ -61,7 +61,7 @@ function render_buttonsNav (response) {
 }
 
 async function diffrentBtns (btn, { response } ) {
-    let { data, storys } = response;
+    let { data } = response;
 
     if (document.querySelector("#wrapperPopUp")) {
         document.querySelector("#wrapperPopUp").remove();
@@ -75,7 +75,6 @@ async function diffrentBtns (btn, { response } ) {
                     params: "",  
                     response: {
                         data: data,
-                        storys: storys
                     }
                 }
             });
