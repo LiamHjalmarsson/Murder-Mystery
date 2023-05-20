@@ -104,11 +104,11 @@ input:focus {
 
 /* fade in out  */
 #wrapperPopUp.fade-in, .containerPopUP.fade-in, #riddleContainer.fade-in,
-#containerDialog.fade-in{
+#containerDialog.fade-in, #nextPart.fade-in{
     opacity:1;
 }
 
 #wrapperPopUp.fade-out, .containerPopUP.fade-out, #riddleContainer.fade-out,
-#containerDialog.fade-out{
+#containerDialog.fade-out, #nextPart.fade-out{
     opacity:0;
 }

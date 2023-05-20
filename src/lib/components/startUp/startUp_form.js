@@ -74,8 +74,8 @@ function inputAddClass (formStartUp) {
 
 async function formListener (e, params) { 
     e.preventDefault();
-    let username = document.querySelector("#username").value;
-    let password = document.querySelector("#password").value;
+    let username = document.querySelector("#username").value.toLowerCase();
+    let password = document.querySelector("#password").value.toLowerCase();
 
     if (params === "login") {
         let user = await getUserDoc(username, password);
@@ -145,8 +145,8 @@ async function formListener (e, params) {
 async function addUser () {
     let usersInDB = await getFromDB("users");
     
-    let username = document.querySelector("#username").value;
-    let password = document.querySelector("#password").value;
+    let username = document.querySelector("#username").value.toLowerCase();
+    let password = document.querySelector("#password").value.toLowerCase();
     
     let userExists = usersInDB.find(user => user.username === username); 
 
@@ -173,8 +173,7 @@ async function addUser () {
     } else {
         PubSub.publish({
             event: "render_popup",
-            detail: "error"
+            params: "error"
         });
-        console.log("error user exists in db");
     }
 }

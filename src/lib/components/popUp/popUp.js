@@ -25,6 +25,7 @@ function render_popup ( response ) {
     let box = createElement("form", "", "box");
     containerPopUp.appendChild(box);
 
+    console.log(response);
     box.innerHTML = `
         <div class="navContainer">
             <div class="navClose"> 
@@ -46,6 +47,7 @@ function render_popup ( response ) {
 }
 
 function displayInformation ( res ) { 
+    console.log(res);
     let { params, response } = res;
 
     let header = document.querySelector(".headerPopUp"); 

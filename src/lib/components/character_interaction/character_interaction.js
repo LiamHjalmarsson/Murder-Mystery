@@ -1,6 +1,7 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
 import { docUpdateArry, getFromDB, updateArrayMap } from "../../../utilities/functions/firebase_functions.js";
+import { doc } from "firebase/firestore";
 
 export default {}
 
@@ -41,7 +42,7 @@ async function render_character_interaction({ response }, counter = 0) {
     fadeInElement(containerDialog);
 
     let personDialog = createElement("div", "", "personDialog");
-    personDialog.textContent = story.character;
+    personDialog.textContent =  story.character.charAt(0).toUpperCase() + story.character.slice(1);
     dialogBox.appendChild(personDialog);
 
     let dialogText = createElement("div", "", "dialogText");
@@ -51,9 +52,6 @@ async function render_character_interaction({ response }, counter = 0) {
 
     writeOutText(dialogText, text);
 
-    setTimeout(() => {
-
-    })
     let nextPart = createElement("div", "nextPart", "nextPart");
     nextPart.innerHTML = `
         <div>
@@ -62,18 +60,17 @@ async function render_character_interaction({ response }, counter = 0) {
     `;
 
     dialogBox.appendChild(nextPart);
-
     nextPartListener(data, story, found, counter);
 }
 
 function nextPartListener(data, story, found, counter) {
-    const nextPartButton = document.querySelector("#nextPart");
-    const dialogText = document.querySelector("#dialogText");
+    let nextPartButton = document.querySelector("#nextPart");
+    let dialogText = document.querySelector("#dialogText");
 
     nextPartButton.addEventListener("click", () => {
         counter++;
-    
         if (counter < story.partsChapter.length) {
+            document.querySelector("#nextPart").classList.remove("fade-in");
             let text = story.partsChapter[counter];
             writeOutText(dialogText, text);
         } else {
@@ -84,9 +81,9 @@ function nextPartListener(data, story, found, counter) {
                     event: "render_charater_interaction_btns",
                     detail: {
                     response: {
-                        data: data,
-                        story: story,
-                    },
+                            data: data,
+                            story: story,
+                        },
                     },
                 });
             } else {
@@ -100,10 +97,10 @@ function nextPartListener(data, story, found, counter) {
                     event: "render_charater_interaction_reOpen",
                     detail: {
                         response: {
-                        data: data,
-                        story: story,
+                                data: data,
+                                story: story,
+                            },
                         },
-                    },
                     });
                 } else {
                     document.querySelector("#containerDialog").remove();
@@ -115,8 +112,7 @@ function nextPartListener(data, story, found, counter) {
 
 function writeOutText(element, text) {
     let index = 0;
-    const speed = 35;
-
+    const speed = 40;
     element.textContent = "";
 
     function addNextLetter() {
@@ -124,8 +120,9 @@ function writeOutText(element, text) {
             element.textContent += text[index];
             index++;
             setTimeout(addNextLetter, speed);
+        } else {
+            fadeInElement(document.querySelector("#nextPart"))
         }
     }
-
     addNextLetter();
 }

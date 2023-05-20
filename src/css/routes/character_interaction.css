@@ -52,6 +52,7 @@
     display: flex;
     justify-content: end;
     cursor: pointer;
+    opacity: 0;
 }
 
 #nextPart > div {
