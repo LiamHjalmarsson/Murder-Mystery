@@ -6,12 +6,10 @@
     background: var(--darkBrown);
     height: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 10px;
 }
 
 #navigationContainer > div {
-    width: 50%;
     align-items: center;
     display: flex;
     justify-content: center;
@@ -20,11 +18,29 @@
 .topNav {
     background-color: var(--lightBrown);
     border: none;
-    height: 50px;
-    width: 150px;
+    width: 100px;
+    position: absolute;
+    left: 10px;
     border-radius: 5px;
     font-size: var(--fontSizeText);
     cursor: pointer; 
+    padding: 5px;
+}
+
+#logOut {
+    position: absolute;
+    right: 5%;
+}
+
+#timeContainer, #timeLeft {
+    flex-grow: 1;
+    text-align:center;
+}
+
+#timeLeft > h3 {
+    position: absolute;
+    left: 53%;
+    transform: translateX(-50%);
 }
 
 .navigationBtn {

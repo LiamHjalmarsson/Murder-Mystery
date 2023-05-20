@@ -89,9 +89,7 @@ async function btnSearchArea (data, puzzel) {
     let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1);
     let lastIndex = data.searchArea ? data.searchArea.length: 0;
 
-    ////// här
-    if (clue.clueId !== 7 && clue.clueId !== 6) {
-
+    if (clue.clueId !== 6 && clue.clueId !== 5) {
         let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
 
         if (nextChapter !== undefined) {
@@ -110,6 +108,10 @@ async function btnSearchArea (data, puzzel) {
         await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
             searchDone: true, searchOnGoing: false, onGoing: false, completed: true, gameFinished: true
         });
+
+        let chapterIds = data.chapters.filter(chapter => chapter.chapterId).map(chapter => chapter.chapterId);
+        console.log(chapterIds);
+    
     }
 
     await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });

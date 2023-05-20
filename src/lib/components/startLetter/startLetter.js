@@ -1,5 +1,5 @@
-import { PubSub } from "../utilities/pubsub.js";
-import { docUpdate } from "../utilities/functions/firebase_functions.js"
+import { PubSub } from "../../../utilities/pubsub.js";
+import { docUpdate } from "../../../utilities/functions/firebase_functions.js"
 
 export default {}
 

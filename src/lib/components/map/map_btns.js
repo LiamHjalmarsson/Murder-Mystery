@@ -24,9 +24,9 @@ function render_buttonsNav (response) {
             icon: `<i class="fa-sharp fa-solid fa-magnifying-glass-location"></i>`,
         },
         {
-            text: "Logga ut", 
+            text: "Spåra", 
             id: "topRight",
-            icon: `<i class="fa-solid fa-right-from-bracket"></i>`,
+            icon: `<i class="fa-solid fa-person-walking"></i>`,
         },
         {
             text: "Väska",
@@ -80,14 +80,36 @@ async function diffrentBtns (btn, { response } ) {
             });
         break;
         
-        case "Logga ut":
-            localStorage.removeItem("user");
-            logout(data.id);
+        case "Spåra":
 
-            PubSub.publish({
-                event: "render_startUp",
-                detail: "login"
-            });
+            if (!document.querySelector("#topRight").classList.contains("active")) { 
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        response: {
+                            data: data,
+                            tracking: true
+                        }
+                    }
+                });
+            } else {
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        response: {
+                            data: data,
+                            tracking: false
+                        }
+                    }
+                });
+            }
+            // localStorage.removeItem("user");
+            // logout(data.id);
+
+            // PubSub.publish({
+            //     event: "render_startUp",
+            //     detail: "login"
+            // });
         break;
 
         case "Väska":

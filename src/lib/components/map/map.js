@@ -18,11 +18,10 @@ export default {}
 
 })();
 
-// renders the map 
 async function render_map ( { response } ) {
-    let { data, myLocation } = response;
+    let { data, tracking } = response;
     
-    console.log(response);
+    console.log("myLocation", tracking);
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -43,10 +42,10 @@ async function render_map ( { response } ) {
         }
     });
 
-    detail_map(data, myLocation);
+    detail_map(data, tracking);
 }
 
-async function detail_map(data, location) {
+async function detail_map(data, tracking) {
     let map;
     // users chapters finds the chapters that are ongoing
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
@@ -92,6 +91,15 @@ async function detail_map(data, location) {
                 }
             }
         }); 
+    }
+
+    if (tracking) {
+        getLocation(map); 
+        document.querySelector("#topRight").classList.add("active");
+    } else {
+        document.querySelector("#topRight").classList.remove("active");
+        let trackUser = getLocation();
+        trackUser.removeTracking();
     }
 }
 
