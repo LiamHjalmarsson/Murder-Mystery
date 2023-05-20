@@ -44,7 +44,7 @@
     width: 80%;
 }
 
-#btnCharacterFind, #btnClueSearch {
+#btnCharacterFind, #btnClueSearch, #btnsecoundCharacterFind {
     background: var(--lightBrown);
 }
 

@@ -1,6 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
-import { getDocByClue } from "../../../utilities/functions/firebase_functions.js";
+import { getDocByClue, getFromDB } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -59,15 +59,17 @@ function displayInformation ( res ) {
 
         case "wrong":
             header.textContent = "Ajdå!";
+            message.textContent = ""; 
         break;
 
         case "success":
             header.textContent = "Grattis";
+            message.textContent = ""; 
         break;
 
         case "completed": 
             header.textContent = "Du har nu kommit till slutet";
-            message.textContent = "Du har nu kvar att gissa på mördaren eller möjligheten att hitta saker du missat genom att trycka på de färdig makerade markörerna på kartan"; 
+            message.textContent = ""; 
         break;
 
         default:
@@ -93,8 +95,12 @@ function inputPopUp (response) {
     formListener(response);
 }
 
-function formListener (response) {
+async function formListener (response) {
     let isClue = response.data.chapters.some(chapter => chapter.searchOnGoing);
+
+    let allChapters = await getFromDB("storyTelling");
+    let onGoingChapter = response.data.chapters.filter(chapter => chapter.onGoing)[0];
+    let story = allChapters.filter(chapter => chapter.chapterId === onGoingChapter.chapter && onGoingChapter.onGoing)[0];
 
     if (isClue) {
         document.querySelector("#box").classList.add("puzzelClues");
@@ -105,7 +111,10 @@ function formListener (response) {
     document.querySelector("#box").addEventListener("submit", async (e) => {
         e.preventDefault();
         let inputValue = document.querySelector(".popUp_input");
-        let puzzel = await getDocByClue(e.target.className, inputValue.value, response); 
+        let puzzel = await getDocByClue(e.target.className, inputValue.value, {response: {
+            data: response.data,
+            storys: story
+        }}); 
 
         if (puzzel.params) {
             inputValue.classList.add("error");
@@ -117,7 +126,7 @@ function formListener (response) {
                 detail: { 
                     response: {
                         data: response.data,
-                        storys: response.storys,
+                        storys: story,
                         puzzel: puzzel
                     }
                 }

@@ -89,7 +89,8 @@ async function btnSearchArea (data, puzzel) {
     let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1);
     let lastIndex = data.searchArea ? data.searchArea.length: 0;
 
-    if (clue.clueId !== 7) {
+    ////// här
+    if (clue.clueId !== 7 && clue.clueId !== 6) {
 
         let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
 

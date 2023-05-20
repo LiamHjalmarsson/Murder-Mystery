@@ -106,7 +106,6 @@ async function formListener (e, params) {
                 }
             }
 
-
             localStorage.setItem("userCount", JSON.stringify(userTime));
             localStorage.setItem("user", JSON.stringify(userLocal));
 
@@ -132,7 +131,6 @@ async function formListener (e, params) {
         }
 
     } else {
-
         if (username !== "" && password !== "") {
             await addUser();
             

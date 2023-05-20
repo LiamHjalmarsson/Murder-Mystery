@@ -22,23 +22,50 @@ async function render_character_interaction_btns ( { response } ) {
     let gotClue = data.clues.find((clue) => clue.clueId === story.clueId);
 
     if (story.secoundCharacter) {
-        choiseContainer.innerHTML = `
-            <div>
-                <button id="btnCharacterFind"> Find a new character 1</button>
-            </div>
-            <div>
-                <button id="btnsecoundCharacterFind"> Find a new character 2</button>
-            </div>
-        `;
+        btnTwoCharacterOption(choiseContainer, data, story);
     }
     else if (gotClue && story.alley) {
-        choiseContainer.innerHTML = `
+        btnPausedChapter(choiseContainer, data, story);
+    } 
+    else if (gotClue && !story.alley) {
+        btnPausedAndCharacter(choiseContainer, data, story);
+    }
+    else if (story.locationSearch && !story.alley ) {
+        btnCharacterSearch(choiseContainer, data, story);
+    } 
+    else if (story.locationSearch && story.alley) {
+        btnSearch(choiseContainer, data, story);
+    } 
+    else {
+        btnCharacterFind(choiseContainer, data, story);
+    }
+
+}
+
+function btnTwoCharacterOption (choiseContainer, data, story) {
+    choiseContainer.innerHTML = `
+        <div>
+            <button id="btnCharacterFind"> Find a new character 1</button>
+        </div>
+        <div>
+            <button id="btnsecoundCharacterFind"> Find a new character 2</button>
+        </div>
+    `;
+    btnCharacterFindListner(data, story);
+    btnSecoundCharacterOption(data, story);
+}
+
+function btnPausedChapter (choiseContainer, data) {
+    choiseContainer.innerHTML = `
         <div> 
             <button id="btnContuineOnPausedChapter"> Continue old path  </button>
         </div>
     `;
-    } else if (gotClue && !story.alley) {
-        choiseContainer.innerHTML = `
+    btnContuineOnPausedChapter(data);
+}
+
+function btnPausedAndCharacter (choiseContainer, data, story) {
+    choiseContainer.innerHTML = `
         <div>
             <button id="btnCharacterFind"> Find a new character </button>
         </div>
@@ -46,61 +73,49 @@ async function render_character_interaction_btns ( { response } ) {
             <button id="btnContuineOnPausedChapter"> Continue old path  </button>
         </div>
     `;
-    }
-    else if (story.locationSearch && !story.alley ) {
-        choiseContainer.innerHTML = `
-            <div>
-                <button id="btnCharacterFind"> Find a new character </button>
-            </div>
-            <div> 
-                <button id="btnClueSearch"> Go to a search area </button>
-            </div>
-        `;
-    } 
-    else if (story.locationSearch && story.alley) {
-        choiseContainer.innerHTML = `
-            <div> 
-                <button id="btnClueSearch"> Go to a search area </button>
-            </div>
-        `;
-    } 
-    else {
-        choiseContainer.innerHTML = `
-            <div>
-                <button id="btnCharacterFind"> Find a new character </button>
-            </div>
-        `;
-    }
-
-    answerListener(data, story);
+    btnCharacterFindListner(data, story);
+    btnContuineOnPausedChapter(data);
 }
 
-function answerListener (data, story) {
+function btnCharacterSearch (choiseContainer, data, story) {
+    choiseContainer.innerHTML = `
+        <div>
+            <button id="btnCharacterFind"> Find a new character </button>
+        </div>
+        <div> 
+            <button id="btnClueSearch"> Go to a search area </button>
+        </div>
+    `;
+    btnCharacterFindListner(data, story);
+    btnSearchListner(data);
+}
 
-    if (document.querySelector("#btnClueSearch")) {
-        btnSearchListner(data);
-    }
+function btnSearch (choiseContainer, data) {
+    choiseContainer.innerHTML = `
+        <div> 
+            <button id="btnClueSearch"> Go to a search area </button>
+        </div>
+    `;
+    btnSearchListner(data);
+}
 
-    if (document.querySelector("#btnCharacterFind")) {
-        btnCharacterFindListner(data, story);
-    }
+function btnCharacterFind (choiseContainer, data, story) { 
+    choiseContainer.innerHTML = `
+        <div>
+            <button id="btnCharacterFind"> Find a new character </button>
+        </div>
+    `;
 
-    if (document.querySelector("#btnsecoundCharacterFind")) {
-        btnSecoundCharacterOption(data, story);
-    }
-
-    if (document.querySelector("#btnContuineOnPausedChapter")) {
-        btnContuineOnPausedChapter(data);
-    }
-
+    btnCharacterFindListner(data, story);
 }
 
 function btnSearchListner (data) {
     document.querySelector("#btnClueSearch").addEventListener("click", async () => {
-        let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
-        let indexPaused = data.chapters.findIndex((chapter) => chapter.paused === true);
+        let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);
+        let indexPaused = data.chapters.findIndex((chapter) => chapter.paused);
+        let paused = data.chapters.some((chapter) => chapter.paused);
 
-        if (indexPaused) {
+        if (paused) {
             await updateArrayMap('users', data.id, 'chapters', indexPaused, { 
                 paused: false
             });

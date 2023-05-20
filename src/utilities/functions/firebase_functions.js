@@ -1,32 +1,35 @@
 import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
-    query, updateDoc, arrayUnion, where, serverTimestamp } from "firebase/firestore";
+    query, updateDoc, arrayUnion, where, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { PubSub } from "../pubsub.js";
 
 export const db = getFirestore(App);
 
 export const getUserDoc = async (username, password) => {
-
     if (username === "" || password === "") {
-        return false;
+        return { 
+                params: "error", 
+                response : { 
+                    error: "No username or password" 
+            }};
     } else {
-
         let colRef = collection(db, "users");
         let queryRef = query(colRef, where("username", "==", username), where("password", "==", password));
         let result = await getDocs(queryRef);
     
         if (result.empty) {
-    
-            return false;
-    
+            return { 
+                params: "error", 
+                response : { 
+                    error: "Try again" 
+            }};
         } else {
             return result.docs[0].data();
         }
     }
-
 };
 
-export const getDocByClue = async (colName, answer, response) => {
+export const getDocByClue = async (colName, answer, { response } ) => {
     let { data, storys } = response;
 
     let colRef = collection(db, colName);
@@ -37,7 +40,7 @@ export const getDocByClue = async (colName, answer, response) => {
         return { 
             params: "error", 
             response : { 
-                error: "Wrong answer" 
+                error: "Wrong answer try gain" 
             }};
     } else {
         let newData = result.docs[0].data();
@@ -49,7 +52,7 @@ export const getDocByClue = async (colName, answer, response) => {
                 return { 
                     params: "error", 
                     response : { 
-                        error: "Already enter this value" 
+                        error: "Already enter this key try again" 
                     }};
             } else {
                 return newData;
@@ -63,7 +66,7 @@ export const getDocByClue = async (colName, answer, response) => {
                 return { 
                     params: "error", 
                     response : { 
-                        error: "Already enter this value" 
+                        error: "there was an error adding the clue" 
                     }};
             }
         }
@@ -78,24 +81,19 @@ export const getFromDB = async (colName, docId) => {
         let docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-
             let data = docSnap.data();
             data.id = docSnap.id;
             return data;
-
         } else {
-
             return { 
                 params: "error", 
                 response : { 
-                    error: "No matching document found" 
+                    error: "No document found" 
                 }
             };
-            
         }
 
     } else {
-
         let dbdocs = await getDocs(colRef);
         
         let data = dbdocs.docs.map((doc) => {
@@ -118,7 +116,6 @@ export const addDocAddData = async (colName, docData, docId) => {
             ...docData,
             id: document.id
         });
-
     } else {
         let document = doc(colRef);
 
@@ -127,7 +124,6 @@ export const addDocAddData = async (colName, docData, docId) => {
             id: document.id,
             createdAt: serverTimestamp()
         });
-    
     }
 }
 
@@ -149,24 +145,25 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
     try {
         await updateDoc(refDoc, dataToUpdate);
 
-        console.log(`Document with ID ${docId} successfully updated.`, newValue);
-
         return newValue;
     } catch (error) {
-        console.error(`Error updating document with ID ${docId}:`, error);
-
-        return false;
+        return { 
+            params: "error", 
+            response : { 
+                error: "Error updating the document" 
+            }
+        };
     }
 }
 
-export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
+export const updateArrayMap = async (colName, docId, arrayField, index, updateObj) => {
     const colRef = collection(db, colName);
     const docRef = doc(colRef, docId);
 
     try {
         const docSnapshot = await getDoc(docRef);
     
-        const arraryToUpdate = docSnapshot.data()[arr].map((item, i) => {
+        const arraryToUpdate = docSnapshot.data()[arrayField].map((item, i) => {
             if (i === index) {
             return {
                 ...item,
@@ -177,13 +174,40 @@ export const updateArrayMap = async (colName, docId, arr, index, updateObj) => {
         });
     
         await updateDoc(docRef, {
-            [arr]: arraryToUpdate
+            [arrayField]: arraryToUpdate
         });
 
         return arraryToUpdate;
     } catch (error) {
-        console.error(`Error updating document with ID ${docId}:`, error);
-        return false;
+        return { 
+            params: "error", 
+            response : { 
+                error: "Error updating the document" 
+            }
+        };
+    }
+};
+
+export const deleteArrayMap = async (colName, docId, arrayField, index) => {
+    const colRef = collection(db, colName);
+    const docRef = doc(colRef, docId);
+
+    try {
+        const docSnapshot = await getDoc(docRef);
+        const arrayToUpdate = docSnapshot.data()[arrayField].filter((item, i) => i !== index);
+    
+        await updateDoc(docRef, {
+            [arrayField]: arrayToUpdate
+        });
+    
+        return arrayToUpdate;
+    } catch (error) {
+        return { 
+            params: "error", 
+            response : { 
+                error: "Error updating the document" 
+            }
+        };
     }
 };
 
@@ -261,8 +285,6 @@ function displayCountdown(remainingTime) {
     }
 }
 
-// Används inte för tillfället kommer kanseke inte användas 
-// updaterar document om de ändras lämna om behövs 
 export const realTime = async (colName, id) => {
     let colRef = collection(db, colName);
     let isUpdating = false;

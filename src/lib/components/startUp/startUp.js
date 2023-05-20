@@ -20,7 +20,7 @@ function render_startUp ( params ) {
     app.append(formContainer);
     
     let gameTitle = createElement("h2", "gameTitle");
-    gameTitle.textContent = "Dåd på kungens hörna";
+    gameTitle.textContent = "Dådet på kungens hörna";
 
     formContainer.append(gameTitle);
 
