@@ -21,7 +21,6 @@ export default {}
 async function render_map ( { response } ) {
     let { data, tracking } = response;
     
-    console.log("myLocation", tracking);
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
@@ -47,13 +46,11 @@ async function render_map ( { response } ) {
 
 async function detail_map(data, tracking) {
     let map;
-    // users chapters finds the chapters that are ongoing
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
-    // get all chapters
     let allChapters = await getFromDB("storyTelling");
     
     if (userLocationsOnGoing !== undefined) {
-        // filter out to get the correct chapter details
+
         let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
         
         if (userLocationsOnGoing.searchOnGoing) {
@@ -67,11 +64,11 @@ async function detail_map(data, tracking) {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
+        
         addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
         chaptersDone(map, allChapters, data);
 
         map.on('click', coordinatesAlert);
-
     } else {
         map = L.map('map').setView([55.6050, 13.0038], 16);
 
@@ -82,15 +79,6 @@ async function detail_map(data, tracking) {
 
         chaptersDone(map, allChapters, data);
 
-        PubSub.publish({
-            event: "render_popup",
-            detail: {
-                params: "completed",  
-                response: {
-                    data: data,
-                }
-            }
-        }); 
     }
 
     if (tracking) {
@@ -129,6 +117,13 @@ function chaptersDone(map, allChapters, data) {
         popupAnchor: [0, -31]
     });
 
+    let paused = L.icon({
+        iconUrl: '../../library/paused.png',
+        iconSize: [38, 38], 
+        iconAnchor: [18, 38],
+        popupAnchor: [0, -31]
+    });
+
     let doneChapters = data.chapters.filter(chapter => chapter);
 
     allChapters.forEach(chapterDb => {
@@ -141,7 +136,8 @@ function chaptersDone(map, allChapters, data) {
                     fillOpacity: 0.4
                 }).addTo(map).bindPopup("Search Completed");
             }
-            else if (chapter.chapter === chapterDb.chapterId && chapter.paused) {
+            
+            if (chapter.chapter === chapterDb.chapterId && chapter.paused) {
                 let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
                 button.textContent = `Story ${chapterDb.chapterId}`;
                 button.addEventListener('click', () => {
@@ -151,10 +147,15 @@ function chaptersDone(map, allChapters, data) {
                 let popupContent = createElement('div');
                 popupContent.appendChild(button);
 
-                L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
-                    radius: chapterDb.searchRadius,
-                    color: "yellow"
-                }).addTo(map).bindPopup(popupContent);
+                if (chapter.searchOnGoing) {
+                    L.circle([chapterDb.locationSearch._lat, chapterDb.locationSearch._long], {
+                        radius: chapterDb.searchRadius,
+                        color: "yellow"
+                    }).addTo(map).bindPopup(popupContent);
+                } else {
+                    L.marker([chapterDb.locationCharacter._lat, chapterDb.locationCharacter._long], { icon: paused })
+                        .addTo(map).bindPopup(popupContent);
+                }
             }
             
             if (chapter.chapter === chapterDb.chapterId && chapter.completed) {
@@ -190,6 +191,7 @@ function handleButtonClick(chapterDb, data) {
 async function handleButtonClickPaused(data) {
     let completedChapterTrue= data.chapters.some(chapter => chapter.paused && chapter.completed);
     let pausedChapterIndex = data.chapters.findIndex(chapter => chapter.paused);
+    let pausedChapterTrue = data.chapters.some(chapter => chapter.paused);
     let onGoingIndex = data.chapters.findIndex(chapter => chapter.onGoing);
 
     await deleteArrayMap("users", data.id, "chapters", onGoingIndex);

@@ -45,45 +45,45 @@ async function render_character_interaction_btns ( { response } ) {
 function btnTwoCharacterOption (choiseContainer, data, story) {
     choiseContainer.innerHTML = `
         <div>
-            <button id="btnCharacterFind"> Find a new character 1</button>
+            <button id="btnCharacterFind"> Hitta karaktär alternativ ett </button>
         </div>
         <div>
-            <button id="btnsecoundCharacterFind"> Find a new character 2</button>
+            <button id="btnsecoundCharacterFind"> Hitta karaktär alternativ två </button>
         </div>
     `;
     btnCharacterFindListner(data, story);
-    btnSecoundCharacterOption(data, story);
+    btnSecoundCharacterOptionListner(data, story);
 }
 
 function btnPausedChapter (choiseContainer, data) {
     choiseContainer.innerHTML = `
         <div> 
-            <button id="btnContuineOnPausedChapter"> Continue old path  </button>
+            <button id="btnContuineOnPausedChapter"> Fortsätt på den gammla vägen </button>
         </div>
     `;
-    btnContuineOnPausedChapter(data);
+    btnContuineOnPausedChapterListner(data);
 }
 
 function btnPausedAndCharacter (choiseContainer, data, story) {
     choiseContainer.innerHTML = `
         <div>
-            <button id="btnCharacterFind"> Find a new character </button>
+            <button id="btnCharacterFind"> Hitta karaktär </button>
         </div>
         <div> 
-            <button id="btnContuineOnPausedChapter"> Continue old path  </button>
+            <button id="btnContuineOnPausedChapter"> Fortsätt på den gammla vägen </button>
         </div>
     `;
     btnCharacterFindListner(data, story);
-    btnContuineOnPausedChapter(data);
+    btnContuineOnPausedChapterListner(data);
 }
 
 function btnCharacterSearch (choiseContainer, data, story) {
     choiseContainer.innerHTML = `
         <div>
-            <button id="btnCharacterFind"> Find a new character </button>
+            <button id="btnCharacterFind"> Hitta karaktär </button>
         </div>
         <div> 
-            <button id="btnClueSearch"> Go to a search area </button>
+            <button id="btnClueSearch"> Gå till sökområde </button>
         </div>
     `;
     btnCharacterFindListner(data, story);
@@ -93,7 +93,7 @@ function btnCharacterSearch (choiseContainer, data, story) {
 function btnSearch (choiseContainer, data) {
     choiseContainer.innerHTML = `
         <div> 
-            <button id="btnClueSearch"> Go to a search area </button>
+            <button id="btnClueSearch"> Gå till sökområde </button>
         </div>
     `;
     btnSearchListner(data);
@@ -102,7 +102,7 @@ function btnSearch (choiseContainer, data) {
 function btnCharacterFind (choiseContainer, data, story) { 
     choiseContainer.innerHTML = `
         <div>
-            <button id="btnCharacterFind"> Find a new character </button>
+            <button id="btnCharacterFind"> Hitta karaktär </button>
         </div>
     `;
 
@@ -169,7 +169,7 @@ function btnCharacterFindListner (data, story) {
     });
 }
 
-function btnSecoundCharacterOption (data, story) {
+function btnSecoundCharacterOptionListner (data, story) {
     document.querySelector("#btnsecoundCharacterFind").addEventListener("click", async (e) => {
         let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);
         
@@ -200,7 +200,7 @@ function btnSecoundCharacterOption (data, story) {
     });
 }
 
-function btnContuineOnPausedChapter(data) {
+function btnContuineOnPausedChapterListner(data) {
     document.querySelector("#btnContuineOnPausedChapter").addEventListener("click", async () => {
         let indexChapterPaused = data.chapters.findIndex((chapter) => chapter.paused === true);
         let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);

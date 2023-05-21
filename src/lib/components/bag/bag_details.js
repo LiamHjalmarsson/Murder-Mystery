@@ -33,7 +33,15 @@ async function render_bag_details ( { response }) {
                     detail: clue
                 });
             } else {
-                console.log("error");
+                PubSub.publish({
+                    event: "render_popup",
+                    detail: { 
+                        params: "locked", 
+                        response : { 
+                            msg: "This item is locked" 
+                        }
+                    }
+                })
             }
         });
 

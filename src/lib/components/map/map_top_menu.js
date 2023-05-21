@@ -1,6 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement } from "../../js/functions.js";
-import { logout } from "../../../utilities/functions/firebase_functions.js";
+import { logout } from "../../../utilities/functions/countDownTimer.js";
 
 export default {}
 
@@ -34,6 +34,10 @@ function renderTopMenu ({response}) {
     `;
 
     container_map.insertBefore(topNavigation, map);
+
+    PubSub.publish({
+        event: "render_counDown"
+    });
 
     document.querySelector("#guessMurder").addEventListener("click", () => {
         PubSub.publish({

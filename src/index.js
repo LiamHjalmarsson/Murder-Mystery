@@ -1,27 +1,40 @@
 import { PubSub } from "/src/utilities/pubsub.js";
-import { checkLoginStatus } from "./utilities/functions/firebase_functions";
+import { getUserDoc } from "./utilities/functions/firebase_functions.js";
 
-let check = await checkLoginStatus();
+async function checkLoginStatus() {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
 
-if (check) {
-    PubSub.publish({
-        event: "render_counDown"
-    });
-
-    PubSub.publish({
-        event: "render_map",
-        detail: {
-            response: {
-                data: check.data
-            }
+    if (storedUser) {
+        const isAuthenticated = await getUserDoc(storedUser.username, storedUser.password)
+        
+        console.log(isAuthenticated);
+        if (!isAuthenticated) {
+            localStorage.removeItem("user");
+            return false;
         }
-    });
-} else {
-    PubSub.publish({
-        event: "render_startUp",
-        detail: "login"
-    });
+        return { detail: true, data: isAuthenticated }
+    }
 }
 
+async function controlStatus () {
+    let check = await checkLoginStatus();
+    
+    if (!check) {
+        PubSub.publish({
+            event: "render_startUp",
+            detail: "login"
+        });
+    } else {
+    
+        PubSub.publish({
+            event: "render_map",
+            detail: {
+                response: {
+                    data: check.data
+                }
+            }
+        });
+    }
+}
 
-
+controlStatus();
