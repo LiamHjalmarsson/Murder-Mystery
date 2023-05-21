@@ -19,37 +19,83 @@ async function renderCharacterFindButton( { response } ) {
     let choiseContainer = createElement("div", "", "choiseContainer");
     document.querySelector("#dialogBox").appendChild(choiseContainer);
 
-    choiseContainer.innerHTML = `
-        <div>
-            <button id="btnCharacterFind"> Find a new character </button>
-        </div>
-    `;
-    
-    document.querySelector("#btnCharacterFind").addEventListener("click", async () => {
-        let chapterId = data.chapters.find((chapter) => chapter.chapter === story.chapterId);
-        let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
-    
-        await updateArrayMap("users", data.id, "chapters", indexChapter, {
-            searchOnGoing: false,
-            paused: true,
-            onGoing: false,
-        });
+    if (!story.alley) {
 
-        await docUpdateArry("users", data.id, "chapters", {
-            chapter: chapterId.chapter + 1,
-            onGoing: true,
+        let clue = data.clues.some(clue => clue.clueId === story.clueId);
+        if (!clue && story.clueId === 4) { 
+            choiseContainer.innerHTML = `
+                <div>
+                    <button id="btnCharacterFind"> Hitta karaktär </button>
+                </div>
+                <div>
+                    <button id="btnSearch"> Gå till sökområde </button>
+                </div>
+            `;
+
+            document.querySelector("#btnSearch").addEventListener("click", async () => {
+                let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);
+                let index = data.chapters.findIndex((chapter) => chapter.chapter === 8);
+
+                await updateArrayMap("users", data.id, "chapters", indexChapter, {
+                    searchOnGoing: false,
+                    paused: true,
+                    onGoing: false,
+                });
+        
+                await updateArrayMap('users', data.id, 'chapters', index, { 
+                    searchOnGoing: true, completed: true, onGoing: true
+                });
+        
+                let updateUser = await getFromDB("users", data.id);
+            
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        response: {
+                            data: updateUser
+                        }
+                    }
+                });
+            });
+
+        } else {
+            choiseContainer.innerHTML = `
+                <div>
+                    <button id="btnCharacterFind"> Hitta karaktär </button>
+                </div>
+            `;
+        }
+        
+
+        document.querySelector("#btnCharacterFind").addEventListener("click", async () => {
+            let chapterId = data.chapters.find((chapter) => chapter.chapter === story.chapterId);
+            let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing === true);
+
+            await updateArrayMap("users", data.id, "chapters", indexChapter, {
+                searchOnGoing: false,
+                paused: true,
+                onGoing: false,
+            });
+    
+
+            await docUpdateArry("users", data.id, "chapters", {
+                chapter: chapterId.chapter + 1,
+                onGoing: true,
+            });
+        
+        
+            let updateUser = await getFromDB("users", data.id);
+        
+            PubSub.publish({
+                event: "render_map",
+                detail: {
+                response: {
+                    data: updateUser,
+                },
+                },
+            });
         });
-    
-    
-        let updateUser = await getFromDB("users", data.id);
-    
-        PubSub.publish({
-            event: "render_map",
-            detail: {
-            response: {
-                data: updateUser,
-            },
-            },
-        });
-    });
+    } else {
+        document.querySelector("#containerDialog").remove();
+    }
 }

@@ -1,6 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement } from "../../js/functions.js";
-import { logout } from "../../../utilities/functions/firebase_functions.js"
 
 export default {}
 
@@ -41,7 +40,7 @@ function render_buttonsNav (response) {
     ];
 
     buttons.forEach(btn => {
-        let buttonBox = createElement("div", "navigationBtn", btn.id);
+        let buttonBox = createElement("button", "navigationBtn", btn.id);
 
         let iconsDiv = createElement("div", "", "iconNav");
         iconsDiv.innerHTML = btn.icon;
@@ -55,7 +54,12 @@ function render_buttonsNav (response) {
         
         buttonBox.append(iconsDiv, button);
         navigationBox.append(buttonBox);
+        
+        function handleClick() {
+            buttonBox.removeEventListener("click", handleClick);
+        }
     });
+    
 
     container_map.append(navigationBox); 
 }
@@ -103,13 +107,6 @@ async function diffrentBtns (btn, { response } ) {
                     }
                 });
             }
-            // localStorage.removeItem("user");
-            // logout(data.id);
-
-            // PubSub.publish({
-            //     event: "render_startUp",
-            //     detail: "login"
-            // });
         break;
 
         case "Väska":

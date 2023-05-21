@@ -87,9 +87,7 @@ function nextPartListener(data, story, found, counter) {
                     },
                 });
             } else {
-                let nextChapter = data.chapters.find(
-                    (chapter) => chapter.chapter === story.chapterId + 1
-                );
+                let nextChapter = data.chapters.find((chapter) => chapter.chapter === story.chapterId + 1);
                 nextPartButton.remove();
         
                 if (nextChapter === undefined) {
@@ -102,6 +100,16 @@ function nextPartListener(data, story, found, counter) {
                             },
                         },
                     });
+                } else if (nextChapter) {
+                    PubSub.publish({
+                        event: "render_charater_interaction_reOpen",
+                        detail: {
+                            response: {
+                                    data: data,
+                                    story: story,
+                                },
+                            },
+                        });
                 } else {
                     document.querySelector("#containerDialog").remove();
                 }
@@ -112,7 +120,7 @@ function nextPartListener(data, story, found, counter) {
 
 function writeOutText(element, text) {
     let index = 0;
-    const speed = 5;
+    const speed = 10;
     element.textContent = "";
 
     function addNextLetter() {

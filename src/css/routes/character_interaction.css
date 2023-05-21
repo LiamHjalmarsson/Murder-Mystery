@@ -44,7 +44,7 @@
     width: 80%;
 }
 
-#btnCharacterFind, #btnClueSearch, #btnsecoundCharacterFind {
+#btnCharacterFind, #btnClueSearch, #btnsecoundCharacterFind, #btnContuineOnPausedChapter, #btnSearch {
     background: var(--lightBrown);
 }
 

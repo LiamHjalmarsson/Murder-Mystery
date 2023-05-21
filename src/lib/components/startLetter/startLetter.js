@@ -26,7 +26,7 @@ function render_start_endLetter (user) {
 
     const button = document.createElement('button');
     button.id = "startGameLetter";
-    button.textContent = 'Go to map';
+    button.textContent = 'Gå till kartan';
     button.addEventListener('click', ()=> {
 
         docUpdate("users", user.id, { newStart: false });

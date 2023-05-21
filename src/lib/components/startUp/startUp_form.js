@@ -21,13 +21,13 @@ function render_startUp_form (params) {
             type: "text",
             name: "username",
             id: "username",
-            label: "Enter username"
+            label: "Skriv in användarnamn"
         },
         {
             type: "password",
             name: "password",
             id: "password",
-            label: "Enter password"
+            label: "Skriv in lösenord"
         }
     ];
 
@@ -132,22 +132,31 @@ async function formListener (e, params) {
 
     } else {
         if (username !== "" && password !== "") {
-            await addUser();
-            
-            PubSub.publish({
-                event: "render_startUp", 
-                detail: "login"
-            });
+            let user = await addUser();
+            if (user) {
+                PubSub.publish({
+                    event: "render_startUp", 
+                    detail: "login"
+                });
+            } else {
+                PubSub.publish({
+                    event: "render_popup",
+                    detail: { 
+                        params: "error", 
+                        response : { 
+                            error: "Username already exists" 
+                        }
+                    }
+                });
+            }
         }
     }
 }
 
 async function addUser () {
     let usersInDB = await getFromDB("users");
-    
     let username = document.querySelector("#username").value.toLowerCase();
     let password = document.querySelector("#password").value.toLowerCase();
-    
     let userExists = usersInDB.find(user => user.username === username); 
 
     let docDataUser = {
@@ -170,10 +179,9 @@ async function addUser () {
 
     if (userExists === undefined) {
         await addDocAddData("users", docDataUser);
+
+        return true;
     } else {
-        PubSub.publish({
-            event: "render_popup",
-            params: "error"
-        });
+        return false;
     }
 }

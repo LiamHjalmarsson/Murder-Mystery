@@ -19,13 +19,11 @@ function render_popup ( response ) {
     app.appendChild(wrapperPopUp);
 
     let containerPopUp = createElement("div", "", "containerPopUp"); 
-
     wrapperPopUp.append(containerPopUp);
 
     let box = createElement("form", "", "box");
     containerPopUp.appendChild(box);
 
-    console.log(response);
     box.innerHTML = `
         <div class="navContainer">
             <div class="navClose"> 
@@ -47,7 +45,6 @@ function render_popup ( response ) {
 }
 
 function displayInformation ( res ) { 
-    console.log(res);
     let { params, response } = res;
 
     let header = document.querySelector(".headerPopUp"); 
@@ -64,6 +61,11 @@ function displayInformation ( res ) {
             message.textContent = ""; 
         break;
 
+        case "locked":
+            header.textContent = "Låst ledtråd";
+            message.textContent = response.msg; 
+        break;
+        
         case "success":
             header.textContent = "Grattis";
             message.textContent = ""; 
@@ -72,6 +74,11 @@ function displayInformation ( res ) {
         case "completed": 
             header.textContent = "Du har nu kommit till slutet";
             message.textContent = ""; 
+        break;
+
+        case "timeout": 
+            header.textContent = "Tiden har runnit ut";
+            message.textContent = response.msg; 
         break;
 
         default:
@@ -86,7 +93,7 @@ function inputPopUp (response) {
 
     header.textContent = "Skriv in kod";
     let input = createElement("input", "popUp_input", ""); 
-    input.placeholder  = "Enter the clue!";
+    input.placeholder  = "Skriv in ditt svar";
     
     let button = createElement("button", "", ""); 
     button.textContent = "Skicka in ditt svar";

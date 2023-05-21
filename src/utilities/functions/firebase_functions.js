@@ -1,7 +1,6 @@
 import App from "../firebase.js";
-import { getFirestore, setDoc, doc, collection, onSnapshot, getDocs, getDoc,
-    query, updateDoc, arrayUnion, where, serverTimestamp, deleteDoc } from "firebase/firestore";
-import { PubSub } from "../pubsub.js";
+import { getFirestore, setDoc, doc, collection, getDocs, getDoc,
+    query, updateDoc, arrayUnion, where, serverTimestamp } from "firebase/firestore";
 
 export const db = getFirestore(App);
 
@@ -18,11 +17,7 @@ export const getUserDoc = async (username, password) => {
         let result = await getDocs(queryRef);
     
         if (result.empty) {
-            return { 
-                params: "error", 
-                response : { 
-                    error: "Try again" 
-            }};
+            return false;
         } else {
             return result.docs[0].data();
         }
@@ -210,112 +205,3 @@ export const deleteArrayMap = async (colName, docId, arrayField, index) => {
         };
     }
 };
-
-export async function checkLoginStatus() {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (storedUser) {
-        const isAuthenticated = await getUserDoc(storedUser.username, storedUser.password)
-        
-        if (!isAuthenticated) {
-            localStorage.removeItem("userId");
-            return false;
-        }
-        return { detail: true, data: isAuthenticated }
-    }
-}
-
-let countdownStart;
-let countdownInterval;
-
-export const startCountdown = async (userId) => {
-    let colRef = collection(db, "users");
-    let docRef = doc(colRef, userId);
-    let docSnap = await getDoc(docRef);
-
-    if (docSnap.exists() && docSnap.data().countdownStart) {
-        countdownStart = docSnap.data().countdownStart;
-    } else {
-        countdownStart = new Date().getTime();
-    }
-
-    let currentTime = new Date().getTime();
-    let elapsedTime = currentTime - countdownStart;
-    let remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
-
-    if (remainingTime > 0) {
-        countdownInterval = setInterval(function() {
-            currentTime = new Date().getTime();
-            elapsedTime = currentTime - countdownStart;
-            remainingTime = 4 * 60 * 60 * 1000 - elapsedTime;
-            displayCountdown(remainingTime);
-        }, 1000);
-    }
-    displayCountdown(remainingTime);
-}
-
-export const logout = async (userId) => {
-    let colRef = collection(db, "users");
-    let docRef = doc(colRef, userId);
-    await setDoc(docRef, {
-        countdownStart: countdownStart
-    }, { merge: true });
-    clearInterval(countdownInterval); 
-}
-
-window.addEventListener('beforeunload', async function() {
-    let user = JSON.parse(localStorage.getItem("user"));
-
-    if (user !== null) {
-        let colRef = collection(db, "users");
-        let docRef = doc(colRef, user.userId);
-        await setDoc(docRef, {
-            countdownStart: countdownStart
-        }, { merge: true });
-    }
-});
-
-function displayCountdown(remainingTime) {
-    let hours = Math.floor(remainingTime / (1000 * 60 * 60));
-    let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-    if (document.querySelector("#timeLeft")) {
-        document.querySelector("#timeLeft").innerHTML = `Timer: <br> ${hours}: ${minutes}m : ${seconds}s`;
-    }
-}
-
-export const realTime = async (colName, id) => {
-    let colRef = collection(db, colName);
-    let isUpdating = false;
-
-    if (id) {
-        let docRef = doc(colRef, id);
-        onSnapshot(docRef, (docSnap) => {
-            if (docSnap.exists()) {
-                console.log("data", { ...docSnap.data(), id: docSnap.id });
-
-                let data = { ...docSnap.data(), id: docSnap.id }
-
-                PubSub.publish({
-                    event: "update_map", 
-                    detail: data
-                });
-                
-                isUpdating = true;
-            } else {
-                console.log({ error: "No matching document found" });
-            }
-        });
-    } else {
-        onSnapshot(colRef, (snapshot) => {
-            let array = [];
-            snapshot.docs.forEach((doc) => {
-                array.push({ ...doc.data(), id: doc.id});
-            });
-            console.log("array", array);
-            isUpdating = true;
-        });
-    }
-    return isUpdating;
-}

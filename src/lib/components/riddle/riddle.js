@@ -1,6 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement, fadeInElement } from "../../js/functions.js";
-import { docUpdateArry, getFromDB, updateArrayMap } from "../../../utilities/functions/firebase_functions.js";
+import { docUpdateArry, getFromDB, updateArrayMap, docUpdate } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -15,7 +15,6 @@ export default {}
 
 function render_riddle ( { response } ) {
     let app = document.querySelector("#app");
-    // app.innerHTML = "";
 
     let riddleContainer = createElement("div", "", "riddleContainer");
     app.append(riddleContainer);
@@ -29,7 +28,7 @@ function render_riddle ( { response } ) {
                 </div>
                 <input type="text" id="riddleAnswer">
                 <div>
-                    <button id="btnAnswerRiddle"> send answer </button>
+                    <button id="btnAnswerRiddle"> Skicka in ditt svar </button>
                 </div>
             </div>
         </div>
@@ -54,7 +53,7 @@ function answerListener (response) {
                 btnSearchArea(data, puzzel);
             }
         } else {
-            console.log("Wrong answer");
+            document.querySelector("#riddleAnswer").style.borderColor = "red";
         }
     });
 }
@@ -105,13 +104,24 @@ async function btnSearchArea (data, puzzel) {
             });
         }
     } else {
-        await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
-            searchDone: true, searchOnGoing: false, onGoing: false, completed: true, gameFinished: true
-        });
 
-        let chapterIds = data.chapters.filter(chapter => chapter.chapterId).map(chapter => chapter.chapterId);
-        console.log(chapterIds);
-    
+        if (clue.clueId === 6 ) {
+            await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                searchDone: true, searchOnGoing: false, onGoing: false, completed: true, gameFinished: true
+            });
+
+            await docUpdateArry("users", data.id, "chapters", {  
+                chapter: 12,
+                onGoing: true,
+                searchOnGoing: false,
+            });
+
+        } else {
+            await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
+                searchDone: true, searchOnGoing: false, onGoing: false, completed: true, gameFinished: true
+            });
+        }
+
     }
 
     await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });

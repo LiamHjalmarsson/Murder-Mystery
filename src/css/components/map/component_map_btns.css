@@ -37,7 +37,7 @@
     text-align:center;
 }
 
-#timeLeft > h3 {
+#timeLeft {
     position: absolute;
     left: 53%;
     transform: translateX(-50%);
@@ -87,4 +87,8 @@
 
 .infoNavBtn{
     text-align: center;
+}
+
+.locked {
+    background: var(--darkGray);
 }
