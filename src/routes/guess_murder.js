@@ -11,7 +11,7 @@ export default {}
     });
 })();
 
-async function render_guess_murder ({response}) {
+async function render_guess_murder (response) {
     let {data} = response;
  let app = document.querySelector("#app");
  let guessMurderWrapper = createElement("div","", "wrapSus");

@@ -16,12 +16,6 @@ export default {}
 async function render_suspects ({response}) {
     let {data} = response;
 
-
-
- app.append(suspectsWrapper);
- var rubrik = createElement("div","rubrik");
-var div = document.createElement('H1');
-
     let app = document.querySelector("#app");
     let suspectsWrapper = createElement("div","", "wrapSus");
 
