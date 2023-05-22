@@ -16,25 +16,32 @@
     background: var(--lightBrown);
     border-radius: 20px;
     box-shadow: 3px 25px 50px -26px rgba(0,0,0,0.62);
-    overflow: scroll;
+ 
 }
 
 #SuspectInfo{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 0;
+    width: 100vw;
+    height: 70vh;
+ 
+    
 }
 
 p {
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 50vw;
-    margin-left: 0;
+    align-items: flex-start;
+    width: 65vw;
+    height: 65vh;
+    z-index: 1;
     padding: 5px;
     font-size: 10pt;
-    overflow-y: scroll;
+    margin: 0;
+    contain: content;
+    overflow: scroll;
+
 }
 
 #info{
@@ -67,11 +74,8 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 130px;
-    height: 50vh;
-
-   
-
+    width: 50vw;
+    height: 70vh;
     background-size: cover;
     padding: 10px;
     overflow-y: scroll;
