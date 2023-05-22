@@ -26,6 +26,9 @@ function render_riddle ( { response } ) {
                 <div id="riddleText">
                     <p>${response.puzzel.riddle}</p>
                 </div>
+                <div>
+                    <p>${response.puzzel.amountOfWords}</p>
+                </div>
                 <input type="text" id="riddleAnswer">
                 <div>
                     <button id="btnAnswerRiddle"> Skicka in ditt svar </button>
@@ -44,7 +47,9 @@ function answerListener (response) {
 
     document.querySelector("#btnAnswerRiddle").addEventListener("click", async (e) => {
         e.preventDefault();
-        let riddleAnswerInput = document.querySelector("#riddleAnswer").value;
+        let riddleAnswerInput = document.querySelector("#riddleAnswer").value.toLowerCase();
+
+        console.log(riddleAnswerInput);
 
         if (riddleAnswerInput === puzzel.removeThis || riddleAnswerInput === puzzel.answer) {
             if (!puzzel.clueId) {
@@ -120,8 +125,10 @@ async function btnSearchArea (data, puzzel) {
             await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
                 searchDone: true, searchOnGoing: false, onGoing: false, completed: true, gameFinished: true
             });
-        }
 
+            await docUpdate("users", data.id, { gameFinished: true } );
+
+        }
     }
 
     await docUpdateArry("users", data.id, "searchArea", { searchArea: lastIndex });

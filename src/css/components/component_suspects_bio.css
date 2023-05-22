@@ -29,7 +29,7 @@
     
 }
 
-p {
+.bioChar {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -41,8 +41,6 @@ p {
     margin: 0;
     contain: content;
     overflow: scroll;
-
-   
 
 }
 
@@ -80,6 +78,7 @@ p {
     height: 70vh;
     background-size: cover;
     padding: 10px;
+    overflow-y: scroll;
    
 }
 
