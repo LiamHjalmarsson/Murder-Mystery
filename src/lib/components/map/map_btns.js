@@ -33,7 +33,7 @@ function render_buttonsNav (response) {
             icon: `<i class="fa-sharp fa-solid fa-suitcase"></i>`,
         },
         {
-            text: "Misstänkta",
+            text: "Karaktärer",
             id: "bottomRight",
             icon: `<i class="fa-solid fa-user-secret"></i>`,
         }
@@ -116,7 +116,7 @@ async function diffrentBtns (btn, { response } ) {
             });
         break;
 
-        case "Misstänkta":
+        case "Karaktärer":
             PubSub.publish({
                 event: "render_suspects",
                 detail: {

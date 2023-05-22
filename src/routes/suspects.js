@@ -23,7 +23,6 @@ async function render_suspects ({response}) {
  app.append(suspectsWrapper);
  var rubrik = createElement("div","rubrik");
 var div = document.createElement('H1');
-
     div.textContent = "Karaktärer";
    rubrik.appendChild(div);
   
