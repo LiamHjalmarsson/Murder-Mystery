@@ -34,6 +34,7 @@ p {
     margin-left: 0;
     padding: 5px;
     font-size: 10pt;
+    overflow-y: scroll;
 }
 
 #info{
@@ -66,10 +67,14 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50vw;
-    height: 60vh;
+    width: 130px;
+    height: 50vh;
+
+   
+
     background-size: cover;
     padding: 10px;
+    overflow-y: scroll;
    
 }
 
