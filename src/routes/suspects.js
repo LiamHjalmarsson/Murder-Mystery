@@ -48,6 +48,7 @@ var div = document.createElement('H1');
     exitBtn.addEventListener("click", () => {
         suspectsWrapper.remove();
     });
+>>>>>>> Stashed changes
 
     let suspectsContainer = createElement("div", "suspectsContainer");
      suspectsWrapper.append(rubrik, suspectsContainer);
