@@ -19,6 +19,7 @@ async function render_suspects ({response}) {
  let app = document.querySelector("#app");
  let suspectsWrapper = createElement("div","", "wrapSus");
 
+
  app.append(suspectsWrapper);
  var rubrik = createElement("div","rubrik");
 var div = document.createElement('H1');
@@ -31,6 +32,22 @@ var div = document.createElement('H1');
  exitBtn.addEventListener("click", () => {
  suspectsWrapper.remove();
  });
+
+    let app = document.querySelector("#app");
+    let suspectsWrapper = createElement("div","", "wrapSus");
+
+    app.append(suspectsWrapper);
+    var rubrik = createElement("div","rubrik");
+    var div = document.createElement('H1');
+    div.textContent = "Karaktärer";
+    rubrik.appendChild(div);
+    
+    let exitBtn = createElement("div","","Xbtn");
+    exitBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+    rubrik.append(exitBtn);
+    exitBtn.addEventListener("click", () => {
+        suspectsWrapper.remove();
+    });
 
     let suspectsContainer = createElement("div", "suspectsContainer");
      suspectsWrapper.append(rubrik, suspectsContainer);
