@@ -7,7 +7,6 @@ export const createElement = ( element, addclass, id ) => {
 }
 
 export const addClass = (addclass, element) => {
-
     if (addclass === "" || addclass === undefined ) {
         return false; 
     } else {
@@ -23,3 +22,23 @@ export const addId = (id, element) => {
     }
 }
 
+export const fadeInElement = (element) => {
+    setTimeout(() => {
+        element.classList.add("fade-in");
+    }, 100);
+
+}
+
+export const fadeOutElement = (element) => {
+    element.classList.add("fade-out");
+    setTimeout(() => {
+        element.remove();
+    }, 500);
+}
+
+export const fadeOutElementEmpetyApp = (element) => {
+    element.classList.add("fade-out");
+    setTimeout(() => {
+        element.innerHTML = "";
+    }, 500);
+}
