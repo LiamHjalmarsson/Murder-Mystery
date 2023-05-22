@@ -6,13 +6,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-   
+}
+
+.rubrik > div {
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
 
 h1{
     font-family: var(--"bradley-djr");
     font-size: 30pt;
-    padding: 20px;
+    /* padding: 20px; */
     margin-right: 20px
 }
 

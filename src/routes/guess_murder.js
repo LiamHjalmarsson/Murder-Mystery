@@ -23,7 +23,7 @@ async function render_guess_murder (response) {
     rubrik.appendChild(div);
     
     let exitBtn = createElement("div","","Xbtn");
-    exitBtn.innerHTML = "X";
+    exitBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
     rubrik.append(exitBtn);
     exitBtn.addEventListener("click", () => {
         guessMurderWrapper.remove();
@@ -35,30 +35,31 @@ async function render_guess_murder (response) {
     let characters = await getFromDB ("charaters");
 
     characters.sort((a, b) => a.Id > b.Id);
-    characters.forEach(chapter => {
-        if (chapter.Id !== 1) {
-            let SusBtnBox = createElement("div", "susBtn", chapter.imgref);
+    characters.forEach(characterDb => {
+        if (characterDb.Id !== 1) {
+            let SusBtnBox = createElement("div", "susBtn", characterDb.imgref);
             let iconsDiv = createElement("div", "", "iconSus");
             let name = createElement("div","name");
 
-            let found = data.characters.some(character => character.characterId === chapter.Id);
+            let found = data.characters.some(character => character.characterId === characterDb.Id);
 
-            iconsDiv.style.backgroundImage = found ? `url(${chapter.ImgProfile})` : `url(../../../../library/lock.png)`;
+            iconsDiv.style.backgroundImage = found ? `url(${characterDb.ImgProfile})` : `url(../../../../library/lock.png)`;
         
-            data.characters.forEach(character => {
-                if (found) {
-                    iconsDiv.addEventListener("click", () => {
-                        PubSub.publish({
-                            event: "render_guess_weaponMotive",
-                                detail: chapter
-                            });
+            if (found) {
+                iconsDiv.addEventListener("click", () => {
+                    PubSub.publish({
+                        event: "render_guess_weaponMotive",
+                            detail: { response : {
+                                data: data,
+                                character: characterDb
+                            }}
                         });
+                    });
                         
-                    name.textContent = chapter.fullName;
-                } else {
-                    name.textContent = "?";
-                }
-            });
+                name.textContent = characterDb.fullName;
+            } else {
+                name.textContent = "?";
+            }
 
             SusBtnBox.append(iconsDiv);
             SusBtnBox.append(name);
