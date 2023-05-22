@@ -91,17 +91,22 @@ function inputPopUp (response) {
     let header = document.querySelector(".headerPopUp"); 
     let message = document.querySelector(".popUp"); 
 
-    header.textContent = "Skriv in kod";
-    let input = createElement("input", "popUp_input", ""); 
-    input.placeholder  = "Skriv in ditt svar";
+    if (!response.gameIsFinished) { 
+        header.textContent = "Skriv in kod";
+        let input = createElement("input", "popUp_input", ""); 
+        input.placeholder  = "Skriv in ditt svar";
+        
+        let button = createElement("button", "", ""); 
+        button.textContent = "Skicka in ditt svar";
     
-    let button = createElement("button", "", ""); 
-    button.textContent = "Skicka in ditt svar";
+        message.append(input);
+        document.querySelector("#box").append(button);
+    
+        formListener(response);
+    } else {
+        header.textContent = "Det går inte att skriva in fler koder";
+    }
 
-    message.append(input);
-    document.querySelector("#box").append(button);
-
-    formListener(response);
 }
 
 async function formListener (response) {
@@ -109,38 +114,41 @@ async function formListener (response) {
 
     let allChapters = await getFromDB("storyTelling");
     let onGoingChapter = response.data.chapters.filter(chapter => chapter.onGoing)[0];
-    let story = allChapters.filter(chapter => chapter.chapterId === onGoingChapter.chapter && onGoingChapter.onGoing)[0];
-
-    if (isClue) {
-        document.querySelector("#box").classList.add("puzzelClues");
-    } else {
-        document.querySelector("#box").classList.add("puzzelStory");
+    
+    if (onGoingChapter !== undefined) {
+        let story = allChapters.filter(chapter => chapter.chapterId === onGoingChapter.chapter && onGoingChapter.onGoing)[0];
+        if (isClue) {
+            document.querySelector("#box").classList.add("puzzelClues");
+        } else {
+            document.querySelector("#box").classList.add("puzzelStory");
+        }
+    
+        document.querySelector("#box").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            let inputValue = document.querySelector(".popUp_input");
+            let puzzel = await getDocByClue(e.target.className, inputValue.value, {response: {
+                data: response.data,
+                storys: story
+            }}); 
+    
+            if (puzzel.params) {
+                inputValue.classList.add("error");
+            } else {
+                inputValue.classList.remove("error");
+    
+                PubSub.publish({
+                    event: "render_riddle",
+                    detail: { 
+                        response: {
+                            data: response.data,
+                            storys: story,
+                            puzzel: puzzel
+                        }
+                    }
+                }); 
+            }
+        });
     }
 
-    document.querySelector("#box").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        let inputValue = document.querySelector(".popUp_input");
-        let puzzel = await getDocByClue(e.target.className, inputValue.value, {response: {
-            data: response.data,
-            storys: story
-        }}); 
-
-        if (puzzel.params) {
-            inputValue.classList.add("error");
-        } else {
-            inputValue.classList.remove("error");
-
-            PubSub.publish({
-                event: "render_riddle",
-                detail: { 
-                    response: {
-                        data: response.data,
-                        storys: story,
-                        puzzel: puzzel
-                    }
-                }
-            }); 
-        }
-    });
 }
 

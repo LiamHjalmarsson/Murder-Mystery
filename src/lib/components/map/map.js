@@ -63,7 +63,6 @@ async function detail_map(data, tracking) {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-
         
         addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
         chaptersDone(map, allChapters, data);
@@ -139,7 +138,7 @@ function chaptersDone(map, allChapters, data) {
             
             if (chapter.chapter === chapterDb.chapterId && chapter.paused) {
                 let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
-                button.textContent = `Story ${chapterDb.chapterId}`;
+                button.textContent = `${chapterDb.character}`;
                 button.addEventListener('click', () => {
                     handleButtonClickPaused(data);
                 });
@@ -160,7 +159,7 @@ function chaptersDone(map, allChapters, data) {
             
             if (chapter.chapter === chapterDb.chapterId && chapter.completed) {
                 let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
-                button.textContent = `Story ${chapterDb.chapterId}`;
+                button.textContent = `${chapterDb.character}`;
                 button.addEventListener('click', () => {
                     handleButtonClick(chapterDb, data);
                 });

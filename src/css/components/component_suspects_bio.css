@@ -42,8 +42,6 @@ p {
     contain: content;
     overflow: scroll;
 
-   
-
 }
 
 #info{
@@ -80,6 +78,7 @@ p {
     height: 70vh;
     background-size: cover;
     padding: 10px;
+    overflow-y: scroll;
    
 }
 
