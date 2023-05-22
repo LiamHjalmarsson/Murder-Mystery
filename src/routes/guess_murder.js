@@ -11,64 +11,58 @@ export default {}
     });
 })();
 
-async function render_guess_murder ({response}) {
+async function render_guess_murder (response) {
     let {data} = response;
- let app = document.querySelector("#app");
- let guessMurderWrapper = createElement("div","", "wrapSus");
+    let app = document.querySelector("#app");
+    let guessMurderWrapper = createElement("div","", "wrapSus");
 
- app.append(guessMurderWrapper);
- var rubrik = createElement("div","rubrik");
-var div = document.createElement('H1');
+    app.append(guessMurderWrapper);
+    var rubrik = createElement("div","rubrik");
+    var div = document.createElement('H1');
     div.textContent = "Gissa mördaren!";
-   rubrik.appendChild(div);
-  
-   let exitBtn = createElement("div","","Xbtn");
-   exitBtn.innerHTML = "X";
-   rubrik.append(exitBtn);
- exitBtn.addEventListener("click", () => {
-    guessMurderWrapper.remove();
- });
+    rubrik.appendChild(div);
+    
+    let exitBtn = createElement("div","","Xbtn");
+    exitBtn.innerHTML = "X";
+    rubrik.append(exitBtn);
+    exitBtn.addEventListener("click", () => {
+        guessMurderWrapper.remove();
+    });
 
     let GuessMurderContainer = createElement("div", "suspectsContainer");
     guessMurderWrapper.append(rubrik, GuessMurderContainer);
 
     let characters = await getFromDB ("charaters");
-    console.log(characters);
-    
 
-    
-
+    characters.sort((a, b) => a.Id > b.Id);
     characters.forEach(chapter => {
-        let SusBtnBox = createElement("div", "susBtn", chapter.imgref);
-         let iconsDiv = createElement("div", "", "iconSus");
+        if (chapter.Id !== 1) {
+            let SusBtnBox = createElement("div", "susBtn", chapter.imgref);
+            let iconsDiv = createElement("div", "", "iconSus");
+            let name = createElement("div","name");
 
-        //  const found = data.chapter.some(userChapter => userChapter.charaters === characters.Id);
+            let found = data.characters.some(character => character.characterId === chapter.Id);
 
-        //  if (found) {
-        //     iconsDiv.addEventListener("click", (e) => {
-        //         PubSub.publish({
-        //             event: "render_component_suspects_bio",
-        //             detail: chapter
-        //         });
-        //     });
-        // }
-         iconsDiv.style.backgroundImage = `url(../../src/lib/ProfilePics/${chapter.ImgProfile}.png)`;
-       
-       
-         iconsDiv.addEventListener("click", () => {
-            
-            PubSub.publish({
-                event: "render_guess_weaponMotive",
-                detail: chapter
-            })
-         })
-         let name = createElement("div","name");
-         name.textContent =(chapter.fullName);
+            iconsDiv.style.backgroundImage = found ? `url(${chapter.ImgProfile})` : `url(../../../../library/lock.png)`;
         
-         SusBtnBox.append(iconsDiv);
-         SusBtnBox.append(name);
-         GuessMurderContainer.append(SusBtnBox);
+            data.characters.forEach(character => {
+                if (found) {
+                    iconsDiv.addEventListener("click", () => {
+                        PubSub.publish({
+                            event: "render_guess_weaponMotive",
+                                detail: chapter
+                            });
+                        });
+                        
+                    name.textContent = chapter.fullName;
+                } else {
+                    name.textContent = "?";
+                }
+            });
 
-   });
-    
+            SusBtnBox.append(iconsDiv);
+            SusBtnBox.append(name);
+            GuessMurderContainer.append(SusBtnBox);
+        }
+    });
 }
