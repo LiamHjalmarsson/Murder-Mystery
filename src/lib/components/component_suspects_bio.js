@@ -28,7 +28,7 @@ function render_component_suspects_bio (chapter) {
 
             <div id="BioInfo">
                 <div id="SuspectInfo">
-                    <p>${chapter.bio}</p>
+                    <p class="bioChar">${chapter.bio}</p>
                 
                     <div id="ImgBox">
                             <div class="imgSus"></div>
