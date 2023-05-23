@@ -17,7 +17,12 @@ export const getUserDoc = async (username, password) => {
         let result = await getDocs(queryRef);
     
         if (result.empty) {
-            return false;
+            console.log("problem retrieving");
+            return { 
+                params: "error", 
+                response : { 
+                    error: "No username or password" 
+            }};
         } else {
             return result.docs[0].data();
         }
