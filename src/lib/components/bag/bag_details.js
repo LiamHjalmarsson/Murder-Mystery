@@ -27,6 +27,11 @@ async function render_bag_details ( { response }) {
         imgClue.style.backgroundImage = found ? `url(${clue.imageRef})` : `url(../../../../../../library/lock.png)`;
 
         foundClue.addEventListener("click", () => {
+
+            if (document.querySelector("#app > #wrapperPopUp")) {
+                document.querySelector("#app > #wrapperPopUp").remove();
+            }
+
             if (found) {
                 PubSub.publish({
                     event: "render_bag_details_item",

@@ -16,7 +16,7 @@
 }
 
 #riddleBox {
-    height: 90vh;
+    height: 100vh;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -32,7 +32,7 @@
 
 #riddleIcon {
     height: 20vh;
-    background-image: url("../../../lib/icons/spyware.png");
+    background-image: url("../../../../library/sherlock-holmes.png");
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -56,4 +56,8 @@
     background: none;
     color: var(--Text);
     transition: all 0.4s ease-in;
+}
+
+#riddleTip {
+    text-align: center;
 }

@@ -43,10 +43,11 @@ export const logout = async (userId) => {
     clearInterval(countdownInterval); 
 }
 
-window.addEventListener('beforeunload', async () => {
+window.addEventListener('beforeunload', async (e) => {
     let user = JSON.parse(localStorage.getItem("user"));
 
     if (user !== null) {
+        e.preventDefault();
         let colRef = collection(db, "users");
         let docRef = doc(colRef, user.userId);
         await setDoc(docRef, {

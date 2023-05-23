@@ -37,6 +37,9 @@ async function render_bag ( data ) {
     `;
 
     document.querySelector("#containerBagClose").addEventListener("click", () => {
+        if (document.querySelector("#app > #wrapperPopUp")) {
+            document.querySelector("#app > #wrapperPopUp").remove();
+        }
         fadeOutElement(containerBag);
     });
 

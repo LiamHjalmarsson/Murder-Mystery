@@ -26,7 +26,7 @@ function render_riddle ( { response } ) {
                 <div id="riddleText">
                     <p>${response.puzzel.riddle}</p>
                 </div>
-                <div>
+                <div id="riddleTip">
                     <p>${response.puzzel.amountOfWords}</p>
                 </div>
                 <input type="text" id="riddleAnswer">
