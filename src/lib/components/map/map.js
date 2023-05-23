@@ -46,9 +46,10 @@ async function render_map ( { response } ) {
 
 async function detail_map(data, tracking) {
     let map;
+
     let userLocationsOnGoing = data.chapters.filter(chapter => chapter.onGoing)[0];
     let allChapters = await getFromDB("storyTelling");
-    
+
     if (userLocationsOnGoing !== undefined) {
 
         let userOnGoingChapter = allChapters.filter(chapter => chapter.chapterId === userLocationsOnGoing.chapter && userLocationsOnGoing.onGoing)[0];
@@ -67,9 +68,7 @@ async function detail_map(data, tracking) {
         addMarkers(map, userOnGoingChapter, userLocationsOnGoing);
         chaptersDone(map, allChapters, data);
 
-        map.on('click', coordinatesAlert);
     } else {
-        map = L.map('map').setView([55.6050, 13.0038], 16);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -77,9 +76,10 @@ async function detail_map(data, tracking) {
         }).addTo(map);
 
         chaptersDone(map, allChapters, data);
-
     }
 
+    map.setMaxBounds(map.getBounds());
+    
     if (tracking) {
         getLocation(map); 
         document.querySelector("#topRight").classList.add("active");
@@ -98,6 +98,7 @@ function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
         popupAnchor: [0, -31]
     });
 
+
     if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
         L.circle([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], {
             radius: userOnGoingChapter.searchRadius
@@ -106,6 +107,7 @@ function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
         L.marker([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], { icon: pinIcon })
             .addTo(map).bindPopup(userOnGoingChapter.character);
     }
+
 }
 
 function chaptersDone(map, allChapters, data) {
@@ -258,8 +260,4 @@ function getLocation(map) {
     return {
         removeTracking: removeTracking
     };
-}
-
-function coordinatesAlert(e) {
-    alert("latitude" + e.latlng);
 }
