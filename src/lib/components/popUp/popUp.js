@@ -1,6 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
-import { getDocByClue, getFromDB } from "../../../utilities/functions/firebase_functions.js";
+import { getDocByClue, getFromDB, docUpdate } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -29,8 +29,8 @@ function render_popup ( response ) {
             <div class="navClose"> 
                 <div class="close" id="popUpClose"> <i class="fa-solid fa-xmark"></i> </div>
             </div>
-            <h3 class="headerPopUp"> </h3>
         </div>
+        <h3 class="headerPopUp"> </h3>
         <div class="popUp"></div>
     `;
 
@@ -56,19 +56,21 @@ function displayInformation ( res ) {
             message.textContent = response.error; 
         break;
 
-        case "wrong":
-            header.textContent = "Ajdå!";
-            message.textContent = ""; 
+        case "wrongGuess":
+            console.log(response);
+            header.textContent = "Ajdå du har gissat fel";
+            message.textContent = `Du har nu ${response.data.timesGuessing} försök kvar!`; 
+        break;
+
+        case "correctGuess":
+            console.log(response);
+            header.textContent = "Du har lyckats lista ut vem mördaren var";
+            message.textContent = `Mördaren var ${response.data.murderGuess}`; 
         break;
 
         case "locked":
             header.textContent = "Låst ledtråd";
             message.textContent = response.msg; 
-        break;
-        
-        case "success":
-            header.textContent = "Grattis";
-            message.textContent = ""; 
         break;
 
         case "completed": 
@@ -76,9 +78,8 @@ function displayInformation ( res ) {
             message.textContent = ""; 
         break;
 
-        case "timeout": 
-            header.textContent = "Tiden har runnit ut";
-            message.textContent = response.msg; 
+        case "guessMurder": 
+            inputGuessMurder(response);
         break;
 
         default:
@@ -149,6 +150,57 @@ async function formListener (response) {
             }
         });
     }
-
 }
 
+function inputGuessMurder (response) {
+    let { data, character } = response;
+    let header = document.querySelector(".headerPopUp"); 
+    
+    header.innerHTML = `Är du säker på att du vill gissa på <br> ${response.character.fullName}`;
+    let btns = ["Yes", "No"];
+
+    btns.forEach(btn => {
+        let btnGuess = createElement("button", `guessMurderBtn${btn}` , "guessMurderBtn");
+        btnGuess.textContent = btn;
+        document.querySelector("#box").append(btnGuess);
+
+        btnGuess.addEventListener("click", async (e) => {
+            e.preventDefault();
+            if (btnGuess.classList.contains("guessMurderBtnYes")) {
+
+                await docUpdate("users", data.id, { murderGuess: character.id } );
+                await docUpdate("users", data.id, { timesGuessing: data.timesGuessing - 1 } );
+                await docUpdate("users", data.id, { murderGuessCorrect: character.isMurder } );
+
+                document.querySelector("#wrapperPopUp").remove();
+
+                let updateUser = await getFromDB("users", data.id);
+
+                if (updateUser.murderGuessCorrect) {
+                    PubSub.publish({
+                        event: "render_popup",
+                        detail: { 
+                            params: "correctGuess", 
+                            response : {
+                                data: updateUser,
+                            }
+                        }
+                    }); 
+                } else {
+                    PubSub.publish({
+                        event: "render_popup",
+                        detail: { 
+                            params: "wrongGuess", 
+                            response : {
+                                data: updateUser,
+                            }
+                        }
+                    }); 
+                }
+
+            } else {
+                fadeOutElement(document.querySelector("#wrapperPopUp"));
+            }
+        });
+    });
+}

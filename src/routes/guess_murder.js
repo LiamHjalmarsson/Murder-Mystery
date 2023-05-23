@@ -43,9 +43,9 @@ async function render_guess_murder (response) {
 
             let found = data.characters.some(character => character.characterId === characterDb.Id);
 
-            iconsDiv.style.backgroundImage = found ? `url(${characterDb.ImgProfile})` : `url(../../../../library/lock.png)`;
+            iconsDiv.style.backgroundImage = `url(${characterDb.ImgProfile})`;
         
-            if (found) {
+            // if (found) {
                 iconsDiv.addEventListener("click", () => {
                     PubSub.publish({
                         event: "render_guess_weaponMotive",
@@ -57,9 +57,9 @@ async function render_guess_murder (response) {
                     });
                         
                 name.textContent = characterDb.fullName;
-            } else {
-                name.textContent = "?";
-            }
+            // } else {
+            //     name.textContent = "?";
+            // }
 
             SusBtnBox.append(iconsDiv);
             SusBtnBox.append(name);

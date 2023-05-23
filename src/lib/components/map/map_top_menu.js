@@ -39,12 +39,16 @@ function renderTopMenu ({response}) {
         event: "render_counDown"
     });
 
-    document.querySelector("#guessMurder").addEventListener("click", () => {
-        PubSub.publish({
-            event: "render_guess_murder",
-            detail: response
+    if (!data.murderGuessCorrect && data.timesGuessing > 0 ) {
+        document.querySelector("#guessMurder").addEventListener("click", () => {
+            PubSub.publish({
+                event: "render_guess_murder",
+                detail: response
+            });
         });
-    });
+    } else {
+        document.querySelector("#guessMurder").setAttribute("disabeld", true);
+    }
 
     document.querySelector("#logOut").addEventListener("click", () => {
             localStorage.removeItem("user");

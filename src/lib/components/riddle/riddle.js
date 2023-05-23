@@ -49,8 +49,6 @@ function answerListener (response) {
         e.preventDefault();
         let riddleAnswerInput = document.querySelector("#riddleAnswer").value.toLowerCase();
 
-        console.log(riddleAnswerInput);
-
         if (riddleAnswerInput === puzzel.removeThis || riddleAnswerInput === puzzel.answer) {
             if (!puzzel.clueId) {
                 btnCharacterInteraction(data, storys);
