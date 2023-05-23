@@ -87,16 +87,16 @@ function btnCharacterSearch (choiseContainer, data, story) {
         </div>
     `;
     btnCharacterFindListner(data, story);
-    btnSearchListner(data);
+    btnSearchListner(data, story);
 }
 
-function btnSearch (choiseContainer, data) {
+function btnSearch (choiseContainer, data, story) {
     choiseContainer.innerHTML = `
         <div> 
             <button id="btnClueSearch"> Gå till sökområde </button>
         </div>
     `;
-    btnSearchListner(data);
+    btnSearchListner(data, story);
 }
 
 function btnCharacterFind (choiseContainer, data, story) { 
@@ -109,11 +109,13 @@ function btnCharacterFind (choiseContainer, data, story) {
     btnCharacterFindListner(data, story);
 }
 
-function btnSearchListner (data) {
+function btnSearchListner (data, story) {
     document.querySelector("#btnClueSearch").addEventListener("click", async () => {
         let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);
         let indexPaused = data.chapters.findIndex((chapter) => chapter.paused);
         let paused = data.chapters.some((chapter) => chapter.paused);
+
+        await docUpdateArry("users", data.id, "characters", { characterId: story.characterId });
 
         if (paused) {
             await updateArrayMap('users', data.id, 'chapters', indexPaused, { 
@@ -148,9 +150,10 @@ function btnCharacterFindListner (data, story) {
 
         let completedChapters = data.chapters.filter((chapter) => chapter.onGoing);
         let lastCorrectChapter = completedChapters.length > 0 ? completedChapters[completedChapters.length - 1].chapter : null;
+        console.log(story);
 
         await docUpdateArry("users", data.id, "characters", { characterId: story.characterId });
-    
+        
         await docUpdateArry("users", data.id, "chapters", {  
             chapter: lastCorrectChapter + 1,
             onGoing: true,
@@ -172,7 +175,7 @@ function btnCharacterFindListner (data, story) {
 function btnSecoundCharacterOptionListner (data, story) {
     document.querySelector("#btnsecoundCharacterFind").addEventListener("click", async (e) => {
         let indexChapter = data.chapters.findIndex((chapter) => chapter.onGoing);
-        
+
         await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
             completed: true, onGoing: false
         });

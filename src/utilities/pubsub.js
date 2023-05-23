@@ -25,14 +25,14 @@ export const PubSub = {
 	publish: function (data) {
 		let { event, detail } = data;
 
-		const doLog = !ignore_publish.includes(event);
+		// const doLog = !ignore_publish.includes(event);
 
-		if (doLog) {
-			console.log( "Event Published: " + event, detail );
-		}
+		// if (doLog) {
+		// 	console.log( "Event Published: " + event, detail );
+		// }
 
 		if (listeners[event] === undefined) {
-			doLog && console.log(`Event (${event}) has no listeners`);
+			// doLog && console.log(`Event (${event}) has no listeners`);
 			return;
 		}
 

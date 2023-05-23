@@ -16,7 +16,6 @@ function render_start_endLetter (user) {
     let app = document.querySelector("#app");
     app.innerHTML = "";
 
-    console.log(user);
     const div = document.createElement('div');
     const img = document.createElement('img');
     img.src = '../../library/startletter.png';
