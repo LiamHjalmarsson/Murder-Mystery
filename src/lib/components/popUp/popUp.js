@@ -57,15 +57,37 @@ function displayInformation ( res ) {
         break;
 
         case "wrongGuess":
-            console.log(response);
             header.textContent = "Ajdå du har gissat fel";
             message.textContent = `Du har nu ${response.data.timesGuessing} försök kvar!`; 
+            
+            document.querySelector("#popUpClose").addEventListener("click", () => {
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        response: {
+                            data: response.data
+                        }
+                    }
+                });
+            });
+
         break;
 
         case "correctGuess":
-            console.log(response);
             header.textContent = "Du har lyckats lista ut vem mördaren var";
             message.textContent = `Mördaren var ${response.data.murderGuess}`; 
+
+            document.querySelector("#popUpClose").addEventListener("click", () => {
+                PubSub.publish({
+                    event: "render_map",
+                    detail: {
+                        response: {
+                            data: response.data
+                        }
+                    }
+                });
+            });
+
         break;
 
         case "locked":
@@ -173,7 +195,6 @@ function inputGuessMurder (response) {
                 await docUpdate("users", data.id, { murderGuessCorrect: character.isMurder } );
 
                 document.querySelector("#wrapperPopUp").remove();
-
                 let updateUser = await getFromDB("users", data.id);
 
                 if (updateUser.murderGuessCorrect) {
@@ -197,7 +218,6 @@ function inputGuessMurder (response) {
                         }
                     }); 
                 }
-
             } else {
                 fadeOutElement(document.querySelector("#wrapperPopUp"));
             }
