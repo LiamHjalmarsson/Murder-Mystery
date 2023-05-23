@@ -9,7 +9,7 @@ export const getUserDoc = async (username, password) => {
         return { 
                 params: "error", 
                 response : { 
-                    error: "No username or password" 
+                    error: "Inget lösenord eller användare inskrivit" 
             }};
     } else {
         let colRef = collection(db, "users");
@@ -17,11 +17,10 @@ export const getUserDoc = async (username, password) => {
         let result = await getDocs(queryRef);
     
         if (result.empty) {
-            console.log("problem retrieving");
             return { 
                 params: "error", 
                 response : { 
-                    error: "No username or password" 
+                    error: "Fel användare eller lösenord" 
             }};
         } else {
             return result.docs[0].data();
@@ -40,7 +39,7 @@ export const getDocByClue = async (colName, answer, { response } ) => {
         return { 
             params: "error", 
             response : { 
-                error: "Wrong answer try gain" 
+                error: "Fel svar prova igen" 
             }};
     } else {
         let newData = result.docs[0].data();
@@ -52,7 +51,7 @@ export const getDocByClue = async (colName, answer, { response } ) => {
                 return { 
                     params: "error", 
                     response : { 
-                        error: "Already enter this key try again" 
+                        error: "Redan skrivit in denna nyckeln prova med en annan" 
                     }};
             } else {
                 return newData;
@@ -66,7 +65,7 @@ export const getDocByClue = async (colName, answer, { response } ) => {
                 return { 
                     params: "error", 
                     response : { 
-                        error: "there was an error adding the clue" 
+                        error: "Där var ett problem med att lägga till ledtråden" 
                     }};
             }
         }
@@ -150,7 +149,7 @@ export const docUpdateArry = async (colName, docId, arrayField, newValue) => {
         return { 
             params: "error", 
             response : { 
-                error: "Error updating the document" 
+                error: "Error med att uppdaterad dokument" 
             }
         };
     }
@@ -182,7 +181,7 @@ export const updateArrayMap = async (colName, docId, arrayField, index, updateOb
         return { 
             params: "error", 
             response : { 
-                error: "Error updating the document" 
+                error: "Error med att uppdaterad dokument" 
             }
         };
     }
@@ -205,7 +204,7 @@ export const deleteArrayMap = async (colName, docId, arrayField, index) => {
         return { 
             params: "error", 
             response : { 
-                error: "Error updating the document" 
+                error: "Error med att uppdaterad dokument" 
             }
         };
     }
