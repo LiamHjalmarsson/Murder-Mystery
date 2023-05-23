@@ -2,3 +2,30 @@
     height: 80vh;
     padding: 20px;
 }
+
+#cluesMurderGuss {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.cluesGuess {
+    height: 178px;
+    padding: 10px;
+    background-color: var(--Darkbackground);
+    border: 2px solid var(--darkYellow);
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#btnMurderGussBox {
+    margin-top: 30px;
+}
+
+.headGuess {
+    text-align: center;
+    padding: 10px;
+}

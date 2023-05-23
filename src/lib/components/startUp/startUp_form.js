@@ -174,7 +174,8 @@ async function addUser () {
                 onGoing: true,
             }, 
         ],
-        newStart: true
+        newStart: true,
+        timesGuessing: 2
     }
 
     if (userExists === undefined) {
