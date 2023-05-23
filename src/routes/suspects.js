@@ -29,6 +29,9 @@ async function render_suspects ({response}) {
     exitBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
     rubrik.append(exitBtn);
     exitBtn.addEventListener("click", () => {
+        if (document.querySelector("#app > #wrapperPopUp")) {
+            document.querySelector("#app > #wrapperPopUp").remove();
+        }
         suspectsWrapper.remove();
     });
 
@@ -42,12 +45,15 @@ async function render_suspects ({response}) {
 
         let found = data.characters.some(character => character.characterId === chapter.Id);
         
-        console.log(found);
         iconsDiv.style.backgroundImage = found ? `url(${chapter.ImgProfile}` : `url(../../../../library/lock.png)`;
         
         if (found) {
             iconsDiv.style.backgroundImage = `url(${chapter.ImgProfile}`;
+
             iconsDiv.addEventListener("click", (e) => {
+                if (document.querySelector("#app > #wrapperPopUp")) {
+                    document.querySelector("#app > #wrapperPopUp").remove();
+                }
                 PubSub.publish({
                     event: "render_component_suspects_bio",
                     detail: chapter
@@ -55,6 +61,9 @@ async function render_suspects ({response}) {
             });
         } else {
             iconsDiv.addEventListener("click", () => {
+                if (document.querySelector("#app > #wrapperPopUp")) {
+                    document.querySelector("#app > #wrapperPopUp").remove();
+                }
                 PubSub.publish({
                     event: "render_popup",
                     detail: { 
