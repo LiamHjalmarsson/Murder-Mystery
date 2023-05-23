@@ -7,7 +7,6 @@ async function checkLoginStatus() {
     if (storedUser) {
         const isAuthenticated = await getUserDoc(storedUser.username, storedUser.password)
         
-        console.log(isAuthenticated);
         if (!isAuthenticated) {
             localStorage.removeItem("user");
             return false;
