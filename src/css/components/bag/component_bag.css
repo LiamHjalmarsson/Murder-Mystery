@@ -1,6 +1,6 @@
 #containerBag {
-    background-color: #582915;
-    background-image: linear-gradient(to top, #582915, #a2704e);
+    background-color: var(--lightBrown);
+    /* background-image: linear-gradient(to top, #582915, #a2704e); */
 }
 
 #bagNav {
@@ -43,7 +43,7 @@
     height: 200px;
     width: 70%;
     padding: 10px;
-    background-color: var(--Darkbackground);
+    background-color: var(--darkBrown);
     border: 2px solid var(--darkYellow);
     border-radius: 5px;
     display: flex;
