@@ -90,7 +90,7 @@ function nextPartListener(data, story, found, counter) {
                 let nextChapter = data.chapters.find((chapter) => chapter.chapter === story.chapterId + 1);
                 nextPartButton.remove();
         
-                if (nextChapter === undefined) {
+                if (nextChapter === undefined || nextChapter) {
                     PubSub.publish({
                     event: "render_charater_interaction_reOpen",
                     detail: {
@@ -100,16 +100,6 @@ function nextPartListener(data, story, found, counter) {
                             },
                         },
                     });
-                } else if (nextChapter) {
-                    PubSub.publish({
-                        event: "render_charater_interaction_reOpen",
-                        detail: {
-                            response: {
-                                    data: data,
-                                    story: story,
-                                },
-                            },
-                        });
                 } else {
                     document.querySelector("#containerDialog").remove();
                 }
