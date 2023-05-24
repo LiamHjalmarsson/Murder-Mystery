@@ -150,7 +150,6 @@ function btnCharacterFindListner (data, story) {
 
         let completedChapters = data.chapters.filter((chapter) => chapter.onGoing);
         let lastCorrectChapter = completedChapters.length > 0 ? completedChapters[completedChapters.length - 1].chapter : null;
-        console.log(story);
 
         await docUpdateArry("users", data.id, "characters", { characterId: story.characterId });
         

@@ -1,6 +1,6 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
-import { getDocByClue, getFromDB, docUpdate } from "../../../utilities/functions/firebase_functions.js";
+import { getDocByClue, getFromDB, docUpdate, addDocAddData } from "../../../utilities/functions/firebase_functions.js";
 
 export default {}
 
@@ -57,13 +57,11 @@ function displayInformation ( res ) {
         break;
 
         case "wrongGuess":
-            console.log(response);
             header.textContent = "Ajdå du har gissat fel";
-            message.textContent = `Du har nu ${response.data.timesGuessing} försök kvar!`; 
+            message.textContent = response.data.timesGuessing === 1 ? `Du har nu gjort ${response.data.timesGuessing} av 2 din två försök till att fånga mördaren!` : `Du har nu gjort ditt sista försök och mördaren lyckades fly`; 
         break;
 
         case "correctGuess":
-            console.log(response);
             header.textContent = "Du har lyckats lista ut vem mördaren var";
             message.textContent = `Mördaren var ${response.data.murderGuess}`; 
         break;
@@ -114,8 +112,8 @@ async function formListener (response) {
     let isClue = response.data.chapters.some(chapter => chapter.searchOnGoing);
 
     let allChapters = await getFromDB("storyTelling");
-    let onGoingChapter = response.data.chapters.filter(chapter => chapter.onGoing)[0];
     
+    let onGoingChapter = response.data.chapters.filter(chapter => chapter.onGoing)[0];
     if (onGoingChapter !== undefined) {
         let story = allChapters.filter(chapter => chapter.chapterId === onGoingChapter.chapter && onGoingChapter.onGoing)[0];
         if (isClue) {
@@ -127,7 +125,7 @@ async function formListener (response) {
         document.querySelector("#box").addEventListener("submit", async (e) => {
             e.preventDefault();
             let inputValue = document.querySelector(".popUp_input");
-            let puzzel = await getDocByClue(e.target.className, inputValue.value, {response: {
+            let puzzel = await getDocByClue(e.target.className, inputValue.value, { response: {
                 data: response.data,
                 storys: story
             }}); 
@@ -157,7 +155,7 @@ function inputGuessMurder (response) {
     let header = document.querySelector(".headerPopUp"); 
     
     header.innerHTML = `Är du säker på att du vill gissa på <br> ${response.character.fullName}`;
-    let btns = ["Yes", "No"];
+    let btns = ["Ja", "Nej"];
 
     btns.forEach(btn => {
         let btnGuess = createElement("button", `guessMurderBtn${btn}` , "guessMurderBtn");
@@ -166,36 +164,82 @@ function inputGuessMurder (response) {
 
         btnGuess.addEventListener("click", async (e) => {
             e.preventDefault();
-            if (btnGuess.classList.contains("guessMurderBtnYes")) {
+            if (btnGuess.classList.contains("guessMurderBtnJa")) {
 
-                await docUpdate("users", data.id, { murderGuess: character.id } );
-                await docUpdate("users", data.id, { timesGuessing: data.timesGuessing - 1 } );
-                await docUpdate("users", data.id, { murderGuessCorrect: character.isMurder } );
+                await docUpdate("users", data.id, { murderGuess: character.id, timesGuessing: data.timesGuessing - 1 , murderGuessCorrect: character.isMurder } );
 
                 document.querySelector("#wrapperPopUp").remove();
 
                 let updateUser = await getFromDB("users", data.id);
-
+                
                 if (updateUser.murderGuessCorrect) {
+
+                    
+                    let userFinish = {
+                        username: data.username,
+                        murderGuessCorrect: true, 
+                        UserStartedAt: data.createdAt
+                    }
+
+                    await addDocAddData("leadboard", userFinish);
+
                     PubSub.publish({
-                        event: "render_popup",
-                        detail: { 
-                            params: "correctGuess", 
-                            response : {
-                                data: updateUser,
+                        event: "leadboard",
+                        detail: {
+                            response: {
+                                data: updateUser
                             }
                         }
-                    }); 
+                    });
+
                 } else {
-                    PubSub.publish({
-                        event: "render_popup",
-                        detail: { 
-                            params: "wrongGuess", 
-                            response : {
-                                data: updateUser,
-                            }
+
+                    if (data.timesGuessing === 1) {
+
+                        console.log(data);
+                        console.log(data.createdAt);
+                        let userFinish = {
+                            username: data.username,
+                            murderGuessCorrect: false, 
+                            UserStartedAt: data.createdAt
                         }
-                    }); 
+
+                        await addDocAddData("leadboard", userFinish);
+
+                        PubSub.publish({
+                            event: "leadboard", 
+                            detail: {
+                                response: {
+                                    data: updateUser
+                                }
+                            }
+                        });
+
+                    } else {
+
+                        PubSub.publish({
+                            event: "render_map",
+                            detail: {
+                                response: {
+                                    data: updateUser
+                                }
+                            }
+                        });
+    
+                        setTimeout(() => {
+                            PubSub.publish({
+                                event: "render_popup",
+                                detail: { 
+                                    params: "wrongGuess", 
+                                    response : {
+                                        data: updateUser,
+                                    }
+                                }
+                            }); 
+                        }, 100);
+
+                    }
+
                 }
 
             } else {

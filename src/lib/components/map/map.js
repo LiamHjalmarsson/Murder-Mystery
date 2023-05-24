@@ -69,6 +69,7 @@ async function detail_map(data, tracking) {
         chaptersDone(map, allChapters, data);
 
     } else {
+        map = L.map('map').setView([55.60547, 13.002362], 16);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -78,8 +79,8 @@ async function detail_map(data, tracking) {
         chaptersDone(map, allChapters, data);
     }
 
-    map.setMaxBounds(map.getBounds());
-    
+    map.setMaxBounds(map.getBounds().pad(1,2));
+    map.on('click', coordinatesAlert);
     if (tracking) {
         getLocation(map); 
         document.querySelector("#topRight").classList.add("active");
@@ -142,7 +143,7 @@ function chaptersDone(map, allChapters, data) {
                 let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
                 button.textContent = `${chapterDb.character}`;
                 button.addEventListener('click', () => {
-                    handleButtonClickPaused(data);
+                    // handleButtonClickPaused(data);
                 });
     
                 let popupContent = createElement('div');
@@ -163,7 +164,7 @@ function chaptersDone(map, allChapters, data) {
                 let button = createElement('button', "", `foundCharacterMapBtn${chapterDb.chapterId}`);
                 button.textContent = `${chapterDb.character}`;
                 button.addEventListener('click', () => {
-                    handleButtonClick(chapterDb, data);
+                    // handleButtonClick(chapterDb, data);
                 });
     
                 let popupContent = createElement('div');
@@ -260,4 +261,8 @@ function getLocation(map) {
     return {
         removeTracking: removeTracking
     };
+}
+
+function coordinatesAlert(e) {
+    alert("latitude" + e.latlng);
 }

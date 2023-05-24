@@ -43,10 +43,9 @@ export const getDocByClue = async (colName, answer, { response } ) => {
             }};
     } else {
         let newData = result.docs[0].data();
-
         if (colName === "puzzelStory") {
             let dataStoryExists = data.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
-    
+            console.log(dataStoryExists);
             if (dataStoryExists === undefined || !dataStoryExists.onGoing) {
                 return { 
                     params: "error", 
@@ -57,8 +56,6 @@ export const getDocByClue = async (colName, answer, { response } ) => {
                 return newData;
             }
         } else {
-
-            let dataSearchArea = data.clues.some((clue) => clue.clueId === newData.clueId);
             if (storys.clueId === newData.clueId) {   
                 return newData;
             } else {

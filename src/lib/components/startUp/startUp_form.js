@@ -129,7 +129,6 @@ async function formListener (e, params) {
                 });
             }
         }
-
     } else {
         if (username !== "" && password !== "") {
             let user = await addUser();
@@ -144,7 +143,7 @@ async function formListener (e, params) {
                     detail: { 
                         params: "error", 
                         response : { 
-                            error: "Username already exists" 
+                            error: "Användar existerar redan" 
                         }
                     }
                 });

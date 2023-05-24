@@ -1,6 +1,5 @@
 import App from "../firebase.js";
 import { getFirestore, setDoc, doc, collection, getDoc,} from "firebase/firestore";
-import { PubSub } from "../pubsub.js";
 
 export const db = getFirestore(App);
 
@@ -50,9 +49,11 @@ window.addEventListener('beforeunload', async (e) => {
         e.preventDefault();
         let colRef = collection(db, "users");
         let docRef = doc(colRef, user.userId);
-        await setDoc(docRef, {
+        let data = await setDoc(docRef, {
             countdownStart: countdownStart
         }, { merge: true });
+
+        return data;
     }
 });
 

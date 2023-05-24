@@ -20,8 +20,9 @@ async function renderCharacterFindButton( { response } ) {
     document.querySelector("#dialogBox").appendChild(choiseContainer);
 
     if (!story.alley) {
-
         let clue = data.clues.some(clue => clue.clueId === story.clueId);
+        let chapter = data.chapters.some(chapter => chapter.chapter === story.chapterId + 1);
+        console.log(chapter);
         if (!clue && story.clueId === 4) { 
             choiseContainer.innerHTML = `
                 <div>

@@ -43,7 +43,7 @@ async function render_bag_details ( { response }) {
                     detail: { 
                         params: "locked", 
                         response : { 
-                            msg: "This item is locked" 
+                            msg: "Låst ledtråd" 
                         }
                     }
                 })

@@ -15,6 +15,8 @@ import riddle from "./lib/components/riddle/riddle.js";
 
 import component_popUp from "./lib/components/popUp/popUp.js";
 
+import leadboard from "./lib/components/leadboard/leadboard.js";
+
 import component_character_interaction from "./lib/components/character_interaction/character_interaction.js";
 import component_character_interaction_btns from "./lib/components/character_interaction/character_interacion_btns.js";
 import component_charachter_interaction_reOpen from "./lib/components/character_interaction/charachter_interaction_reOpen.js";
