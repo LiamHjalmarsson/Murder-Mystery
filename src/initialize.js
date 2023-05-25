@@ -23,8 +23,8 @@ import component_charachter_interaction_reOpen from "./lib/components/character_
 
 import render_start_endLetter from "./lib/components/startLetter/startLetter.js";
 
-import component_suspects_bio from "./lib/components/component_suspects_bio.js";
+import component_suspects_bio from "./lib/components/sucpects/component_suspects_bio.js";
+import suspects from "./lib/components/sucpects/suspects.js";
 
-import guess_murder from "./routes/guess_murder.js";
-import guess_weaponMotive from "./routes/guess_weaponMotive.js";
-import suspects from "./routes/suspects.js";
+import guess_murder from "./lib/components/guessMurder/guess_murder.js";
+import guess_weaponMotive from "./lib/components/guessMurder/guess_weaponMotive.js";

@@ -80,7 +80,7 @@ async function detail_map(data, tracking) {
     }
 
     map.setMaxBounds(map.getBounds().pad(1,2));
-    map.on('click', coordinatesAlert);
+    // map.on('click', coordinatesAlert);
     if (tracking) {
         getLocation(map); 
         document.querySelector("#topRight").classList.add("active");
@@ -99,7 +99,6 @@ function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
         popupAnchor: [0, -31]
     });
 
-
     if (userLocationsOnGoing.searchOnGoing || !userOnGoingChapter.locationCharacter) {
         L.circle([userOnGoingChapter.locationSearch._lat, userOnGoingChapter.locationSearch._long], {
             radius: userOnGoingChapter.searchRadius
@@ -108,7 +107,6 @@ function addMarkers(map, userOnGoingChapter, userLocationsOnGoing) {
         L.marker([userOnGoingChapter.locationCharacter._lat, userOnGoingChapter.locationCharacter._long], { icon: pinIcon })
             .addTo(map).bindPopup(userOnGoingChapter.character);
     }
-
 }
 
 function chaptersDone(map, allChapters, data) {

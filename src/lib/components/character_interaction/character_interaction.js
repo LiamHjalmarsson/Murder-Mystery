@@ -1,7 +1,5 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement, fadeInElement, fadeOutElement } from "../../js/functions.js";
-import { docUpdateArry, getFromDB, updateArrayMap } from "../../../utilities/functions/firebase_functions.js";
-import { doc } from "firebase/firestore";
 
 export default {}
 
@@ -23,9 +21,9 @@ async function render_character_interaction({ response }, counter = 0) {
     let { data, story, found } = response;
     let app = document.querySelector("#app");
 
-    if (!found) {
-        app.innerHTML = "";
-    }
+    // if (!found) {
+    //     app.innerHTML = "";
+    // }
 
     let containerDialog = createElement("div", "", "containerDialog");
     app.appendChild(containerDialog);

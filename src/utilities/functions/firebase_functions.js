@@ -84,7 +84,7 @@ export const getFromDB = async (colName, docId) => {
             return { 
                 params: "error", 
                 response : { 
-                    error: "No document found" 
+                    error: "Hittade inget matchande dokument" 
                 }
             };
         }

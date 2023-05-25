@@ -85,14 +85,12 @@ async function btnSearchArea (data, puzzel) {
     }
 
     let clues = await getFromDB("clues");
-    console.log(clues);
     let clue = clues.filter(clue => clue.clueId === puzzel.clueId)[0];
     
     let allStorys = await getFromDB("storyTelling");
     let storysSort = allStorys.sort((a, b) => (a.chapterId > b.chapterId) ? 1 : -1);
     let lastIndex = data.searchArea ? data.searchArea.length: 0;
 
-    console.log(clue);
     if (clue.clueId !== 6 && clue.clueId !== 5) {
         let nextChapter = storysSort.filter(story => story.partAfterSearch)[lastIndex];
 

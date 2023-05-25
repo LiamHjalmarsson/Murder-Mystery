@@ -1,6 +1,6 @@
-import { getFromDB } from "../utilities/functions/firebase_functions.js";
-import { PubSub } from "../utilities/pubsub.js";
-import { createElement } from "../lib/js/functions.js";
+import { getFromDB } from "../../../utilities/functions/firebase_functions.js";
+import { PubSub } from "../../../utilities/pubsub.js";
+import { createElement } from "../../js/functions.js";
 
 export default {}
 

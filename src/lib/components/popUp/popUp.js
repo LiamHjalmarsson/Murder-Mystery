@@ -71,6 +71,16 @@ function displayInformation ( res ) {
             message.textContent = response.msg; 
         break;
 
+        case "created":
+            header.textContent = "Användare skapad";
+            document.querySelector("#popUpClose").addEventListener("click", () => {
+                PubSub.publish({
+                    event: "render_startUp", 
+                    detail: "login"
+                });
+            });
+        break;
+
         case "completed": 
             header.textContent = "Du har nu kommit till slutet";
             message.textContent = ""; 

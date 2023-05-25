@@ -133,10 +133,12 @@ async function formListener (e, params) {
         if (username !== "" && password !== "") {
             let user = await addUser();
             if (user) {
+
                 PubSub.publish({
-                    event: "render_startUp", 
-                    detail: "login"
+                    event: "render_popup",
+                    detail: { params: "created" }
                 });
+
             } else {
                 PubSub.publish({
                     event: "render_popup",
