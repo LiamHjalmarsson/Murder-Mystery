@@ -1,6 +1,7 @@
 import { PubSub } from "../../../utilities/pubsub.js";
 import { createElement } from "../../js/functions.js";
 import { docUpdateArry, getFromDB, updateArrayMap } from "../../../utilities/functions/firebase_functions.js";
+import { timeSave } from "../../../utilities/functions/countDownTimer.js";
 
 export default {}
 
@@ -126,7 +127,9 @@ function btnSearchListner (data, story) {
         await updateArrayMap('users', data.id, 'chapters', indexChapter, { 
             searchOnGoing: true, completed: true
         });
-
+    
+        await timeSave(data);
+        
         let updateUser = await getFromDB("users", data.id);
     
         PubSub.publish({
@@ -158,6 +161,8 @@ function btnCharacterFindListner (data, story) {
             onGoing: true,
         });
     
+        await timeSave(data);
+
         let updateUser = await getFromDB("users", data.id);
 
         PubSub.publish({
@@ -188,6 +193,8 @@ function btnSecoundCharacterOptionListner (data, story) {
             chapter: lastCorrectChapter + 2,
             onGoing: true,
         });
+
+        await timeSave(data);
     
         let updateUser = await getFromDB("users", data.id);
 
@@ -214,6 +221,8 @@ function btnContuineOnPausedChapterListner(data) {
         await updateArrayMap('users', data.id, 'chapters', indexChapterPaused, { 
             onGoing: true, paused: false
         });
+
+        await timeSave(data);
 
         let updateUser = await getFromDB("users", data.id);
     

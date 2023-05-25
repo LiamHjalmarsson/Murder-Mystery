@@ -57,6 +57,14 @@ window.addEventListener('beforeunload', async (e) => {
     }
 });
 
+export const timeSave = async (data) => {
+    let colRef = collection(db, "users");
+    let docRef = doc(colRef, data.id);
+    await setDoc(docRef, {
+        countdownStart: countdownStart
+    }, { merge: true });
+}
+
 function displayCountdown(remainingTime) {
     let hours = Math.floor(remainingTime / (1000 * 60 * 60));
     let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
