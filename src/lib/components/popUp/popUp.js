@@ -71,6 +71,10 @@ function displayInformation ( res ) {
             message.textContent = response.msg; 
         break;
 
+        case "noTime":
+            header.textContent = "Tiden har tagit slut";
+        break;
+
         case "created":
             header.textContent = "Användare skapad";
             document.querySelector("#popUpClose").addEventListener("click", () => {
@@ -183,7 +187,6 @@ function inputGuessMurder (response) {
                 let updateUser = await getFromDB("users", data.id);
                 
                 if (updateUser.murderGuessCorrect) {
-
                     
                     let userFinish = {
                         username: data.username,
@@ -205,9 +208,6 @@ function inputGuessMurder (response) {
                 } else {
 
                     if (data.timesGuessing === 1) {
-
-                        console.log(data);
-                        console.log(data.createdAt);
                         let userFinish = {
                             username: data.username,
                             murderGuessCorrect: false, 
@@ -249,9 +249,7 @@ function inputGuessMurder (response) {
                         }, 100);
 
                     }
-
                 }
-
             } else {
                 fadeOutElement(document.querySelector("#wrapperPopUp"));
             }

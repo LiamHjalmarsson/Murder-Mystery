@@ -40,14 +40,14 @@ async function render_suspects ({response}) {
     characters.forEach(chapter => {
         let SusBtnBox = createElement("div", "susBtn", chapter.imgref);
         let iconsDiv = createElement("div", "", "iconSus");
+        let name = createElement("div","name");
 
         let found = data.characters.some(character => character.characterId === chapter.Id);
         
         iconsDiv.style.backgroundImage = found ? `url(${chapter.ImgProfile}` : `url(../../../../library/lock.png)`;
+        name.textContent = found ? chapter.fullName : "?";
         
         if (found) {
-            iconsDiv.style.backgroundImage = `url(${chapter.ImgProfile}`;
-
             iconsDiv.addEventListener("click", (e) => {
                 if (document.querySelector("#app > #wrapperPopUp")) {
                     document.querySelector("#app > #wrapperPopUp").remove();
@@ -58,6 +58,7 @@ async function render_suspects ({response}) {
                 });
             });
         } else {
+
             iconsDiv.addEventListener("click", () => {
                 if (document.querySelector("#app > #wrapperPopUp")) {
                     document.querySelector("#app > #wrapperPopUp").remove();
@@ -73,12 +74,8 @@ async function render_suspects ({response}) {
                 });
             });
         }
-
-        let name = createElement("div","name");
-        name.textContent =(chapter.fullName);
         
-        SusBtnBox.append(iconsDiv);
-        SusBtnBox.append(name);
+        SusBtnBox.append(iconsDiv, name);
         suspectsContainer.append(SusBtnBox);
     }); 
 }

@@ -80,7 +80,6 @@ async function btnSearchArea (data, puzzel) {
     let chapterId = data.chapters.filter((chapter) => chapter.searchOnGoing).map(id => id.chapter)[0];
     
     if (chapterId === undefined) { 
-        console.log("error", chapterId);
         return;
     }
 

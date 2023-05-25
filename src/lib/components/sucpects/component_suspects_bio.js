@@ -43,6 +43,4 @@ function render_component_suspects_bio (chapter) {
     document.querySelector(".CloseBio").addEventListener("click", () => {
         bioWrapper.remove();
     });
-
-
 }

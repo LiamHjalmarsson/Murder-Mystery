@@ -7,3 +7,7 @@
     justify-content: space-around;
     padding: 20px;
 }
+
+.leadboard {
+    border: 2px solid var(--lightYellow);
+}

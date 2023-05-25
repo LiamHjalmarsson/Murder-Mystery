@@ -33,6 +33,7 @@ export const getDocByClue = async (colName, answer, { response } ) => {
 
     let colRef = collection(db, colName);
     let queryRef = query(colRef, where("unlockRiddleKey", "==", answer));
+
     let result = await getDocs(queryRef);
 
     if (result.empty) {
@@ -45,7 +46,7 @@ export const getDocByClue = async (colName, answer, { response } ) => {
         let newData = result.docs[0].data();
         if (colName === "puzzelStory") {
             let dataStoryExists = data.chapters.find((chapter) => chapter.chapter === newData.chapterId && chapter.onGoing);
-            console.log(dataStoryExists);
+
             if (dataStoryExists === undefined || !dataStoryExists.onGoing) {
                 return { 
                     params: "error", 
