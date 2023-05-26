@@ -39,10 +39,6 @@ function renderTopMenu ({response}) {
     `;
 
     container_map.insertBefore(topNavigation, map);
-    
-    PubSub.publish({
-        event: "render_counDown"
-    });
 
     if (data.murderGuessCorrect || data.timesGuessing === 0) {
         document.querySelector("#guessMurder").textContent = "leadboard";
@@ -58,7 +54,6 @@ function renderTopMenu ({response}) {
         });
 
     } else {
-
         if (!data.murderGuessCorrect && data.timesGuessing > 0 ) {
             document.querySelector("#guessMurder").addEventListener("click", () => {
                 PubSub.publish({
@@ -70,6 +65,10 @@ function renderTopMenu ({response}) {
             document.querySelector("#guessMurder").setAttribute("disabeld", true);
         }
     }
+
+    PubSub.publish({
+        event: "render_counDown"
+    });
 
     document.querySelector("#logOut").addEventListener("click", () => {
             localStorage.removeItem("user");

@@ -77,27 +77,27 @@ async function displayCountdown(remainingTime) {
         if (remainingTime <= 0) {
             document.querySelector("#timeLeft").innerHTML = `0: 00m : 00s`;
 
-            let container = document.querySelector("#guessMurderBox");
-            container.innerHTML = ""; 
+            // let container = document.querySelector("#guessMurderBox");
+            // container.innerHTML = ""; 
 
-            let btn = createElement("button", "leadboard", "guessMurder");
-            btn.textContent = "Leadboard";
-            container.append(btn);
+            // let btn = createElement("button", "leadboard", "guessMurder");
+            // btn.textContent = "Leadboard";
+            // container.append(btn);
 
-            let userId = JSON.parse(localStorage.getItem("user"));
+            // let userId = JSON.parse(localStorage.getItem("user"));
 
-            let user = await getFromDB("users", userId.userId);
+            // let user = await getFromDB("users", userId.userId);
 
-            document.querySelector("#guessMurder").addEventListener("click", () => {
-                PubSub.publish({
-                    event: "leadboard", 
-                    detail: {
-                        response: {
-                            data: user
-                        }
-                    }
-                });
-            });
+            // document.querySelector("#guessMurder").addEventListener("click", () => {
+            //     PubSub.publish({
+            //         event: "leadboard", 
+            //         detail: {
+            //             response: {
+            //                 data: user
+            //             }
+            //         }
+            //     });
+            // });
         } else {
             document.querySelector("#timeLeft").innerHTML = `${hours}: ${minutes}m : ${seconds}s`;
         }
