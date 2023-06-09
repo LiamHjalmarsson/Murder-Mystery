@@ -43,8 +43,7 @@ function render_start_endLetter (user) {
         });
     });
 
-    div.appendChild(img);
-    div.appendChild(box);
+    div.append(img, box);
     box.append(button);
 
     app.append(div);

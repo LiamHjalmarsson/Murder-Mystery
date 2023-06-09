@@ -1,6 +1,5 @@
 #containerBag {
     background-color: var(--lightBrown);
-    /* background-image: linear-gradient(to top, #582915, #a2704e); */
 }
 
 #bagNav {
@@ -28,7 +27,6 @@
 }
 
 #inventory {
-    /* background-color: var(--darkBrown); */
     width: 80%;
     padding: 10px;
     border-radius: 5px;

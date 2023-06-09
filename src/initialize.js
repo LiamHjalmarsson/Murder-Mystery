@@ -13,18 +13,18 @@ import timer from "./lib/components/map/map_timer.js";
 
 import riddle from "./lib/components/riddle/riddle.js";
 
-import component_popUp from "./lib/components/popUp/popUp.js";
+import popUp from "./lib/components/popUp/popUp.js";
 
 import leadboard from "./lib/components/leadboard/leadboard.js";
 
-import component_character_interaction from "./lib/components/character_interaction/character_interaction.js";
-import component_character_interaction_btns from "./lib/components/character_interaction/character_interacion_btns.js";
-import component_charachter_interaction_reOpen from "./lib/components/character_interaction/charachter_interaction_reOpen.js";
+import character_interaction from "./lib/components/character_interaction/character_interaction.js";
+import character_interaction_btns from "./lib/components/character_interaction/character_interacion_btns.js";
+import charachter_interaction_reOpen from "./lib/components/character_interaction/charachter_interaction_reOpen.js";
 
 import render_start_endLetter from "./lib/components/startLetter/startLetter.js";
 
-import component_suspects_bio from "./lib/components/sucpects/component_suspects_bio.js";
 import suspects from "./lib/components/sucpects/suspects.js";
+import suspects_bio from "./lib/components/sucpects/suspects_bio.js";
 
 import guess_murder from "./lib/components/guessMurder/guess_murder.js";
 import guess_weaponMotive from "./lib/components/guessMurder/guess_weaponMotive.js";

@@ -38,11 +38,11 @@ function render_bag_details_item (clue) {
             <div id="itemInformation">
                 <p>Ledtrådsnummer:${clue.clueId} </p>
                 <p>Plats: ${clue.place} </p>
-                <p> Mottagare: ${clue.mottagare}</p>
-                <p> Mottagare: ${clue.sändare}</p>
+                <p> Mottagare: ${clue.mottagare} </p>
+                <p> Mottagare: ${clue.sändare} </p>
             </div>
             <div id="itemDetailInfo">
-            <p> Info: ${clue.Info}</p>  
+            <p> Info: ${clue.Info} </p>  
         </div>
     `;
 
