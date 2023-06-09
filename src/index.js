@@ -1,6 +1,5 @@
 import { PubSub } from "/src/utilities/pubsub.js";
 import { getUserDoc } from "./utilities/functions/firebase_functions.js";
-import render_startUp from "./lib/components/startUp/startUp.js";
 
 async function checkLoginStatus() {
     const storedUser = JSON.parse(localStorage.getItem("user"));
