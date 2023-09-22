@@ -32,7 +32,8 @@ export const getDocByClue = async (colName, answer, { response } ) => {
     let { data, storys } = response;
 
     let colRef = collection(db, colName);
-    let queryRef = query(colRef, where("unlockRiddleKey", "==", answer));
+    // let queryRef = query(colRef, where("unlockRiddleKey", "==", answer));
+    let queryRef = query(colRef, where("removeThis", "==", answer));
 
     let result = await getDocs(queryRef);
 
